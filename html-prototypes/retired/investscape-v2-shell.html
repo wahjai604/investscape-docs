@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InvestScape — v2 Shell Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold-300:#eacd7c; --gold-500:#c9a227; --white-mark:#f7f5ef; }
+  html[data-theme="dark"]{
+    --bg:#0e1117; --bg-elevated:#141821; --bg-card:#171b26; --bg-card-2:#1c2130;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.16);
+    --text-1:#eef0f4; --text-2:#9aa3b2; --text-3:#67707e;
+    --accent:#d9b04a; --accent-soft:rgba(217,176,74,0.14);
+    --green:#4ade80; --green-soft:rgba(74,222,128,0.12);
+    --red:#f87171; --red-soft:rgba(248,113,113,0.12);
+    --blue:#7dd3fc; --blue-soft:rgba(125,211,252,0.12);
+    --shadow:0 24px 60px rgba(0,0,0,0.4);
+  }
+  html[data-theme="light"]{
+    --bg:#f5f6f8; --bg-elevated:#ffffff; --bg-card:#ffffff; --bg-card-2:#fbfbfc;
+    --border:rgba(15,23,42,0.08); --border-strong:rgba(15,23,42,0.15);
+    --text-1:#14161c; --text-2:#5b6472; --text-3:#8b95a5;
+    --accent:#a8791a; --accent-soft:rgba(168,121,26,0.09);
+    --green:#16a34a; --green-soft:rgba(22,163,74,0.09);
+    --red:#dc2626; --red-soft:rgba(220,38,38,0.09);
+    --blue:#0284c7; --blue-soft:rgba(2,132,199,0.09);
+    --shadow:0 24px 50px rgba(15,23,42,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text-1);font-family:'Inter',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;margin:0;}
+  .mono{font-family:'DM Mono',monospace;}
+  .eyebrow{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .theme-toggle{position:fixed;top:20px;right:28px;z-index:60;display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:999px;padding:6px 14px 6px 6px;cursor:pointer;box-shadow:var(--shadow);font-size:12.5px;color:var(--text-2);}
+  .theme-toggle .knob{width:22px;height:22px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .theme-toggle svg{width:13px;height:13px;}
+
+  .intro{padding:90px 0 60px;border-bottom:1px solid var(--border);}
+  .intro h1{font-size:clamp(28px,3.6vw,42px);max-width:820px;}
+  .intro p{max-width:720px;color:var(--text-2);font-size:15px;margin-top:16px;}
+  .intro .note{font-size:12.5px;color:var(--text-3);margin-top:20px;border-left:2px solid var(--accent);padding-left:14px;}
+  .page-label{padding:64px 0 6px;}
+  .page-label .eyebrow{display:block;margin-bottom:6px;}
+  .page-label h2{font-size:24px;}
+  .page-label p{color:var(--text-2);font-size:13.5px;margin-top:8px;max-width:680px;}
+
+  .app-frame{border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);margin:32px 0 80px;background:var(--bg-elevated);position:relative;}
+  .app-body{padding:24px 24px 32px;background:var(--bg);}
+
+  /* ===== TWO-TIER RIBBON ===== */
+  .ribbon-top{background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:9px 20px;gap:16px;}
+  .ribbon-bottom{background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+  .brand{display:flex;align-items:center;gap:8px;}
+  .brand-word{font-family:'Fraunces',serif;font-size:15px;}
+  .brand-word span{color:var(--accent);}
+  .ribbon-top .right{display:flex;align-items:center;gap:14px;}
+  .icon-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;position:relative;}
+  .icon-btn:hover{border-color:var(--border-strong);color:var(--text-1);}
+  .icon-btn .badge-dot{position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--red);}
+  .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold-300));cursor:pointer;}
+  .tier-pill{font-size:10px;font-weight:700;letter-spacing:0.06em;padding:3px 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent);text-transform:uppercase;}
+
+  /* collapsible search */
+  .search-collapsed{transition:all 0.25s ease;overflow:hidden;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12.5px;color:var(--text-3);cursor:pointer;width:34px;white-space:nowrap;}
+  .search-collapsed.open{width:280px;}
+  .search-collapsed input{background:transparent;border:none;outline:none;color:var(--text-1);font-family:'Inter',sans-serif;font-size:12.5px;width:100%;}
+  .kbd{background:var(--bg-card-2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:10.5px;color:var(--text-3);}
+
+  .tabs-main{display:flex;gap:2px;}
+  .tab{font-size:12.5px;color:var(--text-2);padding:10px 13px;cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+  .tab.active{color:var(--text-1);font-weight:600;border-bottom-color:var(--accent);}
+  .tab .lock{font-size:10px;opacity:0.7;}
+  .tab .drag-h{display:none;color:var(--text-3);cursor:grab;font-size:11px;}
+  .customizing .tab .drag-h{display:inline;}
+  .tabs-sub{display:flex;gap:14px;align-items:center;}
+  .sub-link{font-size:11.5px;color:var(--text-3);padding:10px 0;cursor:pointer;}
+  .sub-link:hover{color:var(--text-1);}
+
+  /* customize mode */
+  .customize-ctl{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-3);}
+  .switch{width:32px;height:18px;border-radius:999px;background:var(--bg-card-2);border:1px solid var(--border-strong);position:relative;cursor:pointer;}
+  .switch::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--text-3);transition:all 0.2s;}
+  .switch.on{background:var(--accent-soft);border-color:var(--accent);}
+  .switch.on::after{left:16px;background:var(--accent);}
+
+  .btn{border:none;border-radius:6px;font-size:13px;font-weight:600;padding:9px 16px;cursor:pointer;font-family:'Inter',sans-serif;}
+  .btn-gold{background:var(--accent);color:#0e1117;}
+  .btn-ghost{background:transparent;border:1px solid var(--border-strong);color:var(--text-1);}
+  .pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;}
+  .pill-blue{background:var(--blue-soft);color:var(--blue);}
+  .pill-gold{background:var(--accent-soft);color:var(--accent);}
+  .pill-green{background:var(--green-soft);color:var(--green);}
+  .pill-red{background:var(--red-soft);color:var(--red);}
+  .pill-grey{background:var(--bg-card-2);color:var(--text-2);border:1px solid var(--border);}
+
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;}
+  .stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;}
+  @media(max-width:900px){.stat-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{padding:15px 17px;position:relative;}
+  .stat .drag-h{display:none;position:absolute;top:8px;right:10px;color:var(--text-3);cursor:grab;font-size:12px;}
+  .customizing .stat .drag-h{display:block;}
+  .customizing .stat{border-style:dashed;border-color:var(--accent);}
+  .stat-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;}
+  .stat-value{font-size:19px;}
+  .delta{font-size:11.5px;margin-top:4px;}
+  .delta.up{color:var(--green);}
+  .delta.down{color:var(--red);}
+
+  /* category filter chips */
+  .filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+  .filter-chip{font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--border-strong);color:var(--text-2);cursor:pointer;background:transparent;}
+  .filter-chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text-1);}
+  .filter-chip.custom{border-style:dashed;}
+  .filter-note{font-size:11px;color:var(--text-3);margin-left:auto;}
+
+  .holdings-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .holdings-table th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-3);padding:11px 14px;border-bottom:1px solid var(--border);}
+  .holdings-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .holdings-table tr.prop-row{cursor:pointer;transition:background 0.15s;}
+  .holdings-table tr.prop-row:hover{background:var(--accent-soft);}
+  .holdings-table tr.prop-row.dimmed{opacity:0.35;}
+  .prop-cell{display:flex;align-items:center;gap:10px;}
+  .thumb{width:38px;height:38px;border-radius:6px;flex-shrink:0;position:relative;overflow:hidden;}
+  .thumb .cam{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);color:#fff;font-size:13px;}
+  .prop-row:hover .thumb .cam{display:flex;}
+  .prop-addr{font-weight:500;font-size:13px;}
+  .prop-sub{font-size:11px;color:var(--text-3);}
+  .eye-btn{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-3);}
+  .cat-tag{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:4px;}
+
+  .export-menu{position:relative;display:inline-block;}
+  .export-pop{position:absolute;right:0;top:36px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:8px;box-shadow:var(--shadow);min-width:220px;z-index:20;display:none;}
+  .export-pop.open{display:block;}
+  .export-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:12.5px;cursor:pointer;border-bottom:1px solid var(--border);}
+  .export-row:last-child{border-bottom:none;}
+  .export-row:hover{background:var(--accent-soft);}
+
+  /* language popover */
+  .lang-pop{position:absolute;right:120px;top:46px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:8px;box-shadow:var(--shadow);min-width:190px;z-index:30;display:none;}
+  .lang-pop.open{display:block;}
+  .lang-row{padding:9px 14px;font-size:12.5px;cursor:pointer;display:flex;justify-content:space-between;border-bottom:1px solid var(--border);}
+  .lang-row:last-child{border-bottom:none;}
+  .lang-row:hover{background:var(--accent-soft);}
+  .lang-row.sel{color:var(--accent);font-weight:600;}
+
+  /* status flow */
+  .status-flow{display:flex;align-items:center;gap:10px;padding:16px 18px;flex-wrap:wrap;}
+  .status-step{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-3);}
+  .status-step .dot{width:10px;height:10px;border-radius:50%;background:var(--bg-card-2);border:1.5px solid var(--border-strong);}
+  .status-step.done{color:var(--text-1);}
+  .status-step.done .dot{background:var(--accent);border-color:var(--accent);}
+  .status-arrow{color:var(--text-3);font-size:12px;}
+  .cat-picker{display:flex;gap:8px;flex-wrap:wrap;padding:0 18px 16px;}
+  .cat-opt{font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--border-strong);color:var(--text-2);cursor:pointer;}
+  .cat-opt.sel{background:var(--green-soft);border-color:var(--green);color:var(--green);}
+  .cat-opt.add{border-style:dashed;color:var(--text-3);}
+
+  /* files */
+  .file-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+  .file-row:last-child{border-bottom:none;}
+  .file-icon{width:30px;height:30px;border-radius:6px;background:var(--bg-card-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .file-meta{flex:1;}
+  .file-name{font-weight:500;}
+  .file-sub{font-size:10.5px;color:var(--text-3);}
+  .ai-read{font-size:10px;color:var(--blue);}
+  .dropzone{border:1.5px dashed var(--border-strong);border-radius:8px;padding:16px;text-align:center;font-size:12px;color:var(--text-3);margin-top:12px;cursor:pointer;}
+  .dropzone:hover{border-color:var(--accent);color:var(--text-2);}
+
+  .input-card{padding:18px;margin-bottom:16px;}
+  .input-card h4{font-size:13px;margin:0 0 12px;font-weight:600;display:flex;align-items:center;gap:8px;justify-content:space-between;}
+  .kv-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+  .kv-row:last-child{border-bottom:none;}
+  .kv-row .k{color:var(--text-2);}
+  .kv-row .v{font-family:'DM Mono',monospace;}
+
+  /* ===== LIBRARY ===== */
+  .lib-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .lib-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  @media(max-width:860px){.lib-grid{grid-template-columns:1fr;}}
+  .formula-card{padding:18px;display:none;}
+  .formula-card.show{display:block;}
+  .fc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
+  .fc-name{font-family:'Fraunces',serif;font-size:16px;}
+  .fc-id{font-size:10px;color:var(--text-3);font-family:'DM Mono',monospace;}
+  .fc-formula{font-family:'DM Mono',monospace;font-size:12.5px;color:var(--accent);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:9px 12px;margin:8px 0;}
+  .fc-plain{font-size:12.5px;color:var(--text-2);}
+  .fc-example{font-size:11.5px;color:var(--text-3);margin-top:10px;border-left:2px solid var(--border-strong);padding-left:10px;}
+  .fc-foot{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;}
+
+  /* ===== COMMUNITY ===== */
+  .community-layout{display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start;}
+  @media(max-width:860px){.community-layout{grid-template-columns:1fr;}}
+  .board-list{padding:10px 0;}
+  .board-row{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;font-size:12.5px;cursor:pointer;color:var(--text-2);}
+  .board-row:hover{background:var(--accent-soft);color:var(--text-1);}
+  .board-row.active{color:var(--text-1);font-weight:600;box-shadow:inset 3px 0 0 var(--accent);background:var(--accent-soft);}
+  .board-count{font-size:10.5px;color:var(--text-3);}
+  .thread-row{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+  .thread-row:hover{background:var(--accent-soft);}
+  .sentiment{width:38px;text-align:center;flex-shrink:0;}
+  .sentiment .s-tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;}
+  .s-bull{background:var(--green-soft);color:var(--green);}
+  .s-bear{background:var(--red-soft);color:var(--red);}
+  .s-q{background:var(--blue-soft);color:var(--blue);}
+  .thread-main{flex:1;}
+  .thread-title{font-size:13.5px;font-weight:500;}
+  .thread-meta{font-size:11px;color:var(--text-3);margin-top:3px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .vpro{font-size:9.5px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:3px;padding:0 4px;letter-spacing:0.04em;}
+  .thread-stats{font-size:11px;color:var(--text-3);text-align:right;flex-shrink:0;}
+  .composer{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--border);}
+  .composer input{flex:1;background:var(--bg);border:1px solid var(--border-strong);border-radius:6px;padding:9px 12px;color:var(--text-1);font-family:'Inter',sans-serif;font-size:12.5px;outline:none;}
+
+  /* ===== AI BUBBLE ===== */
+  .ai-bubble{position:absolute;bottom:24px;right:24px;z-index:40;}
+  .ai-fab{width:48px;height:48px;border-radius:50%;background:var(--accent);color:#0e1117;border:none;font-size:20px;cursor:grab;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;}
+  .ai-panel{position:absolute;bottom:58px;right:0;width:300px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:12px;box-shadow:var(--shadow);display:none;overflow:hidden;}
+  .ai-panel.open{display:block;}
+  .ai-panel-head{padding:12px 14px;border-bottom:1px solid var(--border);font-size:12.5px;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
+  .ai-msgs{padding:14px;font-size:12px;color:var(--text-2);min-height:90px;}
+  .ai-msg-user{background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin-bottom:8px;color:var(--text-1);}
+  .ai-input-row{display:flex;gap:8px;padding:10px;border-top:1px solid var(--border);}
+  .ai-input-row input{flex:1;background:var(--bg);border:1px solid var(--border-strong);border-radius:999px;padding:8px 12px;font-size:12px;color:var(--text-1);outline:none;font-family:'Inter',sans-serif;}
+  .mic-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border-strong);background:transparent;color:var(--text-2);cursor:pointer;font-size:14px;}
+  .mic-btn.rec{background:var(--red-soft);border-color:var(--red);color:var(--red);animation:pulse 1.2s infinite;}
+  @keyframes pulse{50%{opacity:0.55;}}
+  .drag-hint{font-size:10px;color:var(--text-3);text-align:center;padding:0 0 8px;}
+
+  footer{padding:40px 0 60px;text-align:center;color:var(--text-3);font-size:12px;}
+</style>
+</head>
+<body>
+
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span id="toggle-label">Dark mode</span>
+  <span class="knob"><svg viewBox="0 0 24 24" fill="none" stroke="#0e1117" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
+</div>
+
+<div class="wrap">
+
+  <section class="intro">
+    <span class="eyebrow">Lighthouse Research Ltd. — v2 Shell Concept</span>
+    <h1>The InvestScape shell, version two: more doors, more control, one ecosystem.</h1>
+    <p>Four screens introducing the platform-wide systems: the <strong>two-tier ribbon</strong> with collapsible search and Development Studio (Enterprise), the <strong>property category system</strong> with prospect-to-owned flow and portfolio filtering, the <strong>Library</strong> rendering the Commercial Formula Library (doc 06) as learning cards, and <strong>Community</strong> — Bullboards for real estate. Plus three ambient systems on every screen: Customize mode (drag &amp; lock), the draggable AI bubble with voice input, and the language switcher.</p>
+    <p class="note">Everything interactive here works: click the search icon to expand it, toggle Customize to drag KPI cards, filter the portfolio by category, hide rows with the eye icon, open the export menu, switch languages with the globe (nav and KPI labels translate live — EN / FR / 繁體 / 简体), and drag the gold AI bubble anywhere. Figma imports static frames, so when you bring this into Buddy, capture key states (search open, customize on, AI panel open) as separate frames.</p>
+  </section>
+
+  <!-- ============ SCREEN 1: PORTFOLIO v2 ============ -->
+  <div class="page-label">
+    <span class="eyebrow">Screen One · Portfolio v2</span>
+    <h2>Categories, visibility, and customization</h2>
+    <p>Filter chips for property class (plus user-defined labels), eye toggles to show/hide holdings, thumbnail upload on hover, the export menu with tier gating, and Customize mode — flip the switch to see drag handles appear on KPI cards, then lock your layout.</p>
+  </div>
+  <div class="app-frame" id="frame-portfolio">
+
+    <!-- TWO-TIER RIBBON -->
+    <div class="ribbon-top">
+      <div class="brand">
+        <svg width="20" height="20" viewBox="0 0 240 260"><polygon points="84,208 112,208 116,80 98,102" fill="#f7f5ef"/><polygon points="156,208 128,208 124,80 142,102" fill="#f7f5ef"/><circle cx="120" cy="78" r="27" fill="none" stroke="var(--gold-500)" stroke-width="4"/><circle cx="120" cy="78" r="7" fill="var(--bg-card)"/><circle cx="120" cy="78" r="4" fill="#f6e1a0"/></svg>
+        <span class="brand-word">Invest<span>Scape</span></span>
+        <span class="tier-pill">Pro</span>
+      </div>
+      <div class="right">
+        <div class="search-collapsed" id="searchbar" onclick="openSearch(event)">
+          <span>🔍</span><input id="searchinput" placeholder="Search markets, deals, boards…" style="display:none;"><span class="kbd" id="searchkbd" style="display:none;">⌘K</span>
+        </div>
+        <button class="icon-btn" onclick="toggleLang(event)" title="Language">🌐</button>
+        <button class="icon-btn" title="Notifications">🔔<span class="badge-dot"></span></button>
+        <div class="customize-ctl"><span id="i18n-customize">Customize</span><div class="switch" id="customize-switch" onclick="toggleCustomize()"></div><span id="lock-icon" title="Lock layout" style="cursor:pointer;display:none;" onclick="lockLayout()">🔓</span></div>
+        <div class="avatar"></div>
+      </div>
+      <div class="lang-pop" id="langpop">
+        <div class="lang-row sel" onclick="setLang('en',this)"><span>English</span><span>✓</span></div>
+        <div class="lang-row" onclick="setLang('fr',this)"><span>Français</span></div>
+        <div class="lang-row" onclick="setLang('zht',this)"><span>中文（繁體）</span></div>
+        <div class="lang-row" onclick="setLang('zhs',this)"><span>中文（简体）</span></div>
+      </div>
+    </div>
+    <div class="ribbon-bottom">
+      <div class="tabs-main" id="main-tabs">
+        <span class="tab active"><span class="drag-h">⠿</span><span data-i18n="portfolio">Portfolio</span></span>
+        <span class="tab"><span class="drag-h">⠿</span><span data-i18n="analyzer">Deal Analyzer</span></span>
+        <span class="tab"><span class="drag-h">⠿</span><span data-i18n="devstudio">Development Studio</span> <span class="lock">🔒 <span style="font-size:9px;">ENT</span></span></span>
+        <span class="tab"><span class="drag-h">⠿</span><span data-i18n="research">Research</span></span>
+        <span class="tab"><span class="drag-h">⠿</span><span data-i18n="intel">Market Intel</span></span>
+        <span class="tab"><span class="drag-h">⠿</span><span data-i18n="community">Community</span></span>
+        <span class="tab"><span class="drag-h">⠿</span><span data-i18n="library">Library</span></span>
+        <span class="tab"><span class="drag-h">⠿</span><span data-i18n="workspace">Workspace</span></span>
+      </div>
+      <div class="tabs-sub">
+        <span class="sub-link" data-i18n="alerts">Alerts</span>
+        <span class="sub-link" data-i18n="reports">Reports</span>
+        <span class="sub-link" data-i18n="settings">Settings</span>
+      </div>
+    </div>
+
+    <div class="app-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+        <h3 style="font-size:20px;" data-i18n="myportfolio">My Portfolio</h3>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div class="export-menu">
+            <button class="btn btn-ghost" onclick="toggleExport(event)">🖨 <span data-i18n="export">Export</span></button>
+            <div class="export-pop" id="exportpop">
+              <div class="export-row"><span>PDF report</span><span class="pill pill-grey">All tiers</span></div>
+              <div class="export-row"><span>Excel (static results)</span><span class="pill pill-gold">Pro</span></div>
+              <div class="export-row"><span>CSV data</span><span class="pill pill-gold">Pro</span></div>
+              <div class="export-row"><span>Full branded report pack</span><span class="pill pill-blue">Enterprise</span></div>
+            </div>
+          </div>
+          <button class="btn btn-gold">+ <span data-i18n="addprop">Add Property</span></button>
+        </div>
+      </div>
+
+      <div class="stat-row" id="kpi-row">
+        <div class="card stat" draggable="false"><span class="drag-h">⠿</span><div class="stat-label" data-i18n="totalvalue">Total Value</div><div class="stat-value mono">$6.21M</div><div class="delta up">▲ 2.8% QoQ</div></div>
+        <div class="card stat" draggable="false"><span class="drag-h">⠿</span><div class="stat-label" data-i18n="totalequity">Total Equity</div><div class="stat-value mono">$2.63M</div><div class="delta up">▲ 5.1% YTD</div></div>
+        <div class="card stat" draggable="false"><span class="drag-h">⠿</span><div class="stat-label" data-i18n="cashflow">Monthly Cash Flow</div><div class="stat-value mono">$4,890</div><div class="delta up">▲ $517 MoM</div></div>
+        <div class="card stat" draggable="false"><span class="drag-h">⠿</span><div class="stat-label" data-i18n="avgcap">Avg Cap Rate</div><div class="stat-value mono">5.2%</div><div class="delta down">▼ 0.1 pts</div></div>
+        <div class="card stat" draggable="false"><span class="drag-h">⠿</span><div class="stat-label" data-i18n="occupancy">Occupancy</div><div class="stat-value mono">95%</div><div class="delta up">▲ 1 pt</div></div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-chip active" onclick="filterCat('all',this)" data-i18n="fall">All (7)</button>
+        <button class="filter-chip" onclick="filterCat('res',this)" data-i18n="fres">Residential</button>
+        <button class="filter-chip" onclick="filterCat('mf',this)">Multi-Family</button>
+        <button class="filter-chip" onclick="filterCat('com',this)">Commercial</button>
+        <button class="filter-chip" onclick="filterCat('ind',this)">Industrial</button>
+        <button class="filter-chip" onclick="filterCat('rec',this)">Recreational</button>
+        <button class="filter-chip" onclick="filterCat('str',this)" style="border-color:var(--blue);color:var(--blue);">STR ✦ <span style="font-size:9px;opacity:0.7;">custom</span></button>
+        <button class="filter-chip custom">+ New label</button>
+        <span class="filter-note">👁 hides a property from views &amp; totals — it stays in your data</span>
+      </div>
+
+      <div class="card">
+        <table class="holdings-table">
+          <tr><th></th><th data-i18n="thprop">Property</th><th>Category</th><th data-i18n="thvalue">Value</th><th data-i18n="thcf">Cash Flow / mo</th><th>Cap</th><th></th></tr>
+          <tr class="prop-row" data-cat="res">
+            <td><button class="eye-btn" onclick="toggleRow(event,this)">👁</button></td>
+            <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#c9a227,#12233b);"><div class="cam">📷</div></div><div><div class="prop-addr">Unit 1804 — 6088 Willingdon Ave.</div><div class="prop-sub">Burnaby, BC 🇨🇦 · Owned 2024</div></div></div></td>
+            <td><span class="cat-tag" style="background:var(--blue-soft);color:var(--blue);">Residential</span></td>
+            <td class="mono">$550,000</td><td class="mono" style="color:var(--red);">−$166</td><td class="mono">4.5%</td>
+            <td class="mono" style="color:var(--text-3);">›</td>
+          </tr>
+          <tr class="prop-row" data-cat="res">
+            <td><button class="eye-btn" onclick="toggleRow(event,this)">👁</button></td>
+            <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#c9a227,#eacd7c);"><div class="cam">📷</div></div><div><div class="prop-addr">142 Maple Grove Ave.</div><div class="prop-sub">Austin, TX 🇺🇸 · Owned 2021</div></div></div></td>
+            <td><span class="cat-tag" style="background:var(--blue-soft);color:var(--blue);">Residential</span></td>
+            <td class="mono">$612,000</td><td class="mono" style="color:var(--green);">+$411</td><td class="mono">4.3%</td>
+            <td class="mono" style="color:var(--text-3);">›</td>
+          </tr>
+          <tr class="prop-row" data-cat="mf">
+            <td><button class="eye-btn" onclick="toggleRow(event,this)">👁</button></td>
+            <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#7dd3fc,#c9a227);"><div class="cam">📷</div></div><div><div class="prop-addr">88 Birchwood Court</div><div class="prop-sub">Raleigh, NC 🇺🇸 · Owned 2022</div></div></div></td>
+            <td><span class="cat-tag" style="background:var(--accent-soft);color:var(--accent);">Multi-Family</span></td>
+            <td class="mono">$489,000</td><td class="mono" style="color:var(--green);">+$517</td><td class="mono">5.5%</td>
+            <td class="mono" style="color:var(--text-3);">›</td>
+          </tr>
+          <tr class="prop-row" data-cat="mf">
+            <td><button class="eye-btn" onclick="toggleRow(event,this)">👁</button></td>
+            <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#f87171,#c9a227);"><div class="cam">📷</div></div><div><div class="prop-addr">2210 Harbor View Ln.</div><div class="prop-sub">Tampa, FL 🇺🇸 · Owned 2025</div></div></div></td>
+            <td><span class="cat-tag" style="background:var(--accent-soft);color:var(--accent);">Multi-Family</span></td>
+            <td class="mono">$1,340,000</td><td class="mono" style="color:var(--red);">−$194</td><td class="mono">5.0%</td>
+            <td class="mono" style="color:var(--text-3);">›</td>
+          </tr>
+          <tr class="prop-row" data-cat="rec str">
+            <td><button class="eye-btn" onclick="toggleRow(event,this)">👁</button></td>
+            <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#eacd7c,#7dd3fc);"><div class="cam">📷</div></div><div><div class="prop-addr">17 Sundown Terrace</div><div class="prop-sub">Asheville, NC 🇺🇸 · Owned 2022</div></div></div></td>
+            <td><span class="cat-tag" style="background:var(--green-soft);color:var(--green);">Recreational</span> <span class="cat-tag" style="background:var(--blue-soft);color:var(--blue);">STR ✦</span></td>
+            <td class="mono">$558,000</td><td class="mono" style="color:var(--green);">+$876</td><td class="mono">5.8%</td>
+            <td class="mono" style="color:var(--text-3);">›</td>
+          </tr>
+          <tr class="prop-row" data-cat="com">
+            <td><button class="eye-btn" onclick="toggleRow(event,this)">👁</button></td>
+            <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#4ade80,#12233b);"><div class="cam">📷</div></div><div><div class="prop-addr">5501 Kingsway — Retail Strip (4 CRU)</div><div class="prop-sub">Burnaby, BC 🇨🇦 · Owned 2023</div></div></div></td>
+            <td><span class="cat-tag" style="background:var(--red-soft);color:var(--red);">Commercial</span></td>
+            <td class="mono">$2,150,000</td><td class="mono" style="color:var(--green);">+$2,730</td><td class="mono">5.4%</td>
+            <td class="mono" style="color:var(--text-3);">›</td>
+          </tr>
+          <tr class="prop-row" data-cat="ind">
+            <td><button class="eye-btn" onclick="toggleRow(event,this)">👁</button></td>
+            <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#9aa3b2,#12233b);"><div class="cam">📷</div></div><div><div class="prop-addr">Unit 210 — 1455 Boundary Rd.</div><div class="prop-sub">Vancouver, BC 🇨🇦 · Owned 2024 · Industrial strata</div></div></div></td>
+            <td><span class="cat-tag" style="background:var(--bg-card-2);color:var(--text-2);border:1px solid var(--border);">Industrial</span></td>
+            <td class="mono">$518,000</td><td class="mono" style="color:var(--green);">+$726</td><td class="mono">5.9%</td>
+            <td class="mono" style="color:var(--text-3);">›</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- AI BUBBLE (per-frame demo) -->
+    <div class="ai-bubble" id="aibubble">
+      <div class="ai-panel" id="aipanel">
+        <div class="ai-panel-head"><span>✨ InvestScape AI</span><span style="cursor:pointer;color:var(--text-3);" onclick="toggleAI(event)">✕</span></div>
+        <div class="ai-msgs">
+          <div class="ai-msg-user">Which of my properties has negative cash flow?</div>
+          <div>The numbers indicate two holdings are cash-flow negative this month: Unit 1804 (−$166/mo) and Harbor View Ln. (−$194/mo). Would you like the break-even analysis for either?</div>
+        </div>
+        <div class="ai-input-row">
+          <input placeholder="Ask about your portfolio…">
+          <button class="mic-btn" id="micbtn" onclick="toggleMic(event)">🎤</button>
+        </div>
+        <div class="drag-hint">drag the bubble anywhere · mic = voice-to-text</div>
+      </div>
+      <button class="ai-fab" id="aifab" onclick="toggleAI(event)">✨</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 2: DEAL LIFECYCLE ============ -->
+  <div class="page-label">
+    <span class="eyebrow">Screen Two · Deal Analyzer — Lifecycle &amp; Files</span>
+    <h2>Prospect to Owned, categories, and the deal file room</h2>
+    <p>The status flow that moves an analyzed deal into the Portfolio, the category picker (with custom labels), the per-deal file repository the AI can read, and the export bar. The full deal statement lives below this header in the real app — collapsed here to spotlight the new systems.</p>
+  </div>
+  <div class="app-frame">
+    <div class="ribbon-top">
+      <div class="brand">
+        <svg width="20" height="20" viewBox="0 0 240 260"><polygon points="84,208 112,208 116,80 98,102" fill="#f7f5ef"/><polygon points="156,208 128,208 124,80 142,102" fill="#f7f5ef"/><circle cx="120" cy="78" r="27" fill="none" stroke="var(--gold-500)" stroke-width="4"/><circle cx="120" cy="78" r="7" fill="var(--bg-card)"/><circle cx="120" cy="78" r="4" fill="#f6e1a0"/></svg>
+        <span class="brand-word">Invest<span>Scape</span></span><span class="tier-pill">Pro</span>
+      </div>
+      <div class="right">
+        <div class="search-collapsed" onclick="this.classList.toggle('open');this.querySelector('input').style.display=this.classList.contains('open')?'block':'none';"><span>🔍</span><input placeholder="Search…" style="display:none;"></div>
+        <button class="icon-btn">🌐</button><button class="icon-btn">🔔</button><div class="avatar"></div>
+      </div>
+    </div>
+    <div class="ribbon-bottom">
+      <div class="tabs-main">
+        <span class="tab">Portfolio</span><span class="tab active">Deal Analyzer</span><span class="tab">Development Studio <span class="lock">🔒</span></span><span class="tab">Research</span><span class="tab">Market Intel</span><span class="tab">Community</span><span class="tab">Library</span><span class="tab">Workspace</span>
+      </div>
+      <div class="tabs-sub"><span class="sub-link">Alerts</span><span class="sub-link">Reports</span><span class="sub-link">Settings</span></div>
+    </div>
+
+    <div class="app-body">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;flex-wrap:wrap;">
+        <div style="display:flex;gap:14px;align-items:center;">
+          <div class="thumb" style="width:56px;height:56px;background:linear-gradient(135deg,#c9a227,#12233b);"><div class="cam" style="display:flex;">📷</div></div>
+          <div>
+            <h3 style="font-size:20px;">1120 Eighth Ave.</h3>
+            <div style="font-size:12px;color:var(--text-3);">4-plex · New Westminster, BC 🇨🇦 · <span class="pill pill-green">Accepted offer</span></div>
+          </div>
+        </div>
+        <div class="export-menu">
+          <button class="btn btn-ghost" onclick="toggleExport2(event)">🖨 Export deal</button>
+          <div class="export-pop" id="exportpop2">
+            <div class="export-row"><span>One-page PDF summary</span><span class="pill pill-grey">All</span></div>
+            <div class="export-row"><span>Full deal statement PDF</span><span class="pill pill-gold">Pro</span></div>
+            <div class="export-row"><span>Excel workbook (static)</span><span class="pill pill-gold">Pro</span></div>
+            <div class="export-row"><span>Lender package</span><span class="pill pill-blue">Enterprise</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start;">
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="status-flow">
+              <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);font-weight:600;margin-right:6px;">Deal status</span>
+              <span class="status-step done"><span class="dot"></span>Prospect</span>
+              <span class="status-arrow">→</span>
+              <span class="status-step done"><span class="dot"></span>Under Contract</span>
+              <span class="status-arrow">→</span>
+              <span class="status-step"><span class="dot"></span>Owned</span>
+              <button class="btn btn-gold" style="margin-left:auto;padding:7px 14px;font-size:12px;" onclick="markOwned(this)">Mark as Owned</button>
+            </div>
+            <div style="padding:0 18px 6px;font-size:11.5px;color:var(--text-3);">Marking as Owned moves this deal into your Portfolio with its full analysis history. Pick its categories:</div>
+            <div class="cat-picker">
+              <span class="cat-opt sel" onclick="this.classList.toggle('sel')">Multi-Family</span>
+              <span class="cat-opt" onclick="this.classList.toggle('sel')">Residential</span>
+              <span class="cat-opt" onclick="this.classList.toggle('sel')">Commercial</span>
+              <span class="cat-opt" onclick="this.classList.toggle('sel')">Industrial</span>
+              <span class="cat-opt" onclick="this.classList.toggle('sel')">Farm</span>
+              <span class="cat-opt" onclick="this.classList.toggle('sel')">Recreational</span>
+              <span class="cat-opt add">+ Custom label…</span>
+            </div>
+          </div>
+
+          <div class="card input-card">
+            <h4>📎 Deal Files <span class="pill pill-blue">AI-readable</span></h4>
+            <div class="file-row">
+              <div class="file-icon">📄</div>
+              <div class="file-meta"><div class="file-name">Rent roll — March 2026.pdf</div><div class="file-sub">Uploaded Jun 28 · 1.2 MB · <span class="ai-read">✓ read by AI — 2 units below market</span></div></div>
+              <button class="eye-btn">⬇</button>
+            </div>
+            <div class="file-row">
+              <div class="file-icon">📊</div>
+              <div class="file-meta"><div class="file-name">Strata depreciation report.pdf</div><div class="file-sub">Uploaded Jun 30 · 8.4 MB · <span class="ai-read">✓ read by AI — roof reserve flagged</span></div></div>
+              <button class="eye-btn">⬇</button>
+            </div>
+            <div class="file-row">
+              <div class="file-icon">🖼</div>
+              <div class="file-meta"><div class="file-name">Inspection photos (14).zip</div><div class="file-sub">Uploaded Jul 2 · 46 MB · stored only</div></div>
+              <button class="eye-btn">⬇</button>
+            </div>
+            <div class="dropzone">Drop files here or click to upload — PDF, Excel, images · <strong>Download all</strong> available anytime</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card input-card">
+            <h4>Deal snapshot</h4>
+            <div class="kv-row"><span class="k">Cap rate (on cost)</span><span class="v">4.09%</span></div>
+            <div class="kv-row"><span class="k">Yield with lease-up</span><span class="v">7.9% <span style="color:var(--blue);font-size:10px;">scenario</span></span></div>
+            <div class="kv-row"><span class="k">DSCR at quote</span><span class="v">1.31</span></div>
+            <div class="kv-row"><span class="k">Leverage state</span><span class="v" style="color:var(--green);">Positive</span></div>
+            <div class="kv-row"><span class="k">Analysis modules</span><span class="v">3 active</span></div>
+            <div style="font-size:11px;color:var(--text-3);padding-top:10px;">Full statement &amp; modules collapsed — see Deal Analyzer suite concept.</div>
+          </div>
+          <div class="card input-card">
+            <h4>✨ AI file insight</h4>
+            <div style="font-size:12.5px;color:var(--text-2);">The uploaded rent roll indicates Units 3 and 4 rent about 12% below the Rentcast median for the block. The strata depreciation report flags a roof reserve contribution increase in 2027 — the numbers suggest adding roughly $180/mo to projected operating expenses from that year. Assumptions worth verifying with the strata council.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 3: LIBRARY ============ -->
+  <div class="page-label">
+    <span class="eyebrow">Screen Three · Library</span>
+    <h2>The Formula Library as a learning surface</h2>
+    <p>Document 06 rendered as Formula Cards — category tabs, the formula in engine notation, a plain-English explanation in InvestScape's own words, and a worked example. Six of the 28 entries shown; every acronym in the app hover-links to its card.</p>
+  </div>
+  <div class="app-frame">
+    <div class="ribbon-top">
+      <div class="brand">
+        <svg width="20" height="20" viewBox="0 0 240 260"><polygon points="84,208 112,208 116,80 98,102" fill="#f7f5ef"/><polygon points="156,208 128,208 124,80 142,102" fill="#f7f5ef"/><circle cx="120" cy="78" r="27" fill="none" stroke="var(--gold-500)" stroke-width="4"/><circle cx="120" cy="78" r="7" fill="var(--bg-card)"/><circle cx="120" cy="78" r="4" fill="#f6e1a0"/></svg>
+        <span class="brand-word">Invest<span>Scape</span></span><span class="tier-pill">Pro</span>
+      </div>
+      <div class="right">
+        <div class="search-collapsed open" style="width:240px;"><span>🔍</span><input placeholder="Search 28 formulas…" style="display:block;"></div>
+        <button class="icon-btn">🌐</button><button class="icon-btn">🔔</button><div class="avatar"></div>
+      </div>
+    </div>
+    <div class="ribbon-bottom">
+      <div class="tabs-main">
+        <span class="tab">Portfolio</span><span class="tab">Deal Analyzer</span><span class="tab">Development Studio <span class="lock">🔒</span></span><span class="tab">Research</span><span class="tab">Market Intel</span><span class="tab">Community</span><span class="tab active">Library</span><span class="tab">Workspace</span>
+      </div>
+      <div class="tabs-sub"><span class="sub-link">Glossary</span><span class="sub-link">Guides</span><span class="sub-link">Settings</span></div>
+    </div>
+
+    <div class="app-body">
+      <div class="lib-tabs">
+        <button class="filter-chip active" onclick="filterLib('all',this)">All</button>
+        <button class="filter-chip" onclick="filterLib('cap',this)">Cost of Capital</button>
+        <button class="filter-chip" onclick="filterLib('tvm',this)">Time Value of Money</button>
+        <button class="filter-chip" onclick="filterLib('cfm',this)">Cash Flow Model</button>
+        <button class="filter-chip" onclick="filterLib('perf',this)">Performance</button>
+        <button class="filter-chip" onclick="filterLib('lev',this)">Leverage</button>
+      </div>
+
+      <div class="lib-grid">
+        <div class="card formula-card show" data-lib="perf">
+          <div class="fc-head"><div><div class="fc-name">Capitalization Rate — the IRV triangle</div></div><span class="fc-id">F-404</span></div>
+          <div class="fc-formula">R = I ÷ V &nbsp;·&nbsp; V = I ÷ R &nbsp;·&nbsp; I = V × R</div>
+          <div class="fc-plain">One relationship, three uses: measure a deal's unleveraged yield, price a building from its income, or infer what income a price implies. InvestScape shows two cap rates on every deal — market cap (NOI ÷ price) and yield-on-cost — and never conflates them.</div>
+          <div class="fc-example">NOI $106,000 on a $2,500,000 building → R = 4.24%. At a 4% market cap, that income supports V = $2,650,000.</div>
+          <div class="fc-foot"><span class="pill pill-gold">Core engine</span><span class="pill pill-grey">All tiers</span></div>
+        </div>
+
+        <div class="card formula-card show" data-lib="lev">
+          <div class="fc-head"><div><div class="fc-name">Debt Service Coverage Ratio</div></div><span class="fc-id">F-502</span></div>
+          <div class="fc-formula">DSCR = NOI ÷ Annual Debt Service</div>
+          <div class="fc-plain">The lender's stress question: how many times over does the building's income cover the mortgage? 1.25 is the common commercial floor. Below 1.0, the property can't carry its own loan.</div>
+          <div class="fc-example">NOI $81,000 against $64,800 of annual payments → DSCR 1.25, exactly at a typical lender minimum.</div>
+          <div class="fc-foot"><span class="pill pill-gold">Commercial</span><span class="pill pill-blue">Loan Sizing card</span></div>
+        </div>
+
+        <div class="card formula-card show" data-lib="lev">
+          <div class="fc-head"><div><div class="fc-name">Leverage State</div></div><span class="fc-id">F-505</span></div>
+          <div class="fc-formula">cost of debt &lt; unlevered yield → positive leverage</div>
+          <div class="fc-plain">The mathematics behind "cheap debt makes deals." When the building yields more than the loan costs, borrowing concentrates the spread onto a smaller equity base and raises the equity return. When rates exceed yields, the same arithmetic runs in reverse.</div>
+          <div class="fc-example">A 6.0% building financed at 4.5% interest-only: $300K of equity earns 9.0%. The same building at a 7.5% rate: equity earns just 3.0%.</div>
+          <div class="fc-foot"><span class="pill pill-gold">Commercial</span><span class="pill pill-blue">AI narrative</span></div>
+        </div>
+
+        <div class="card formula-card show" data-lib="perf">
+          <div class="fc-head"><div><div class="fc-name">Net Operating Income — the waterfall</div></div><span class="fc-id">F-401</span></div>
+          <div class="fc-formula">PRI − vacancy + other income − OpEx = NOI</div>
+          <div class="fc-plain">What the building itself earns before any financing or tax effects — the single most important number on the platform. Debt service, depreciation, capex, reserves, and the owner's income taxes are all excluded; a seller's "NOI" that blurs these lines is the most common source of an overstated cap rate.</div>
+          <div class="fc-example">12 units at $1,650/mo plus parking, 4% vacancy, $84,000 expenses → NOI $159,312.</div>
+          <div class="fc-foot"><span class="pill pill-gold">Core engine</span><span class="pill pill-grey">All tiers</span></div>
+        </div>
+
+        <div class="card formula-card show" data-lib="perf">
+          <div class="fc-head"><div><div class="fc-name">Net Present Value</div></div><span class="fc-id">F-410</span></div>
+          <div class="fc-formula">NPV = Σ [CFₜ ÷ (1+r)ᵗ] − Initial Investment</div>
+          <div class="fc-plain">At <em>your</em> required rate of return, is this deal worth more than it costs — and by how many dollars? Positive means it beats your hurdle; zero means it exactly meets it. Better than IRR for ranking deals of different sizes, because it answers in dollars rather than percentages.</div>
+          <div class="fc-example">Cash flows worth $1.40M today against a $1.23M investment → NPV +$167K at a 15% required return.</div>
+          <div class="fc-foot"><span class="pill pill-gold">DCF module</span><span class="pill pill-blue">Offer Comparison</span></div>
+        </div>
+
+        <div class="card formula-card show" data-lib="tvm">
+          <div class="fc-head"><div><div class="fc-name">Present Value of an Annuity</div></div><span class="fc-id">F-205</span></div>
+          <div class="fc-formula">PV = PMT × [(1 − (1+i)⁻ⁿ) ÷ i]</div>
+          <div class="fc-plain">Today's value of a stream of level payments — which makes it the loan formula in reverse: a mortgage is a lender buying your payment stream at a price that yields the contract rate. This one formula powers loan payments, remaining balances, and maximum-loan sizing.</div>
+          <div class="fc-example">$5,400/mo for 25 years at 5.2% (CA semi-annual compounding) prices at about $910,600 — the DSCR-method maximum loan.</div>
+          <div class="fc-foot"><span class="pill pill-gold">Core engine</span><span class="pill pill-grey">All tiers</span></div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--text-3);margin-top:16px;">Showing 6 of 28 formula cards · full set in reference doc 06 · every explanation is original InvestScape copy — no licensed course text.</div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 4: COMMUNITY ============ -->
+  <div class="page-label">
+    <span class="eyebrow">Screen Four · Community</span>
+    <h2>Bullboards for real estate</h2>
+    <p>The Stockhouse pattern adapted: boards per market and topic, Bull/Bear sentiment tags on posts, Verified Pro badges from the license-verification tier, and a composer. Moderation and posting rules ship with the legal review.</p>
+  </div>
+  <div class="app-frame">
+    <div class="ribbon-top">
+      <div class="brand">
+        <svg width="20" height="20" viewBox="0 0 240 260"><polygon points="84,208 112,208 116,80 98,102" fill="#f7f5ef"/><polygon points="156,208 128,208 124,80 142,102" fill="#f7f5ef"/><circle cx="120" cy="78" r="27" fill="none" stroke="var(--gold-500)" stroke-width="4"/><circle cx="120" cy="78" r="7" fill="var(--bg-card)"/><circle cx="120" cy="78" r="4" fill="#f6e1a0"/></svg>
+        <span class="brand-word">Invest<span>Scape</span></span><span class="tier-pill">Pro</span>
+      </div>
+      <div class="right">
+        <div class="search-collapsed" onclick="this.classList.toggle('open');this.querySelector('input').style.display=this.classList.contains('open')?'block':'none';"><span>🔍</span><input placeholder="Search boards…" style="display:none;"></div>
+        <button class="icon-btn">🌐</button><button class="icon-btn">🔔<span class="badge-dot"></span></button><div class="avatar"></div>
+      </div>
+    </div>
+    <div class="ribbon-bottom">
+      <div class="tabs-main">
+        <span class="tab">Portfolio</span><span class="tab">Deal Analyzer</span><span class="tab">Development Studio <span class="lock">🔒</span></span><span class="tab">Research</span><span class="tab">Market Intel</span><span class="tab active">Community</span><span class="tab">Library</span><span class="tab">Workspace</span>
+      </div>
+      <div class="tabs-sub"><span class="sub-link">My posts</span><span class="sub-link">Rules</span><span class="sub-link">Settings</span></div>
+    </div>
+
+    <div class="app-body">
+      <div class="community-layout">
+        <div class="card board-list">
+          <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);font-weight:600;padding:6px 16px 8px;">Market boards</div>
+          <div class="board-row active"><span>Metro Vancouver</span><span class="board-count">1.2K</span></div>
+          <div class="board-row"><span>BC Commercial</span><span class="board-count">438</span></div>
+          <div class="board-row"><span>US Southeast</span><span class="board-count">861</span></div>
+          <div class="board-row"><span>Prairies &amp; Alberta</span><span class="board-count">512</span></div>
+          <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);font-weight:600;padding:14px 16px 8px;">Topic boards</div>
+          <div class="board-row"><span>First Deal Help</span><span class="board-count">2.4K</span></div>
+          <div class="board-row"><span>STR Operators</span><span class="board-count">903</span></div>
+          <div class="board-row"><span>Financing &amp; Lenders</span><span class="board-count">1.1K</span></div>
+          <div class="board-row"><span>Development &amp; Build</span><span class="board-count">377</span></div>
+        </div>
+
+        <div class="card" style="overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);">
+            <div><strong style="font-size:14px;">Metro Vancouver</strong> <span style="font-size:11px;color:var(--text-3);">· 1,247 members · 38 online</span></div>
+            <span class="pill pill-gold">Following</span>
+          </div>
+          <div class="thread-row">
+            <div class="sentiment"><span class="s-tag s-bull">BULL</span></div>
+            <div class="thread-main">
+              <div class="thread-title">Rental completions at decade high — why I think Burnaby rents hold anyway</div>
+              <div class="thread-meta"><span>@yvr_landlord</span><span class="vpro">✓ VERIFIED PRO</span><span>2h ago</span></div>
+            </div>
+            <div class="thread-stats">47 replies<br>▲ 112</div>
+          </div>
+          <div class="thread-row">
+            <div class="sentiment"><span class="s-tag s-q">Q</span></div>
+            <div class="thread-main">
+              <div class="thread-title">First 4-plex under contract in New West — is a 1.31 DSCR enough cushion at renewal?</div>
+              <div class="thread-meta"><span>@eastvan_eric</span><span>5h ago</span><span class="pill pill-grey" style="font-size:9.5px;">Deal attached 🔒</span></div>
+            </div>
+            <div class="thread-stats">23 replies<br>▲ 41</div>
+          </div>
+          <div class="thread-row">
+            <div class="sentiment"><span class="s-tag s-bear">BEAR</span></div>
+            <div class="thread-main">
+              <div class="thread-title">Presale assignments drying up — what I'm seeing in the Brentwood tower pipeline</div>
+              <div class="thread-meta"><span>@towercrane_watch</span><span>9h ago</span></div>
+            </div>
+            <div class="thread-stats">64 replies<br>▲ 89</div>
+          </div>
+          <div class="thread-row">
+            <div class="sentiment"><span class="s-tag s-bull">BULL</span></div>
+            <div class="thread-main">
+              <div class="thread-title">Industrial strata under $600/sqft east of Boundary — the last cheap yield in the city?</div>
+              <div class="thread-meta"><span>@capratechaser</span><span class="vpro">✓ VERIFIED PRO</span><span>1d ago</span></div>
+            </div>
+            <div class="thread-stats">31 replies<br>▲ 57</div>
+          </div>
+          <div class="composer">
+            <input placeholder="Start a discussion on Metro Vancouver… (attach a deal snapshot, tag Bull/Bear)">
+            <button class="btn btn-gold" style="padding:8px 14px;">Post</button>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--text-3);margin-top:14px;">Community content is user opinion, not advice — posting rules, moderation, and disclaimers per the legal consultation checklist. "Deal attached" shares a read-only snapshot, never the user's files.</div>
+    </div>
+  </div>
+
+  <footer>Lighthouse Research Ltd. — InvestScape v2 Shell Concept · All interactions functional in-browser · Import to Figma via Buddy, capturing key states as separate frames · Prepared for internal review</footer>
+</div>
+
+<script>
+function toggleTheme(){
+  const html=document.documentElement, d=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('toggle-label').textContent=d?'Light mode':'Dark mode';
+}
+
+/* collapsible search */
+function openSearch(e){
+  e.stopPropagation();
+  const bar=document.getElementById('searchbar');
+  bar.classList.add('open');
+  document.getElementById('searchinput').style.display='block';
+  document.getElementById('searchkbd').style.display='inline';
+  document.getElementById('searchinput').focus();
+}
+document.addEventListener('click',()=>{ // collapse on outside click
+  const bar=document.getElementById('searchbar');
+  if(bar && bar.classList.contains('open') && document.activeElement.id!=='searchinput'){
+    bar.classList.remove('open');
+    document.getElementById('searchinput').style.display='none';
+    document.getElementById('searchkbd').style.display='none';
+  }
+  document.getElementById('exportpop')?.classList.remove('open');
+  document.getElementById('exportpop2')?.classList.remove('open');
+  document.getElementById('langpop')?.classList.remove('open');
+});
+
+/* customize mode + KPI drag */
+let locked=false;
+function toggleCustomize(){
+  if(locked) return;
+  const sw=document.getElementById('customize-switch');
+  sw.classList.toggle('on');
+  const frame=document.getElementById('frame-portfolio');
+  frame.classList.toggle('customizing');
+  const on=sw.classList.contains('on');
+  document.getElementById('lock-icon').style.display=on?'inline':'none';
+  document.querySelectorAll('#kpi-row .stat').forEach(s=>s.setAttribute('draggable',on));
+}
+function lockLayout(){
+  locked=!locked;
+  const li=document.getElementById('lock-icon');
+  li.textContent=locked?'🔒':'🔓';
+  if(locked){
+    document.getElementById('customize-switch').classList.remove('on');
+    document.getElementById('frame-portfolio').classList.remove('customizing');
+    document.querySelectorAll('#kpi-row .stat').forEach(s=>s.setAttribute('draggable',false));
+  }
+}
+/* HTML5 drag reorder for KPI cards */
+let dragged=null;
+const kpiRow=document.getElementById('kpi-row');
+kpiRow.addEventListener('dragstart',e=>{dragged=e.target.closest('.stat');});
+kpiRow.addEventListener('dragover',e=>{e.preventDefault();});
+kpiRow.addEventListener('drop',e=>{
+  e.preventDefault();
+  const target=e.target.closest('.stat');
+  if(dragged && target && dragged!==target){
+    const nodes=[...kpiRow.children];
+    kpiRow.insertBefore(dragged, nodes.indexOf(dragged)<nodes.indexOf(target)?target.nextSibling:target);
+  }
+});
+
+/* portfolio category filter */
+function filterCat(cat,btn){
+  document.querySelectorAll('.filter-bar .filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#frame-portfolio .prop-row').forEach(r=>{
+    r.style.display=(cat==='all'||r.dataset.cat.split(' ').includes(cat))?'':'none';
+  });
+}
+/* eye toggle */
+function toggleRow(e,btn){
+  e.stopPropagation();
+  const row=btn.closest('tr');
+  row.classList.toggle('dimmed');
+  btn.textContent=row.classList.contains('dimmed')?'🚫':'👁';
+}
+
+/* export menus */
+function toggleExport(e){e.stopPropagation();document.getElementById('exportpop').classList.toggle('open');}
+function toggleExport2(e){e.stopPropagation();document.getElementById('exportpop2').classList.toggle('open');}
+
+/* language switcher (demo dictionary) */
+const I18N={
+ en:{portfolio:'Portfolio',analyzer:'Deal Analyzer',devstudio:'Development Studio',research:'Research',intel:'Market Intel',community:'Community',library:'Library',workspace:'Workspace',alerts:'Alerts',reports:'Reports',settings:'Settings',myportfolio:'My Portfolio',export:'Export',addprop:'Add Property',totalvalue:'Total Value',totalequity:'Total Equity',cashflow:'Monthly Cash Flow',avgcap:'Avg Cap Rate',occupancy:'Occupancy',customize:'Customize',fall:'All (7)',fres:'Residential',thprop:'Property',thvalue:'Value',thcf:'Cash Flow / mo'},
+ fr:{portfolio:'Portefeuille',analyzer:'Analyseur de transactions',devstudio:'Studio de développement',research:'Recherche',intel:'Veille de marché',community:'Communauté',library:'Bibliothèque',workspace:'Espace de travail',alerts:'Alertes',reports:'Rapports',settings:'Paramètres',myportfolio:'Mon portefeuille',export:'Exporter',addprop:'Ajouter une propriété',totalvalue:'Valeur totale',totalequity:'Capitaux propres',cashflow:'Flux de trésorerie / mois',avgcap:'Taux de capitalisation moyen',occupancy:"Taux d'occupation",customize:'Personnaliser',fall:'Toutes (7)',fres:'Résidentiel',thprop:'Propriété',thvalue:'Valeur',thcf:'Flux / mois'},
+ zht:{portfolio:'投資組合',analyzer:'交易分析器',devstudio:'開發工作室',research:'研究',intel:'市場情報',community:'社群',library:'公式庫',workspace:'工作區',alerts:'提醒',reports:'報告',settings:'設定',myportfolio:'我的投資組合',export:'匯出',addprop:'新增物業',totalvalue:'總價值',totalequity:'總權益',cashflow:'每月現金流',avgcap:'平均資本化率',occupancy:'出租率',customize:'自訂',fall:'全部 (7)',fres:'住宅',thprop:'物業',thvalue:'價值',thcf:'現金流 / 月'},
+ zhs:{portfolio:'投资组合',analyzer:'交易分析器',devstudio:'开发工作室',research:'研究',intel:'市场情报',community:'社区',library:'公式库',workspace:'工作区',alerts:'提醒',reports:'报告',settings:'设置',myportfolio:'我的投资组合',export:'导出',addprop:'添加物业',totalvalue:'总价值',totalequity:'总权益',cashflow:'每月现金流',avgcap:'平均资本化率',occupancy:'出租率',customize:'自定义',fall:'全部 (7)',fres:'住宅',thprop:'物业',thvalue:'价值',thcf:'现金流 / 月'}
+};
+function toggleLang(e){e.stopPropagation();document.getElementById('langpop').classList.toggle('open');}
+function setLang(code,row){
+  document.querySelectorAll('.lang-row').forEach(r=>{r.classList.remove('sel');r.querySelector('span:last-child')?.remove?.();});
+  document.querySelectorAll('#frame-portfolio [data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(I18N[code][k]) el.textContent=I18N[code][k];
+  });
+  document.querySelectorAll('.lang-row').forEach(r=>r.classList.remove('sel'));
+  row.classList.add('sel');
+  document.getElementById('langpop').classList.remove('open');
+}
+
+/* deal status */
+function markOwned(btn){
+  const steps=btn.parentElement.querySelectorAll('.status-step');
+  steps[2].classList.add('done');
+  btn.textContent='✓ In Portfolio';
+  btn.style.background='var(--green)';
+}
+
+/* library tabs */
+function filterLib(cat,btn){
+  document.querySelectorAll('.lib-tabs .filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.formula-card').forEach(c=>{
+    c.classList.toggle('show', cat==='all'||c.dataset.lib===cat);
+  });
+}
+
+/* AI bubble: open/close, mic, drag */
+function toggleAI(e){e.stopPropagation();document.getElementById('aipanel').classList.toggle('open');}
+function toggleMic(e){e.stopPropagation();document.getElementById('micbtn').classList.toggle('rec');}
+(function makeDraggable(){
+  const bubble=document.getElementById('aibubble'), fab=document.getElementById('aifab');
+  const frame=document.getElementById('frame-portfolio');
+  let sx,sy,ox,oy,moved=false,down=false;
+  fab.addEventListener('mousedown',e=>{
+    down=true;moved=false;sx=e.clientX;sy=e.clientY;
+    const r=bubble.getBoundingClientRect(),f=frame.getBoundingClientRect();
+    ox=r.left-f.left;oy=r.top-f.top;
+    bubble.style.left=ox+'px';bubble.style.top=oy+'px';bubble.style.right='auto';bubble.style.bottom='auto';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!down)return;
+    const dx=e.clientX-sx,dy=e.clientY-sy;
+    if(Math.abs(dx)+Math.abs(dy)>4)moved=true;
+    bubble.style.left=(ox+dx)+'px';bubble.style.top=(oy+dy)+'px';
+  });
+  document.addEventListener('mouseup',()=>{down=false;});
+  fab.addEventListener('click',e=>{if(moved){e.stopPropagation();}},true);
+})();
+</script>
+
+</body>
+</html>

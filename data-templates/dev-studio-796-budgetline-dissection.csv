@@ -1,0 +1,60 @@
+DevProject,Group,Subgroup,Label,DriverType,DriverRate,DriverBasis,Amount,IsContingency
+796 Main Street,Land,,Land Cost (Purchase Price),fixed_$,,,22000000.0,False
+796 Main Street,Land,,Land Transfer Tax - Purchase Bare Trust,fixed_$,,,0.0,False
+796 Main Street,Land,,Land Broker Fee,fixed_$,,,150000.0,False
+796 Main Street,Land,,Community Amenity Contribution Charges,fixed_$,,,0.0,False
+796 Main Street,Land,,Site Remidiation,fixed_$,,,50000.0,False
+796 Main Street,Land,,Other - Land Holding Cost,fixed_$,,,1154490.84,False
+796 Main Street,Hard,,General Requirements,fixed_$,,,35404980.0,False
+796 Main Street,Hard,,Tenant Improvements (Commercial Only),fixed_$,,,0.0,False
+796 Main Street,Hard,,Demolision,fixed_$,,,200000.0,False
+796 Main Street,Hard,,Other - Tenant Relocation Costs,fixed_$,,,50000.0,False
+796 Main Street,Hard,,Other - Offsite Costs,fixed_$,,,150000.0,False
+796 Main Street,Hard,,Other - TDM Measure Costs,fixed_$,,,100000.0,False
+796 Main Street,Hard,,Hard Cost Contingency,fixed_$,,,1795249.0,True
+796 Main Street,Soft,Design,Architectural Fees (Design & Monitoring),fixed_$,,,600000.0,False
+796 Main Street,Soft,Design,Engineering Work,fixed_$,,,768826.16,False
+796 Main Street,Soft,Design,Landscape Architect,fixed_$,,,25000.0,False
+796 Main Street,Soft,Design,Interior Designer,fixed_$,,,50000.0,False
+796 Main Street,Soft,General Development,Construction Loan Draw Fees,fixed_$,,,11250.0,False
+796 Main Street,Soft,General Development,Mortgage Discharge Fees,fixed_$,,,7500.0,False
+796 Main Street,Soft,General Development,Strata Registration,fixed_$,,,30000.0,False
+796 Main Street,Soft,General Development,Insurance,fixed_$,,,175000.0,False
+796 Main Street,Soft,General Development,Accounting,fixed_$,,,30000.0,False
+796 Main Street,Soft,General Development,Legal,fixed_$,,,300000.0,False
+796 Main Street,Soft,General Development,Legal - Air Space Parcel Creation,fixed_$,,,145000.0,False
+796 Main Street,Soft,General Development,Project Management,fixed_$,,,1131006.87,False
+796 Main Street,Soft,General Development,Property Taxes During Development,fixed_$,,,200000.0,False
+796 Main Street,Soft,Third Party Consultants,Environmental Reports,fixed_$,,,10000.0,False
+796 Main Street,Soft,Third Party Consultants,Geotechnical Reports,fixed_$,,,22000.0,False
+796 Main Street,Soft,Third Party Consultants,Cost Consultant - Initial Budget Review,fixed_$,,,12000.0,False
+796 Main Street,Soft,Third Party Consultants,Cost Consultant - Draw Reports,fixed_$,,,30000.0,False
+796 Main Street,Soft,Third Party Consultants,Appraisals,fixed_$,,,20000.0,False
+796 Main Street,Soft,Third Party Consultants,Survey -Initial,fixed_$,,,15000.0,False
+796 Main Street,Soft,Third Party Consultants,Survey - Completion,fixed_$,,,82000.0,False
+796 Main Street,Soft,Permits & Fees,Development Permit Fee,fixed_$,,,0.0,False
+796 Main Street,Soft,Permits & Fees,Building Permit Fees,fixed_$,,,158868.5,False
+796 Main Street,Soft,Permits & Fees,Development Cost Levies - Market Residential,fixed_$,,,2048895.87,False
+796 Main Street,Soft,Permits & Fees,Development Cost Levies - Commercial,fixed_$,,,130718.21,False
+796 Main Street,Soft,Permits & Fees,Development Cost Charges (Residential),fixed_$,,,139899.75,False
+796 Main Street,Soft,Permits & Fees,Development Cost Charges (Commercial),fixed_$,,,5870.01,False
+796 Main Street,Soft,Permits & Fees,Development Cost Charges (Translink - Residential),fixed_$,,,119351.25,False
+796 Main Street,Soft,Permits & Fees,Development Cost Charges (Translink - Commercial),fixed_$,,,7889.8,False
+796 Main Street,Soft,Permits & Fees,Water Connection Fees,fixed_$,,,113477.5,False
+796 Main Street,Soft,Permits & Fees,Sewer Connection Fees,fixed_$,,,113477.5,False
+796 Main Street,Soft,Permits & Fees,Street Use Permits,fixed_$,,,15000.0,False
+796 Main Street,Soft,Permits & Fees,Hydro Hook-Up Fees,fixed_$,,,50000.0,False
+796 Main Street,Soft,Permits & Fees,Telus/Shaw Connection Fees,fixed_$,,,50000.0,False
+796 Main Street,Soft,Sales & Marketing,Marketing Costs,fixed_$,,,1150162.5,False
+796 Main Street,Soft,Sales & Marketing,Realtor Commissions (50% Up Front),fixed_$,,,1298955.0,False
+796 Main Street,Soft,Warranty,New Home Warranty Fees + Bond,fixed_$,,,69375.0,False
+796 Main Street,Soft,Warranty,HPO Fees,fixed_$,,,75000.0,False
+796 Main Street,Soft,,Soft Cost Contingency,fixed_$,,,322403.34,True
+796 Main Street,Financing,,Interest Budget - 1st Mortgage,fixed_$,,,3232173.91,False
+796 Main Street,Financing,,Interest Budget - 2nd Mortgage,fixed_$,,,0.0,False
+796 Main Street,Financing,,Interest Budget - DPI Facility,fixed_$,,,115000.0,False
+796 Main Street,Financing,,Commitment Fee - 1st Mortgage,fixed_$,,,600000.0,False
+796 Main Street,Financing,,Commitment Fee - 2nd Mortgage,fixed_$,,,0.0,False
+796 Main Street,Financing,,Commitment Fee - DPI Facility,fixed_$,,,14375.0,False
+796 Main Street,Financing,,Third Party Guarantee/Cost-Overrun Fees,fixed_$,,,150000.0,False
+796 Main Street,Financing,,Mortgage Brokerage Fee,fixed_$,,,300000.0,False

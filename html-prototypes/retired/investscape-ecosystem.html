@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InvestScape — Ecosystem Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold-300:#eacd7c;
+    --gold-500:#c9a227;
+    --white-mark:#f7f5ef;
+  }
+  html[data-theme="dark"]{
+    --bg:#0e1117;
+    --bg-elevated:#141821;
+    --bg-card:#171b26;
+    --bg-card-2:#1c2130;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
+    --text-1:#eef0f4;
+    --text-2:#9aa3b2;
+    --text-3:#67707e;
+    --accent:#d9b04a;
+    --accent-soft:rgba(217,176,74,0.14);
+    --green:#4ade80;
+    --green-soft:rgba(74,222,128,0.12);
+    --red:#f87171;
+    --red-soft:rgba(248,113,113,0.12);
+    --blue:#7dd3fc;
+    --shadow:0 24px 60px rgba(0,0,0,0.4);
+  }
+  html[data-theme="light"]{
+    --bg:#f5f6f8;
+    --bg-elevated:#ffffff;
+    --bg-card:#ffffff;
+    --bg-card-2:#fbfbfc;
+    --border:rgba(15,23,42,0.08);
+    --border-strong:rgba(15,23,42,0.15);
+    --text-1:#14161c;
+    --text-2:#5b6472;
+    --text-3:#8b95a5;
+    --accent:#a8791a;
+    --accent-soft:rgba(168,121,26,0.09);
+    --green:#16a34a;
+    --green-soft:rgba(22,163,74,0.09);
+    --red:#dc2626;
+    --red-soft:rgba(220,38,38,0.09);
+    --blue:#0284c7;
+    --shadow:0 24px 50px rgba(15,23,42,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text-1);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    transition:background 0.25s ease, color 0.25s ease;
+  }
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;margin:0;}
+  a{color:inherit;}
+  .mono{font-family:'DM Mono',monospace;}
+  .eyebrow{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+
+  /* THEME TOGGLE */
+  .theme-toggle{
+    position:fixed;top:20px;right:28px;z-index:50;
+    display:flex;align-items:center;gap:8px;
+    background:var(--bg-card);border:1px solid var(--border-strong);
+    border-radius:999px;padding:6px 14px 6px 6px;cursor:pointer;
+    box-shadow:var(--shadow);font-size:12.5px;color:var(--text-2);
+  }
+  .theme-toggle .knob{
+    width:22px;height:22px;border-radius:50%;background:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .theme-toggle svg{width:13px;height:13px;}
+
+  /* INTRO */
+  .intro{padding:90px 0 60px;border-bottom:1px solid var(--border);}
+  .intro h1{font-size:clamp(28px,3.6vw,42px);max-width:780px;letter-spacing:-0.01em;}
+  .intro p{max-width:680px;color:var(--text-2);font-size:15px;margin-top:16px;}
+  .intro .note{font-size:12.5px;color:var(--text-3);margin-top:20px;border-left:2px solid var(--accent);padding-left:14px;}
+
+  .page-label{padding:64px 0 6px;}
+  .page-label .eyebrow{display:block;margin-bottom:6px;}
+  .page-label h2{font-size:24px;}
+  .page-label p{color:var(--text-2);font-size:13.5px;margin-top:8px;max-width:640px;}
+
+  /* SHARED NAV */
+  .app-frame{border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);margin:32px 0 80px;background:var(--bg-elevated);}
+  .app-nav{
+    background:var(--bg-card);border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 24px;gap:24px;
+  }
+  .nav-left{display:flex;align-items:center;gap:28px;}
+  .brand{display:flex;align-items:center;gap:8px;}
+  .brand-word{font-family:'Fraunces',serif;font-size:15px;}
+  .brand-word span{color:var(--accent);}
+  .nav-links{display:flex;gap:22px;font-size:13px;color:var(--text-2);}
+  .nav-links .active{color:var(--text-1);font-weight:500;position:relative;}
+  .search-box{
+    display:flex;align-items:center;gap:8px;background:var(--bg);
+    border:1px solid var(--border);border-radius:6px;padding:7px 10px;
+    font-size:12.5px;color:var(--text-3);min-width:200px;
+  }
+  .kbd{background:var(--bg-card-2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:10.5px;color:var(--text-3);}
+  .nav-right{display:flex;align-items:center;gap:16px;}
+  .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold-300));}
+
+  .app-body{padding:26px 24px 32px;background:var(--bg);}
+
+  /* BUTTONS / PILLS */
+  .btn{border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;cursor:pointer;}
+  .btn-gold{background:var(--accent);color:#0e1117;}
+  .btn-ghost{background:transparent;border:1px solid var(--border-strong);color:var(--text-1);}
+  .pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;}
+  .pill-blue{background:rgba(125,211,252,0.12);color:var(--blue);}
+  .pill-gold{background:var(--accent-soft);color:var(--accent);}
+  .pill-green{background:var(--green-soft);color:var(--green);}
+
+  /* CARDS / STATS */
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;}
+  .stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+  @media(max-width:900px){.stat-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{padding:16px 18px;}
+  .stat-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;}
+  .stat-value{font-size:20px;}
+  .delta{font-size:11.5px;margin-top:5px;}
+  .delta.up{color:var(--green);}
+  .delta.down{color:var(--red);}
+
+  /* PORTFOLIO PAGE */
+  .portfolio-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;}
+  @media(max-width:960px){.portfolio-layout{grid-template-columns:1fr;}}
+  .holdings-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .holdings-table th{
+    text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;
+    color:var(--text-3);padding:12px 16px;border-bottom:1px solid var(--border);
+  }
+  .holdings-table td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .prop-cell{display:flex;align-items:center;gap:10px;}
+  .thumb{width:36px;height:36px;border-radius:6px;flex-shrink:0;}
+  .prop-addr{font-weight:500;font-size:13px;}
+  .prop-sub{font-size:11px;color:var(--text-3);}
+  .side-card{padding:18px 18px 6px;margin-bottom:16px;}
+  .side-card h4{font-size:13px;margin-bottom:12px;font-family:'Inter',sans-serif;font-weight:600;color:var(--text-1);}
+  .watch-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+  .watch-row:last-child{border-bottom:none;}
+  .watch-name{color:var(--text-1);}
+  .watch-price{color:var(--text-2);}
+  .forum-row{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:12px;color:var(--text-2);border-bottom:1px solid var(--border);}
+  .forum-row:last-child{border-bottom:none;}
+  .mini-avatar{width:20px;height:20px;border-radius:50%;flex-shrink:0;}
+
+  /* RESEARCH PAGE */
+  .research-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;}
+  @media(max-width:960px){.research-layout{grid-template-columns:1fr;}}
+  .feature-card{padding:0;overflow:hidden;margin-bottom:20px;}
+  .feature-thumb{height:160px;background:linear-gradient(135deg, var(--accent-soft), var(--bg-card-2));display:flex;align-items:flex-end;padding:16px;}
+  .feature-body{padding:20px;}
+  .feature-body h3{font-size:19px;margin-bottom:8px;}
+  .feature-body p{font-size:13px;color:var(--text-2);margin:0 0 14px;}
+  .article-row{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--border);}
+  .article-row:last-child{border-bottom:none;}
+  .article-thumb{width:84px;height:64px;border-radius:6px;flex-shrink:0;}
+  .article-title{font-size:14.5px;font-weight:500;margin-bottom:6px;}
+  .article-meta{font-size:11.5px;color:var(--text-3);display:flex;align-items:center;gap:10px;}
+  .ticker-row{display:flex;justify-content:space-between;font-size:12.5px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .ticker-row:last-child{border-bottom:none;}
+  .contrib-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+  .contrib-row:last-child{border-bottom:none;}
+  .contrib-name{font-size:12.5px;font-weight:500;}
+  .contrib-sub{font-size:10.5px;color:var(--text-3);}
+  .tag-cloud{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:14px;}
+
+  /* WORKSPACE PAGE */
+  .workspace-layout{display:grid;grid-template-columns:200px 1fr;gap:0;min-height:520px;}
+  @media(max-width:900px){.workspace-layout{grid-template-columns:1fr;}}
+  .ws-tree{background:var(--bg-card);border-right:1px solid var(--border);padding:18px 14px;}
+  .tree-item{font-size:12.5px;color:var(--text-2);padding:6px 8px;border-radius:5px;cursor:pointer;}
+  .tree-item.active{background:var(--accent-soft);color:var(--text-1);font-weight:500;}
+  .tree-sub{padding-left:16px;}
+  .ws-main{padding:24px 28px;}
+  .block-checklist{list-style:none;padding:0;margin:14px 0;}
+  .block-checklist li{font-size:13.5px;padding:5px 0;color:var(--text-2);display:flex;align-items:center;gap:8px;}
+  .check{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border-strong);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;}
+  .check.done{background:var(--green);border-color:var(--green);color:#0e1117;}
+  .callout{background:var(--accent-soft);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-size:13px;color:var(--text-1);margin:16px 0;display:flex;gap:10px;}
+  .metrics-block{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:16px 0;}
+  .metrics-block .row{display:flex;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--border);font-size:12.5px;}
+  .metrics-block .row:last-child{border-bottom:none;}
+  .chart-panel{border-top:1px solid var(--border);padding:20px 0 0;margin-top:24px;}
+  .chart-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .range-tabs{display:flex;gap:4px;}
+  .range-tab{font-size:11.5px;padding:4px 10px;border-radius:5px;color:var(--text-3);cursor:pointer;}
+  .range-tab.active{background:var(--bg-card-2);color:var(--text-1);}
+  .legend{display:flex;gap:16px;font-size:11.5px;color:var(--text-2);}
+  .legend-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:5px;}
+
+  footer{padding:40px 0 60px;text-align:center;color:var(--text-3);font-size:12px;}
+</style>
+</head>
+<body>
+
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span id="toggle-label">Dark mode</span>
+  <span class="knob">
+    <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="#0e1117" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </span>
+</div>
+
+<div class="wrap">
+
+  <section class="intro">
+    <span class="eyebrow">Lighthouse Research Ltd. — Ecosystem Concept</span>
+    <h1>InvestScape, as a working system.</h1>
+    <p>Four screens sharing one navigation shell, one type system, and one set of components — the way an actual product would, rather than four disconnected hero shots. Each screen borrows a <em>functional pattern</em> from a category leader (portfolio tracking, research feeds, workspace notes, live charting) without copying any of their layouts, colors, or content verbatim.</p>
+    <p class="note">Everything below is original layout and placeholder data built to explore feel and structure — not a reproduction of any existing product's design or branding.</p>
+  </section>
+
+  <div class="page-label">
+    <span class="eyebrow">Screen One</span>
+    <h2>Login — rebranded to InvestScape</h2>
+    <p>The mark now carries its own skyline — the beam falls across an ascending set of bars, tying the "light cast outward" idea directly to the platform's core metaphor: surveying a landscape of opportunities.</p>
+  </div>
+  <div style="display:flex;justify-content:center;margin:40px 0 80px;">
+    <div class="card" style="width:400px;padding:44px 36px 36px;text-align:center;">
+      <div style="display:flex;justify-content:center;margin-bottom:18px;">
+        <svg width="180" height="90" viewBox="0 0 320 160">
+          <defs>
+            <radialGradient id="loginHalo" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#f6e1a0" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#f6e1a0" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="70" cy="58" r="34" fill="url(#loginHalo)"/>
+          <polygon points="46,146 66,146 69,60 58,76" fill="#f7f5ef"/>
+          <polygon points="94,146 74,146 71,60 82,76" fill="#f7f5ef"/>
+          <circle cx="70" cy="58" r="21" fill="none" stroke="var(--gold-500)" stroke-width="2.5"/>
+          <circle cx="70" cy="58" r="5" fill="var(--bg-card)"/>
+          <circle cx="70" cy="58" r="3" fill="#f6e1a0"/>
+          <line x1="118" y1="146" x2="300" y2="146" stroke="var(--text-3)" stroke-width="1" opacity="0.3"/>
+          <rect x="126" y="120" width="14" height="26" fill="#eacd7c" opacity="0.55"/>
+          <rect x="146" y="104" width="14" height="42" fill="#eacd7c" opacity="0.7"/>
+          <rect x="166" y="86" width="14" height="60" fill="var(--gold-500)" opacity="0.9"/>
+          <rect x="186" y="70" width="14" height="76" fill="var(--gold-500)"/>
+          <rect x="206" y="94" width="14" height="52" fill="#eacd7c" opacity="0.75"/>
+          <rect x="226" y="112" width="14" height="34" fill="#eacd7c" opacity="0.55"/>
+        </svg>
+      </div>
+      <div style="font-family:'Fraunces',serif;font-size:26px;">Invest<span style="color:var(--gold-500);">Scape</span></div>
+      <div style="font-size:12.5px;color:var(--text-2);font-style:italic;font-family:'Fraunces',serif;margin-top:4px;">"Survey the whole landscape."</div>
+      <div style="text-align:left;margin-top:30px;">
+        <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);display:block;margin-bottom:6px;">Email</span>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:11px 12px;font-size:14px;margin-bottom:16px;">eric@lighthouseresearch.ca</div>
+        <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);display:block;margin-bottom:6px;">Password</span>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:11px 12px;font-size:14px;margin-bottom:20px;">••••••••••••</div>
+        <button class="btn btn-gold" style="width:100%;padding:12px;">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-label">
+    <span class="eyebrow">Screen Two · Stockhouse-inspired</span>
+    <h2>Portfolio</h2>
+    <p>Dense, data-forward, table-first — built for someone scanning holdings the way an investor scans a screener, with a market watchlist and community pulse sitting alongside.</p>
+  </div>
+  <div class="app-frame">
+    <div class="app-nav">
+      <div class="nav-left">
+        <div class="brand">
+          <svg width="20" height="20" viewBox="0 0 240 260"><polygon points="84,208 112,208 116,80 98,102" fill="#f7f5ef"/><polygon points="156,208 128,208 124,80 142,102" fill="#f7f5ef"/><circle cx="120" cy="78" r="27" fill="none" stroke="var(--gold-500)" stroke-width="4"/><circle cx="120" cy="78" r="7" fill="var(--bg-card)"/><circle cx="120" cy="78" r="4" fill="#f6e1a0"/></svg>
+          <span class="brand-word">Invest<span>Scape</span></span>
+        </div>
+        <div class="nav-links">
+          <span class="active">Portfolio</span>
+          <span>Deal Analyzer</span>
+          <span>Research</span>
+          <span>Market Intel</span>
+          <span>Workspace</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="search-box">Search markets, deals… <span class="kbd">⌘K</span></div>
+        <div class="avatar"></div>
+      </div>
+    </div>
+    <div class="app-body">
+      <div class="stat-row">
+        <div class="card stat"><div class="stat-label">Total Value</div><div class="stat-value mono">$4.82M</div><div class="delta up">▲ 3.1% QoQ</div></div>
+        <div class="card stat"><div class="stat-label">Total Equity</div><div class="stat-value mono">$1.96M</div><div class="delta up">▲ 5.4% YTD</div></div>
+        <div class="card stat"><div class="stat-label">Monthly Cash Flow</div><div class="stat-value mono">$6,340</div><div class="delta up">▲ $410 MoM</div></div>
+        <div class="card stat"><div class="stat-label">Avg Cap Rate</div><div class="stat-value mono">6.1%</div><div class="delta down">▼ 0.2 pts</div></div>
+        <div class="card stat"><div class="stat-label">Occupancy</div><div class="stat-value mono">96%</div><div class="delta up">▲ 2 pts</div></div>
+      </div>
+
+      <div class="portfolio-layout">
+        <div class="card">
+          <table class="holdings-table">
+            <tr><th>Property</th><th>Value</th><th>Equity</th><th>Cash Flow</th><th>Cap Rate</th><th>Trend</th></tr>
+            <tr>
+              <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#c9a227,#eacd7c);"></div><div><div class="prop-addr">142 Maple Grove Ave.</div><div class="prop-sub">Single-Family · Austin, TX</div></div></div></td>
+              <td class="mono">$612,000</td><td class="mono">$248,000</td><td class="mono" style="color:var(--green);">+$412</td><td class="mono">6.4%</td>
+              <td><svg width="70" height="24" viewBox="0 0 70 24"><polyline points="0,18 12,15 24,16 36,9 48,11 60,5 70,3" fill="none" stroke="var(--green)" stroke-width="2"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#7dd3fc,#c9a227);"></div><div><div class="prop-addr">88 Birchwood Court</div><div class="prop-sub">Duplex · Raleigh, NC</div></div></div></td>
+              <td class="mono">$489,000</td><td class="mono">$171,000</td><td class="mono" style="color:var(--green);">+$298</td><td class="mono">5.9%</td>
+              <td><svg width="70" height="24" viewBox="0 0 70 24"><polyline points="0,10 12,12 24,8 36,14 48,10 60,13 70,9" fill="none" stroke="var(--green)" stroke-width="2"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#f87171,#c9a227);"></div><div><div class="prop-addr">2210 Harbor View Ln.</div><div class="prop-sub">Multifamily (6-unit) · Tampa, FL</div></div></div></td>
+              <td class="mono">$1,340,000</td><td class="mono">$402,000</td><td class="mono" style="color:var(--red);">−$120</td><td class="mono">5.2%</td>
+              <td><svg width="70" height="24" viewBox="0 0 70 24"><polyline points="0,6 12,9 24,7 36,12 48,15 60,17 70,20" fill="none" stroke="var(--red)" stroke-width="2"/></svg></td>
+            </tr>
+            <tr>
+              <td><div class="prop-cell"><div class="thumb" style="background:linear-gradient(135deg,#eacd7c,#7dd3fc);"></div><div><div class="prop-addr">17 Sundown Terrace</div><div class="prop-sub">STR · Asheville, NC</div></div></div></td>
+              <td class="mono">$558,000</td><td class="mono">$233,000</td><td class="mono" style="color:var(--green);">+$780</td><td class="mono">7.8%</td>
+              <td><svg width="70" height="24" viewBox="0 0 70 24"><polyline points="0,20 12,14 24,17 36,8 48,12 60,4 70,6" fill="none" stroke="var(--green)" stroke-width="2"/></svg></td>
+            </tr>
+          </table>
+        </div>
+
+        <div>
+          <div class="card side-card">
+            <h4>Market Watchlist</h4>
+            <div class="watch-row"><span class="watch-name">Austin, TX</span><span class="watch-price mono">$412K <span style="color:var(--green);">▲1.2%</span></span></div>
+            <div class="watch-row"><span class="watch-name">Raleigh, NC</span><span class="watch-price mono">$368K <span style="color:var(--green);">▲0.6%</span></span></div>
+            <div class="watch-row"><span class="watch-name">Tampa, FL</span><span class="watch-price mono">$395K <span style="color:var(--red);">▼0.3%</span></span></div>
+            <div class="watch-row"><span class="watch-name">Boise, ID</span><span class="watch-price mono">$447K <span style="color:var(--green);">▲2.1%</span></span></div>
+          </div>
+          <div class="card side-card">
+            <h4>Community Pulse</h4>
+            <div class="forum-row"><div class="mini-avatar" style="background:#c9a227;"></div>"Cap rates holding in the Sun Belt despite rate cuts…"</div>
+            <div class="forum-row"><div class="mini-avatar" style="background:#7dd3fc;"></div>"Anyone underwriting STR in the Smokies right now?"</div>
+            <div class="forum-row"><div class="mini-avatar" style="background:#f87171;"></div>"Insurance premiums up 18% in coastal FL this cycle."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-label">
+    <span class="eyebrow">Screen Three · Seeking Alpha-inspired</span>
+    <h2>Research</h2>
+    <p>A feed built for analysis, not headlines — a featured deep-dive up top, a scannable list below, and a sidebar carrying the numbers and voices that give the feed authority.</p>
+  </div>
+  <div class="app-frame">
+    <div class="app-nav">
+      <div class="nav-left">
+        <div class="brand">
+          <svg width="20" height="20" viewBox="0 0 240 260"><polygon points="84,208 112,208 116,80 98,102" fill="#f7f5ef"/><polygon points="156,208 128,208 124,80 142,102" fill="#f7f5ef"/><circle cx="120" cy="78" r="27" fill="none" stroke="var(--gold-500)" stroke-width="4"/><circle cx="120" cy="78" r="7" fill="var(--bg-card)"/><circle cx="120" cy="78" r="4" fill="#f6e1a0"/></svg>
+          <span class="brand-word">Invest<span>Scape</span></span>
+        </div>
+        <div class="nav-links">
+          <span>Portfolio</span>
+          <span>Deal Analyzer</span>
+          <span class="active">Research</span>
+          <span>Market Intel</span>
+          <span>Workspace</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="search-box">Search markets, deals… <span class="kbd">⌘K</span></div>
+        <div class="avatar"></div>
+      </div>
+    </div>
+    <div class="app-body">
+      <div class="research-layout">
+        <div>
+          <div class="card feature-card">
+            <div class="feature-thumb"><span class="pill pill-gold">AI Analysis</span></div>
+            <div class="feature-body">
+              <h3>Why Sun Belt cap rates are decoupling from national trends</h3>
+              <p>A look at seven mid-size metros where rent growth is outpacing insurance and tax increases — and what it means for 2026 acquisitions.</p>
+              <div class="article-meta"><div class="mini-avatar" style="background:#c9a227;"></div> InvestScape Research Desk · 9 min read · ★ 4.8 (212)</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:6px 20px;">
+            <div class="article-row">
+              <div class="article-thumb" style="background:linear-gradient(135deg,#7dd3fc,#12233b);"></div>
+              <div>
+                <span class="pill pill-blue" style="margin-bottom:6px;">Rate Forecast</span>
+                <div class="article-title">What another Fed hold means for DSCR lending in Q4</div>
+                <div class="article-meta"><div class="mini-avatar" style="background:#7dd3fc;"></div> M. Alders · 6 min read · 84 comments</div>
+              </div>
+            </div>
+            <div class="article-row">
+              <div class="article-thumb" style="background:linear-gradient(135deg,#eacd7c,#12233b);"></div>
+              <div>
+                <span class="pill pill-green" style="margin-bottom:6px;">City Deep-Dive</span>
+                <div class="article-title">Boise, five years later: has the pandemic boom held up?</div>
+                <div class="article-meta"><div class="mini-avatar" style="background:#eacd7c;"></div> R. Osei · 11 min read · 47 comments</div>
+              </div>
+            </div>
+            <div class="article-row">
+              <div class="article-thumb" style="background:linear-gradient(135deg,#f87171,#12233b);"></div>
+              <div>
+                <span class="pill pill-gold" style="margin-bottom:6px;">Risk Watch</span>
+                <div class="article-title">Coastal insurance premiums: the underwriting line nobody's stress-testing</div>
+                <div class="article-meta"><div class="mini-avatar" style="background:#f87171;"></div> InvestScape Research Desk · 8 min read · 129 comments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card side-card">
+            <h4>Today's Numbers</h4>
+            <div class="ticker-row"><span>30-Yr Fixed</span><span class="mono">6.42% <span style="color:var(--red);">▲</span></span></div>
+            <div class="ticker-row"><span>10-Yr Treasury</span><span class="mono">4.18% <span style="color:var(--green);">▼</span></span></div>
+            <div class="ticker-row"><span>Fed Funds Rate</span><span class="mono">4.25–4.50%</span></div>
+            <div class="ticker-row"><span>Case-Shiller (YoY)</span><span class="mono">+3.9%</span></div>
+          </div>
+          <div class="card side-card">
+            <h4>Top Contributors</h4>
+            <div class="contrib-row"><div class="mini-avatar" style="background:#c9a227;width:26px;height:26px;"></div><div><div class="contrib-name">M. Alders <span class="pill pill-gold" style="margin-left:4px;">Verified</span></div><div class="contrib-sub">Rates & Lending</div></div></div>
+            <div class="contrib-row"><div class="mini-avatar" style="background:#7dd3fc;width:26px;height:26px;"></div><div><div class="contrib-name">R. Osei</div><div class="contrib-sub">Market Deep-Dives</div></div></div>
+          </div>
+          <div class="card side-card">
+            <h4>Trending Tags</h4>
+            <div class="tag-cloud">
+              <span class="pill pill-blue">DSCR</span>
+              <span class="pill pill-green">Sun Belt</span>
+              <span class="pill pill-gold">STR</span>
+              <span class="pill pill-blue">Insurance</span>
+              <span class="pill pill-green">Cap Rates</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-label">
+    <span class="eyebrow">Screen Four · Notion + TradingView-inspired</span>
+    <h2>Workspace + Charts</h2>
+    <p>Notes and live market data in the same frame — deal notes on the left behave like a Notion page; the panel below behaves like a charting terminal. The idea: research and analysis shouldn't live in a different tab than the notes about them.</p>
+  </div>
+  <div class="app-frame">
+    <div class="app-nav">
+      <div class="nav-left">
+        <div class="brand">
+          <svg width="20" height="20" viewBox="0 0 240 260"><polygon points="84,208 112,208 116,80 98,102" fill="#f7f5ef"/><polygon points="156,208 128,208 124,80 142,102" fill="#f7f5ef"/><circle cx="120" cy="78" r="27" fill="none" stroke="var(--gold-500)" stroke-width="4"/><circle cx="120" cy="78" r="7" fill="var(--bg-card)"/><circle cx="120" cy="78" r="4" fill="#f6e1a0"/></svg>
+          <span class="brand-word">Invest<span>Scape</span></span>
+        </div>
+        <div class="nav-links">
+          <span>Portfolio</span>
+          <span>Deal Analyzer</span>
+          <span>Research</span>
+          <span>Market Intel</span>
+          <span class="active">Workspace</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="search-box">Search markets, deals… <span class="kbd">⌘K</span></div>
+        <div class="avatar"></div>
+      </div>
+    </div>
+    <div class="workspace-layout">
+      <div class="ws-tree">
+        <div class="tree-item">Deal Notes</div>
+        <div class="tree-sub">
+          <div class="tree-item active">142 Maple Grove Ave.</div>
+          <div class="tree-sub">
+            <div class="tree-item">Underwriting</div>
+            <div class="tree-item">Comps</div>
+            <div class="tree-item">Lender Docs</div>
+          </div>
+          <div class="tree-item">88 Birchwood Court</div>
+          <div class="tree-item">2210 Harbor View Ln.</div>
+        </div>
+      </div>
+      <div class="ws-main">
+        <h3 style="font-size:20px;">142 Maple Grove Ave. — Underwriting Notes</h3>
+        <ul class="block-checklist">
+          <li><span class="check done">✓</span> Title search complete</li>
+          <li><span class="check done">✓</span> Comparable sales pulled (last 6 months)</li>
+          <li><span class="check"></span> Insurance quote requested</li>
+          <li><span class="check"></span> Lender pre-approval on file</li>
+        </ul>
+        <div class="callout">💡 <div><strong>AI Insight:</strong> This property's rent-to-price ratio sits 0.6 pts above the Austin metro median — cash flow is likely underestimated in the seller's pro forma.</div></div>
+        <div class="metrics-block">
+          <div class="row"><span>Purchase Price</span><span class="mono">$612,000</span></div>
+          <div class="row"><span>Est. Monthly Rent</span><span class="mono">$3,450</span></div>
+          <div class="row"><span>Cap Rate</span><span class="mono">6.4%</span></div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-toolbar">
+            <div class="range-tabs">
+              <span class="range-tab">1D</span><span class="range-tab">1M</span><span class="range-tab active">1Y</span><span class="range-tab">5Y</span>
+            </div>
+            <div class="legend">
+              <span><span class="legend-dot" style="background:var(--gold-500);"></span>Est. Rent Trend</span>
+              <span><span class="legend-dot" style="background:var(--text-3);"></span>Market Median</span>
+            </div>
+          </div>
+          <svg width="100%" height="180" viewBox="0 0 600 180" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--gold-500)" stop-opacity="0.28"/>
+                <stop offset="100%" stop-color="var(--gold-500)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,140 L60,132 L120,136 L180,112 L240,120 L300,92 L360,100 L420,76 L480,82 L540,58 L600,64 L600,180 L0,180 Z" fill="url(#areaFill)"/>
+            <polyline points="0,140 60,132 120,136 180,112 240,120 300,92 360,100 420,76 480,82 540,58 600,64" fill="none" stroke="var(--gold-500)" stroke-width="2.5"/>
+            <polyline points="0,110 600,88" fill="none" stroke="var(--text-3)" stroke-width="1.5" stroke-dasharray="5,5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Lighthouse Research Ltd. — InvestScape Ecosystem Concept · Toggle light/dark above · Prepared for internal review</footer>
+</div>
+
+<script>
+function toggleTheme(){
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('toggle-label').textContent = isDark ? 'Light mode' : 'Dark mode';
+}
+</script>
+
+</body>
+</html>
