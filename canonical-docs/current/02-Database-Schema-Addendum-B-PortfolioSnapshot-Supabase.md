@@ -13,11 +13,19 @@
 ### `portfolio_snapshots` (belongs to `properties`)
 
 ```sql
+CREATE TYPE snapshot_cadence AS ENUM ('monthly', 'annual');
+
 CREATE TABLE portfolio_snapshots (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   property_id uuid NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-  period_date date NOT NULL,              -- normalized to the 1st of the month at write time, so every
-                                           -- user's snapshots line up on the same x-axis categories
+  snapshot_type snapshot_cadence NOT NULL DEFAULT 'monthly',
+                                           -- distinguishes the two parallel jobs (§2) writing to this same
+                                           -- table — 'monthly' feeds Stage E2's trend chart, 'annual' feeds
+                                           -- Prompt 5h's locked Year-End Record. See §6 for why both exist
+                                           -- rather than picking one cadence.
+  period_date date NOT NULL,              -- normalized to the 1st of the month (monthly rows) or Dec 31
+                                           -- (annual rows) at write time, so every user's snapshots of the
+                                           -- same type line up on the same x-axis categories
   property_value numeric,                 -- current estimated value at time of snapshot
   loan_balance numeric,                   -- outstanding balance across all mortgages on this property
                                            -- at time of snapshot
@@ -34,7 +42,7 @@ CREATE TABLE portfolio_snapshots (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_portfolio_snapshots_property_period ON portfolio_snapshots (property_id, period_date);
+CREATE INDEX idx_portfolio_snapshots_property_period ON portfolio_snapshots (property_id, snapshot_type, period_date);
 ```
 
 `fx_rate_used` is deliberately not listed here, for the same reason `properties.currency` isn't in base Doc 02 — it's added by `15-Currency-Multi-Jurisdiction-Schema-Supabase.md` §2 via `ALTER TABLE` once this table exists. Build in that order: this table, then Doc 15's column.
@@ -50,9 +58,10 @@ SELECT cron.schedule(
   'snapshot-portfolio-monthly',
   '0 6 1 * *',      -- 06:00 UTC on the 1st of every month
   $$
-  INSERT INTO portfolio_snapshots (property_id, period_date, property_value, loan_balance, cash_flow_for_period)
+  INSERT INTO portfolio_snapshots (property_id, snapshot_type, period_date, property_value, loan_balance, cash_flow_for_period)
   SELECT
     p.id,
+    'monthly',
     date_trunc('month', now())::date,
     -- current estimated value — see "known MVP simplification" below for what this actually
     -- resolves to today
@@ -71,7 +80,32 @@ SELECT cron.schedule(
   );
   $$
 );
+
+SELECT cron.schedule(
+  'snapshot-portfolio-annual',
+  '0 7 31 12 *',    -- 07:00 UTC on Dec 31 every year — an hour after the monthly job, so if both fire
+                     -- on the same calendar day they don't race each other for the same connection slot
+  $$
+  INSERT INTO portfolio_snapshots (property_id, snapshot_type, period_date, property_value, loan_balance, cash_flow_for_period)
+  SELECT
+    p.id,
+    'annual',
+    make_date(EXTRACT(year FROM now())::int, 12, 31),
+    COALESCE(p.manual_value_update, di.purchase_price),
+    dm.loan_amount,
+    dm.cash_flow_monthly
+  FROM properties p
+  JOIN deals d ON d.property_id = p.id
+  JOIN deal_inputs di ON di.deal_id = d.id
+  JOIN deal_metrics dm ON dm.deal_id = d.id
+  WHERE d.id = (
+    SELECT id FROM deals WHERE property_id = p.id ORDER BY created_at DESC LIMIT 1
+  );
+  $$
+);
 ```
+
+Same query shape, deliberately — the only differences are the cron schedule, the literal `snapshot_type` value, and how `period_date` is computed (month-start vs. year-end). Keeping the two jobs structurally identical means a future fix to one (e.g., swapping in a real `manual_value_update` column, or wiring in Doc 5d's per-tranche amortized balance instead of the placeholder `loan_amount`) is a mechanical copy to the other, not a second independent bug to track down.
 
 This runs as a single scheduled SQL statement rather than an Edge Function, because the whole operation is a set-based `INSERT ... SELECT` with no external API call and no calc-engine involvement — it's arithmetic Postgres can do in one pass (`equity` derives itself via the generated column), which is exactly the kind of "simple enough not to need an Edge Function" case Doc 15 §3 already established as the dividing line for this stack. Compare Doc 15's own `fetch-fx-rate` job, which *is* an Edge Function, because it calls an external API (Bank of Canada Valet) that SQL alone can't reach.
 
@@ -120,26 +154,49 @@ series: [
 xaxis: { categories: [/* period_date list, e.g. 'Jan 2026', 'Feb 2026'... */] }
 ```
 
-**Aggregation, Supabase side:** rather than a Bubble backend workflow (`agg-equity-growth`) writing comma-separated strings for the HTML element to read, this is a single SQL query WeWeb can call directly through Supabase's REST API — no intermediate workflow step required:
+**Aggregation, Supabase side:** rather than a Bubble backend workflow (`agg-equity-growth`) writing comma-separated strings for the HTML element to read, this is a single SQL query WeWeb can call directly through Supabase's REST API — no intermediate workflow step required. **Now that this table holds two cadences, every query against it must filter by `snapshot_type` — omitting it would silently mix monthly and annual rows into the same chart:**
 
 ```sql
+-- Monthly trend chart (Stage E2, above)
 SELECT
   period_date,
   SUM(equity) AS total_equity,
   SUM(loan_balance) AS total_debt
 FROM portfolio_snapshots
 WHERE property_id IN (SELECT id FROM properties WHERE user_id = auth.uid())
+  AND snapshot_type = 'monthly'
 GROUP BY period_date
 ORDER BY period_date;
+
+-- Annual Year-End Records (Prompt 5h) — same shape, different filter and grain
+SELECT
+  period_date,
+  SUM(equity) AS total_equity,
+  SUM(loan_balance) AS total_debt,
+  SUM(property_value) AS total_value
+FROM portfolio_snapshots
+WHERE property_id IN (SELECT id FROM properties WHERE user_id = auth.uid())
+  AND snapshot_type = 'annual'
+GROUP BY period_date
+ORDER BY period_date DESC;   -- newest year first, matching Prompt 5h's Historical Records list order
 ```
 
-WeWeb binds the chart's series directly to this query's result set. If the query is reused often enough to be worth naming, wrap it as a Postgres function (`get_equity_growth()`) and call it via RPC — the same "simple enough not to need an Edge Function" reasoning from §2 applies here too, since this is read-only aggregation with no external call.
+WeWeb binds each chart/list to its respective query's result set. If either query is reused often enough to be worth naming, wrap it as a Postgres function (`get_equity_growth()` for monthly, `get_year_end_records()` for annual) and call it via RPC — the same "simple enough not to need an Edge Function" reasoning from §2 applies here too, since both are read-only aggregation with no external call.
 
 ---
 
 ## 6. Status — carried forward from Doc 50, not resolved by this rewrite
 
-Doc 50 already audited this table's design against the 5f build audit and found the *design* was never the gap — the design has existed since the original Bubble addendum. The gap was that the monthly job was never built and scheduled, so the table held zero rows. **That gap is not closed by this document.** This rewrite makes the job schema-ready and gives it a working `pg_cron` definition, but the job still needs to actually be scheduled against a live Supabase project, and it will still take a full month before the first real row exists and a full year before the equity-growth chart has enough history to be useful. Log this the same way Doc 50 did: an implementation gap against an existing spec, not a missing design, and not something a documentation pass alone resolves.
+**Cadence discrepancy — resolved as "build both," not "pick one."** `51-Acquisition-Wizard-Annual-Snapshot-Prompts.md` recorded a session decision to change this table's cadence from monthly to annual, made without cross-checking this document's already-specced monthly `pg_cron` job. Rather than resolve that by silently picking a side, the decision is: **run both cadences as two separate scheduled jobs against the same `portfolio_snapshots` table**, since they serve genuinely different purposes and neither one supersedes the other:
+
+- **Monthly** (`snapshot-portfolio-monthly`, as already specced in §2 below) — feeds Stage E2's equity-growth chart with enough resolution to show real month-to-month movement, and is the finer-grained data a Portfolio Rollup-style view (Prompt 5f) could eventually chart if a trend view gets added there.
+- **Annual** (a second job, `snapshot-portfolio-annual`, locking at Dec 31 calendar year-end) — feeds Prompt 5h's Year-End Record specifically: a small number of permanent, frozen, once-a-year reference points a user can look back on, distinct from a continuously-updating chart.
+
+Both write to the same `portfolio_snapshots` table (§1 below), distinguished by a new `snapshot_type` column (`'monthly'` or `'annual'`) so a single table serves both use cases without duplicating schema. This is a deliberate build-both approach: Doc 03 Addendum B and Prompt 5f are both getting a Claude Design pass before any decision about which one (or both) actually ships to Route 2 — see the note at the end of this section on how that decision gets made.
+
+**Status of the underlying gap Doc 50 originally found, unchanged by this resolution:** neither job has been deployed against a live Supabase project yet. This rewrite makes both schema-ready with working `pg_cron` definitions, but until at least one is actually scheduled, `portfolio_snapshots` still holds zero rows regardless of which cadence(s) are chosen. A monthly job needs a full month before its first real row exists and a full year before the equity-growth chart has enough history to be useful; an annual job needs a full year before its first Year-End Record exists at all. Log this the same way Doc 50 did: an implementation gap against an existing spec, not a missing design.
+
+**How the "which one ships" decision actually gets made:** per project preference, both cadences get built out in Claude Design first — visible, clickable, testable — before either is committed to the TypeScript calc engine. Once both are in front of a real prototype (Prompt 5h, extended to show both a monthly trend view and the annual Year-End Record side by side), the decision about whether Route 2 needs one, the other, or both gets made from what that prototype actually shows, not from documentation alone.
 
 **`Property.AcquisitionDate` — still not built, per Doc 50 §2.** That field belongs on `properties` in base Doc 02, not on this table, and this rewrite doesn't add it — Doc 50 recommended it but marked it not yet built, and that status is unchanged here. Portfolio blended IRR stays blocked on it for the same reason Doc 50 gave: building it without a real acquisition date per property means fabricating an investment date, which this schema is deliberately not designed to do.
 
