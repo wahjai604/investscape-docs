@@ -15,13 +15,13 @@
 | 7 | `05-Claude-API-Narrative-Prompt-Template.md` | `05-Claude-API-Narrative-Prompt-Template-Supabase.md` | Retire | ✅ Done — build status unaudited, see note below |
 | 8 | `11-Notification-System-Design.md` | `11-Notification-System-Design-Supabase.md` | Retire | ✅ Done — Tier 1 complete |
 
-**Not in this batch — already correct, no action needed** (per Doc 55 §1):- `02-Database-Schema-Addendum-A-DevStudio-Supabase.md` — already the Supabase-native version, filed correctly
+**Not in this batch — already correct, no action needed** (per Doc 61 §1):- `02-Database-Schema-Addendum-A-DevStudio-Supabase.md` — already the Supabase-native version, filed correctly
 - `12-Pre-Port-Advisory-Review.md` + `52-Route2-Simplification-Post-Pivot.md` — read as a pair, both current
 - `53-WeWeb-Supabase-Integration-Audit.md` — current
 - `InvestScape_on_Bubble...Research_Report.md` — correctly historical, no fix needed
 - `15-Currency-Multi-Jurisdiction-Schema-Supabase.md` — already current (note: its predecessor `15-Currency-Multi-Jurisdiction-Schema.md` is Tier 2, not Tier 1 — separate small pass)
 
-**Tier 2 (phrase-level, batchable separately, not tracked row-by-row here)** — see Doc 55 §3 for the full list. Recommend a second, smaller supersession map once Tier 1 is committed, since Tier 2 files mostly don't need a new filename at all — likely in-place edits to the existing file rather than a superseding rewrite.
+**Tier 2 (phrase-level, batchable separately, not tracked row-by-row here)** — see Doc 61 §3 for the full list. Recommend a second, smaller supersession map once Tier 1 is committed, since Tier 2 files mostly don't need a new filename at all — likely in-place edits to the existing file rather than a superseding rewrite.
 
 ---
 
@@ -60,10 +60,10 @@ Rewrite core schema and build docs for WeWeb + Supabase stack
 
 Supersedes Bubble-era Docs 01, 02, 02-Addendum-B, 03, 03-Addendum-A,
 03-Addendum-B, 05, 11 per the pivot documented in Docs 12/52/53 and
-inventoried in Doc 55. No changes to underlying data model, formulas,
+inventoried in Doc 61. No changes to underlying data model, formulas,
 or UX decisions — mechanical re-derivation onto Postgres/WeWeb only.
 
-See 55-Bubble-Reference-Inventory.md for full audit and remaining
+See 61-Bubble-Reference-Inventory.md for full audit and remaining
 Tier 2 (phrase-level) cleanup still pending.
 ```
 

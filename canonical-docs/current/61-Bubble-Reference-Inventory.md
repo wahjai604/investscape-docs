@@ -1,4 +1,9 @@
-# InvestScape — Bubble → WeWeb/Supabase Documentation Inventory — Doc 55
+# InvestScape — Bubble → WeWeb/Supabase Documentation Inventory — Doc 61
+
+**Renumbered from Doc 55 on 1 August 2026** — Doc 55 was a numbering collision with
+`55-Master-ToDo-Triage-Execution-Plan.md`, which retains the Doc 55 designation.
+Any earlier reference elsewhere in the doc set to "Doc 55" meaning this inventory
+should now be read as Doc 61.
 
 **Read-only audit, same convention as Docs 17 and 53. Nothing is fixed in this pass — this is the map, so you can decide the order of repair rather than discovering gaps one prompt at a time.**
 
@@ -101,4 +106,4 @@ These are lower cost to fix — usually one phrase or one dependency line — be
 
 ---
 
-*End of Doc 55 · Read-only inventory per Docs 17/53 convention · Covers: 74 `.md` files by direct scan; PDF/docx/pptx flagged but not scanned · Depends on: Docs 12, 52, 53 for what "already corrected" means · Feeds: repair work on Docs 01, 02, 02B, 03, 03A, 03B, 05, 11*
+*End of Doc 61 · Read-only inventory per Docs 17/53 convention · Covers: 74 `.md` files by direct scan; PDF/docx/pptx flagged but not scanned · Depends on: Docs 12, 52, 53 for what "already corrected" means · Feeds: repair work on Docs 01, 02, 02B, 03, 03A, 03B, 05, 11*

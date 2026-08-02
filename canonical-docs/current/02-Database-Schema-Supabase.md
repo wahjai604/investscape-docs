@@ -270,7 +270,7 @@ Development Studio's tables (`dev_projects` and everything beneath it) attach to
 
 ## 5. What changed, for anyone diffing this against the Bubble version
 
-Kept a short list here deliberately, since Doc 55's inventory flagged this file as the most-cited parent document in the registry — anything that touches it should be able to see at a glance what actually moved versus what's cosmetic.
+Kept a short list here deliberately, since Doc 61's inventory flagged this file as the most-cited parent document in the registry — anything that touches it should be able to see at a glance what actually moved versus what's cosmetic.
 
 - **Option Sets → native enums.** No behavior change; enums are still free to query and still enforce a fixed set of values.
 - **Privacy Rules → Row-Level Security.** A real change, not just a renamed feature — RLS is enforced by the database for every caller, including anything that bypasses the application layer. Genuinely stricter, not just relocated.
