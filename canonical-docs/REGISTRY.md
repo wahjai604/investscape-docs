@@ -60,7 +60,7 @@ Append-only. Retired numbers are never reused. Governed by Doc 56 Versioning Con
 | 54 | Engine Reconciliation ClaudeDesign vs CalcEngine | Current | — |
 | 55 | Master ToDo Triage Execution Plan | Current | — |
 | 56 | Versioning Convention | Current | — |
-| 57 | — | **Never created** | — |
+| 57 | — | **Retired unassigned** | Never used (reference in prior summary was mistaken) |
 | 58 | US Jurisdiction Gap Log | Current | — |
 | 59 | US Qualifier Research Brief | Current | — |
 | 60 | US Reference Deal Pack | Current | — |
