@@ -87,12 +87,13 @@ Independently of whether the branch was ever written, **"USA = flat rate" is not
 
 A flat `USTransferTaxPct` cannot express this. The **existing BC bracket mechanism can** — `tax_bracket_tables` is already jurisdiction-keyed. This is more rows, not a new engine.
 
-**Axis 2 — incidence, and this is the more serious one.** In BC, PTT is **buyer-paid** and belongs in acquisition cost. In Washington, <cite index="91-1">REET is typically paid by the seller at closing</cite>. US incidence varies by state and by local custom, and is sometimes negotiable.
+**Axis 2 — incidence, and this is the more serious one.** In BC, PTT is **buyer-paid** (grantee); it is a closing cost and part of the buyer's total acquisition cost. In Washington, REET is typically paid by the seller at closing (grantor). US incidence varies by state and by local custom, and is sometimes negotiable.
 
 The consequence is not a rate error. It is a **line-item-on-the-wrong-side error**:
 
-- A seller-paid transfer tax added to buyer acquisition cost overstates basis and understates return.
-- The same amount belongs in **selling costs at exit — inside E10**, which was built this session with a 7% selling-cost assumption. Whether that 7% is intended as blended commission only, or commission plus transfer tax, is currently unstated. On a $700,000 Washington sale, REET plus local is roughly $9,000 — large enough to matter and large enough to double-count.
+- A **seller-paid** transfer tax added to **buyer acquisition cost** (as if the buyer paid it) overstates basis and understates return. This is a sign error.
+- The same amount belongs in **selling costs at exit — inside E10**, which was built this session with a 7% selling-cost assumption. Whether that 7% is intended as blended commission only, or commission plus transfer tax, is currently unstated. On a $700,000 Washington sale, REET plus local is roughly $11,515 — large enough to matter and large enough to double-count.
+- **Contrast with BC:** If both jurisdictions defaulted to the same side (buyer pays both PTT and REET), the mistake would be a constant error in the comparative analysis. But they don't — BC is buyer-paid, WA is seller-paid — so the mistake in one direction but not the other introduces a comparative bias. A deal analysed side-by-side should not make different incidence assumptions for what is structurally the same line item.
 
 ### 2.3 Actions
 

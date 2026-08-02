@@ -273,6 +273,64 @@ H. **README/consolidation refresh** — done in this pass (updated through Doc 2
 
 **Suggested order: A and B first** (they gate the consultations with real lead times and don't depend on design work), then C, then D+E together, then F+G after Batch 1 completes.
 
+## PART 5A — US QUALIFIER BUILD SEQUENCING (E26, E9, E10, E11) — Critical Path
+
+**Priority: HIGH.** The US Qualifier engine (E26) unblocks a major product feature for US investors and the Arizona developer prospect. However, E26 alone is insufficient — four related engines must follow in sequence to deliver complete deal analysis and portfolio rollup across mixed US/CA portfolios. **This section defines the blocking order and scope.**
+
+### E26: US Financing Qualifier (BUILD NOW)
+- **Scope:** Conventional DTI (front-end + back-end) + FHA MIP/DTI + DSCR-loan sizing (gross rent ÷ PITIA)
+- **Status:** Claude Design prompt ready; reference deals (three Arizona, three Texas) in progress
+- **Deliverable:** HTML/JS prototype + reference-deal golden tests
+- **Code stage:** `qualifying-us.ts` (parallel to existing `qualifying.ts`, not merged into it; two DSCRs must be labeled to distinguish Loan convention from F-502 commercial)
+- **Output fields:** `CanQualify`, `DTI_Frontend`, `DTI_Backend`, `DSCR_Loan`, `SuggestedRate`, `ApprovedAmount`
+
+### E9: Multi-Period Hold-Period Cash Flow Projection (BUILD AFTER E8, BEFORE E10)
+- **Scope:** Year-by-year NOI projection across a hold period; country-aware (US: 75% qualifying rent haircut; Canada: use stated vacancy rate); jurisdiction-aware tax escalation
+- **Dependencies:** E8 (amortisation schedule already built), Doc 15 currency/jurisdiction schema
+- **Schema delta needed:** `Deal.Country` (already exists per Doc 60/58 decisions), `Deal.HoldYears`, `HoldPeriodAssumptions` type (rent growth %, expense growth %, capex reserve)
+- **Output:** Year-by-year NOI series, fed to E10 for exit value
+- **Note:** Property tax escalation varies by state (Ohio: 2.5% phase-out through 2029; Texas/Arizona vary by city) — add `PropertyTaxEscalation%` per jurisdiction to D2 admin tables
+
+### E10: Exit/Reversion & Equity Multiple (BUILD AFTER E9)
+- **Scope:** Remaining loan balance (from E8), exit cap rate, selling costs, capital gains by jurisdiction
+- **Dependencies:** E8, E9, Doc 15 (jurisdiction-scoped capital-gains treatment), Doc 60 (transfer tax tables and incidence)
+- **Schema delta:** `Deal.ExitYear`, `Deal.ExitCapRate`, `SaleAssumptions` type (appreciation %, expense growth %)
+- **Transfer tax handling — CRITICAL:**
+  - **BC PTT:** Buyer-paid (treated as closing cost, part of basis); jurisdiction-scoped via `tax_bracket_tables`
+  - **US REET (seller-paid):** Deducted from sale proceeds; lookup via state + local rates; belongs in "Selling Costs," not "Acquisition Costs"
+  - Schema: `TransferTax.PayableBy` field (buyer|seller|negotiated) to ensure correct sign
+- **Output:** `EquityAtExit`, `EquityMultiple`, `CashOnCash_Total`, `SalesProceeds`, `CapitalGainsTax`
+
+### E11: Portfolio Rollup & Terminal (BUILD AFTER E8/E9/E10 complete)
+- **Scope:** Blended IRR/MIRR/XIRR across mixed US/CA portfolio; blended stress-test floor (min DSCR threshold); tax-drag attribution; currency exposure (if portfolio spans USD + CAD); concentration warnings
+- **Dependencies:** E8, E9, E10 all producing their outputs across all deals
+- **New D2 admin fields:** 
+  - FX conversion rate (CAD/USD, or per-transaction rate if tracking realized/unrealized)
+  - DSCR stress-test threshold by country (US: 1.25 for DSCR loans; Canada: 45% TDS ratio equivalent)
+  - Capital-gains tax rates by country/province (Canada: marginal tax bracket, 50% inclusion; US: federal 15/20%, + state)
+- **Output:** Portfolio-level metrics (blended IRR, blended DSCR floor, concentration risk, tax attribution, FX P&L)
+
+### Deal Analyzer Advanced Metrics — US Branching (UI work, post-E11)
+- **Scope:** Branch Deal Analyzer cards to show country-specific metrics alongside Canadian ones
+- **Affected cards:**
+  1. **Financing card:** Show both DSCR-Loan (US) and DSCR-Commercial (F-502, Canada); label clearly
+  2. **Returns card:** Branch cash-on-cash, cap rate, equity multiple; apply country-specific tax treatment
+  3. **Stress test card:** Branch GDS/TDS (Canada) vs. DTI (US)
+- **Implementation:** Conditional rendering per `Deal.Country` field; same card structure, two branches
+- **No new data fields:** All data computed by E26/E9/E10
+
+### Neighbourhood Intel — US Expansion (Data sourcing work, post-E11)
+- **Scope:** Add statistical profiles for six US cities (Phoenix, Tucson, Mesa; Houston, Dallas, San Antonio)
+- **Data sources:** Census ACS, Redfin metro-level, FRED regional, local news RSS (Arizona Republic, Dallas Morning News, Houston Chronicle, etc.)
+- **Deliverable:** Doc 63 (US Neighbourhood Intel Source Mapping) + follow-up Claude Design prompt for Arizona/Texas neighbourhood cards
+- **Reference:** Doc 29 (Market News / Neighbourhood Intel) establishes narrative layer; Doc 29A (AI narrative guardrails) applies
+
+### Blocking summary
+
+**Ship gate:** Do not claim "US investor ready" until E26+E9+E10+E11 are coded and E11 golden tests pass (mixed portfolio: 2 US deals, 1 CA deal, verify blended IRR and stress-test floor).
+
+---
+
 ## PART 5 — Schema deltas created by this batch (so the canonical docs and Bubble/Route 2 stay in sync)
 
 - `User` (or per-page preference store): country content filter per page (CA/US/Both) — same persistence family as `WidgetLayoutItem`.

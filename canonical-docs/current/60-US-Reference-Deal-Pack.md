@@ -80,7 +80,7 @@ The two deals below are constructed that way. They are not real addresses, and t
 | Conforming? | **Yes** — under the <cite index="10-1">2026 limit of $832,750 in most areas</cite> | D2 |
 | PMI | **None** at 20% down | Per HPA |
 | REET (state, graduated) | <cite index="91-1">1.10% to $525,000; 1.28% on $525,001–$1,525,000</cite> | D2 — WA DOR |
-| REET (local, Pierce) | <cite index="91-1">0.25%</cite> | D2 |
+| REET (local, Pierce) | 0.50% — **verified 1 Aug 2026 against Pierce County Fiscal Office official rate sheet (TY2024 pay-2025)** | D2 |
 | REET incidence | **Seller-paid** — <cite index="91-1">typically paid by the seller at closing</cite> | D2 |
 
 **Verified outputs:**
@@ -92,17 +92,18 @@ The two deals below are constructed that way. They are not real addresses, and t
 | REET — state tier 1 | $525,000 × 1.10% = $5,775.00 |
 | REET — state tier 2 | $175,000 × 1.28% = $2,240.00 |
 | REET — state subtotal | $8,015.00 |
-| REET — Pierce local | $1,750.00 |
-| **REET total** | **$9,765.00** |
-| **Effective REET rate** | **1.3950%** |
-| Flat-1.10% model would give | $7,700.00 — **understates by $2,065.00** |
+| REET — Pierce local | $700,000 × 0.50% = $3,500.00 |
+| **REET total** | **$11,515.00** |
+| **Effective REET rate** | **1.6450%** |
+| Flat-1.10% model would give | $7,700.00 — **understates by $3,815.00** |
 
 **What this deal tests**
 
 1. **The bracket engine on a non-Canadian jurisdiction.** Same mechanism as BC PTT, different table. If `tax_bracket_tables` is genuinely jurisdiction-keyed, this deal should require no new code — only new rows. That is the actual test.
-2. **The flat-rate defect, quantified.** $2,065 on a $700,000 deal, and the error grows non-linearly with price. On a $1.6M Seattle sale it crosses into the 2.75% tier and the gap widens sharply.
-3. **Incidence — the one that produces a sign error, not a size error.** REET is seller-paid. Booked as buyer acquisition cost it inflates basis and depresses return. It belongs in **selling costs at exit, inside E10.** This deal is the fixture that proves which side the engine puts it on.
-4. **E10's selling-cost composition.** E10 currently assumes 7% selling costs. On this deal REET alone is 1.395%. If the 7% is blended commission only, REET must be added — and the exit cost is nearer 8.4%. If 7% was meant to be all-in, REET is being double-counted the moment it is added. **Either way the assumption needs stating**, and this deal forces the question.
+2. **The bracket engine on a non-Canadian jurisdiction.** Same mechanism as BC PTT, different table. If `tax_bracket_tables` is genuinely jurisdiction-keyed, this deal should require no new code — only new rows. That is the actual test.
+3. **The flat-rate defect, quantified.** A naive "1.10% REET" model would give $7,700; the actual bill with graduated brackets and local surcharge is $11,515 — a **$3,815 understatement (49.5% error)**. The error grows non-linearly with price. On a $1.6M Seattle sale it crosses into the 2.75% tier and the gap widens sharply.
+4. **Incidence — the one that produces a sign error, not a size error.** REET is seller-paid. Booked as buyer acquisition cost it inflates basis and depresses return. It belongs in **selling costs at exit, inside E10.** This deal is the fixture that proves which side the engine puts it on.
+5. **E10's selling-cost composition.** E10 currently assumes 7% selling costs. On this deal REET alone is 1.6450%. If the 7% is blended commission only, REET must be added — and the exit cost is nearer 8.6%. If 7% was meant to be all-in, REET is being double-counted the moment it is added. **Either way the assumption needs stating**, and this deal forces the question.
 
 ### 3.1 Variant US-2b — PMI cancellation test (10% down)
 
