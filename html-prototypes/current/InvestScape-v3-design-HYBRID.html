@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InvestScape — Unified Hybrid Checkpoint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/feather-icons"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--gold-300:#eacd7c;}
+html[data-theme="dark"]{
+  --bg:#0C1B2E;--bg-elevated:#141821;--bg-card:#171B26;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-1:#F7F5EF;--text-2:rgba(247,245,239,0.6);--text-3:#8b949e;--accent:#D9B04A;--accent-soft:rgba(217,176,74,0.14);
+  --green:#4ADE80;--red:#F87171;--blue:#7DD3FC;--glow:rgba(217,176,74,0.5);--shadow:0 24px 60px rgba(0,0,0,0.4);--chart-text:#c9d1d9;
+}
+html[data-theme="light"]{
+  --bg:#f5f3ed;--bg-elevated:#fefdfb;--bg-card:#fefdfb;--border:#d9d5cd;--border-strong:#c4beb2;
+  --text-1:#2d2520;--text-2:#5a5248;--text-3:#8b8680;--accent:#A8791A;--accent-soft:rgba(168,121,26,0.09);
+  --green:#16A34A;--red:#DC2626;--blue:#0284C7;--glow:rgba(168,121,26,0.35);--shadow:0 24px 50px rgba(15,23,42,0.08);--chart-text:#5a5248;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{background:var(--bg);color:var(--text-1);font-family:'Inter',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background 0.25s ease,color 0.25s ease;overflow:hidden;}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;margin:0;}
+.mono{font-family:'DM Mono',monospace;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px;}
+
+/* ===== Root shell ===== */
+.app-root{position:relative;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+.top-bar{height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--border);background:var(--bg-elevated);position:relative;z-index:20;gap:16px;}
+.header-left{display:flex;align-items:center;gap:16px;min-width:0;flex:1;overflow:hidden;}
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.logo{font-family:'Fraunces',serif;font-weight:600;font-size:19px;color:var(--accent);flex-shrink:0;}
+.nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none;}
+.nav-tab{padding:10px 14px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-2);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.nav-tab.active{color:var(--text-1);border-bottom-color:var(--accent);}
+.nav-tab:hover{color:var(--text-1);}
+.icon-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-1);cursor:pointer;flex-shrink:0;}
+.icon-btn:hover{border-color:var(--border-strong);}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.settings-wrap{position:relative;}
+.settings-panel{position:absolute;top:46px;right:0;width:240px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow);z-index:40;display:none;}
+.settings-panel.open{display:block;}
+.settings-heading{font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:10px;}
+.settings-label{font-size:13px;color:var(--text-1);}
+.settings-divider{height:1px;background:var(--border);margin:10px 0;}
+.theme-row{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;padding:8px 4px;cursor:pointer;text-align:left;}
+.rail-scrim{display:none;}
+.radio-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);flex-shrink:0;}
+.radio-dot.on{background:var(--accent);}
+.checkbox-mark{width:16px;height:16px;border-radius:4px;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--bg);flex-shrink:0;}
+.checkbox-mark.on{background:var(--accent);}
+
+/* ===== Body / rail / canvas ===== */
+.body-row{flex:1;display:flex;position:relative;overflow:hidden;}
+.rail{width:400px;flex-shrink:0;border-right:1px solid var(--border);background:var(--bg-elevated);overflow-y:auto;padding:20px;}
+.canvas{flex:1;overflow-y:auto;padding:24px;min-width:0;}
+.route{display:none;}
+.route.active{display:flex;}
+.route.simple{display:none;}
+.route.simple.active{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+
+/* ===== Rail sections ===== */
+.section{border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:4px;}
+.section-header{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:12px 4px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-1);}
+.section-header .chev{color:var(--text-2);display:flex;}
+.section-header.open .chev{color:var(--accent);}
+.section-badge{font-size:10px;color:var(--text-2);background:var(--accent-soft);border-radius:999px;padding:2px 8px;margin-left:auto;}
+.section-body{padding:4px 4px 12px 4px;display:none;}
+.section-body.open{display:block;}
+.label{display:block;font-size:12px;color:var(--text-2);margin:4px 0 4px;}
+.hint{font-size:11px;color:var(--text-2);margin:-2px 0 12px;}
+.input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-1);font-family:'Inter',sans-serif;font-size:14px;margin-bottom:14px;outline:none;}
+.input:focus{border-color:var(--accent);}
+.input-nopad{padding:10px 12px 10px 26px;margin-bottom:4px;}
+.glow{box-shadow:0 0 20px 2px var(--glow);border-color:var(--accent);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.currency-wrap{position:relative;}
+.currency-prefix{position:absolute;left:12px;top:10px;color:var(--text-2);font-size:14px;}
+.calc-btn{width:100%;margin-top:10px;padding:12px 16px;border-radius:10px;border:none;background:var(--accent);color:var(--bg);font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+
+/* ===== Tabs (in-page) ===== */
+.tab-bar{display:flex;gap:4px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;overflow-x:auto;margin-bottom:20px;}
+.tab-btn{display:flex;align-items:center;gap:6px;padding:14px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-2);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.tab-btn.active{color:var(--text-1);border-bottom-color:var(--accent);}
+.tab-btn .lock{color:var(--accent);display:inline-flex;}
+.tab-panel{display:none;flex-direction:column;gap:20px;}
+.tab-panel.active{display:flex;}
+.sub-tab-bar{display:flex;gap:8px;margin-bottom:18px;}
+.sub-tab{padding:8px 14px;background:none;border:1px solid var(--border);border-radius:999px;color:var(--text-2);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;}
+.sub-tab.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+
+/* ===== KPI grid / cards ===== */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:640px){.kpi-grid{grid-template-columns:1fr;}}
+.kpi-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;text-align:left;cursor:default;}
+.kpi-card.clickable{cursor:pointer;display:flex;flex-direction:column;gap:10px;width:100%;}
+.kpi-card:hover{transform:scale(1.02);border-color:var(--border-strong);}
+.kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-2);margin-bottom:8px;}
+.kpi-value{font-family:'DM Mono',monospace;font-size:26px;color:var(--text-1);}
+.kpi-value.md{font-size:22px;}
+.kpi-value.sm{font-size:20px;}
+.kpi-value.green{color:var(--green);}
+.kpi-value.red{color:var(--red);}
+
+/* ===== Card / table ===== */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.card-title{font-family:'Fraunces',serif;font-weight:600;font-size:15px;margin-bottom:12px;}
+.two-col-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.three-col-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:1000px){.two-col-grid,.three-col-grid{grid-template-columns:1fr;}}
+table.data-table{width:100%;border-collapse:collapse;min-width:420px;}
+.data-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-2);padding:8px 14px;border-bottom:1px solid var(--border-strong);}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;font-size:13px;color:var(--text-1);}
+.data-table tr:hover td{background:var(--accent-soft);}
+.table-scroll{overflow-x:auto;}
+
+/* ===== Meta / narrative / status ===== */
+.meta-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;}
+.meta-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);gap:10px;font-size:13px;}
+.meta-key{color:var(--text-2);}
+.meta-val{font-family:'DM Mono',monospace;color:var(--text-1);}
+.status-pill{font-size:12px;color:var(--blue);background:rgba(125,211,252,0.12);border-radius:999px;padding:3px 12px;}
+.narrative{background:var(--accent-soft);border-left:2px solid var(--accent);padding:16px;border-radius:8px;font-size:15px;}
+.narrative-title{font-family:'Fraunces',serif;font-weight:600;margin-bottom:8px;font-size:15px;}
+
+/* ===== Locked / premium ===== */
+.locked-box{position:relative;border:1px solid var(--border);border-radius:14px;min-height:200px;}
+.locked-content{padding:20px;filter:grayscale(.3);opacity:.45;pointer-events:none;background:var(--bg-card);border-radius:14px;}
+.lock-badge{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:600;color:var(--accent);background:rgba(12,27,46,0.6);border-radius:14px;text-align:center;padding:0 24px;}
+html[data-theme="light"] .lock-badge{background:rgba(245,246,248,0.7);}
+.big-mono{font-family:'DM Mono',monospace;font-size:20px;}
+.sens-out-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+
+/* ===== Page title / placeholder ===== */
+.page-title{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin:0 0 16px;}
+.placeholder-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:48px;text-align:center;}
+.header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.edit-inputs-btn{display:none;margin-bottom:16px;padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-1);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+
+/* ===== Portfolio cards ===== */
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px;}
+.pf-card-top{display:flex;justify-content:space-between;align-items:center;}
+.pf-type-badge{font-size:11px;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:3px 10px;font-weight:600;}
+.pf-status-pill{font-size:11px;color:var(--text-2);background:rgba(201,209,217,0.12);border-radius:999px;padding:3px 10px;}
+.pf-address{font-family:'Fraunces',serif;font-weight:600;font-size:15px;}
+.pf-stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.pf-stat-val{font-family:'DM Mono',monospace;font-size:15px;}
+.pf-view-link{font-size:12px;color:var(--accent);font-weight:600;margin-top:4px;}
+
+/* ===== Modal ===== */
+.modal-scrim{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:50;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-scrim.open{display:flex;}
+.modal{width:min(640px,92vw);max-height:88vh;overflow-y:auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);}
+.modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px;}
+.modal-title{font-family:'Fraunces',serif;font-weight:600;font-size:18px;}
+.modal-subtitle{font-size:13px;color:var(--text-2);margin-top:4px;}
+
+/* ===== Neighbourhood / gauges / map ===== */
+.search-input{max-width:360px;}
+.map-wrap{height:360px;border-radius:14px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px;}
+.proto-notice{font-size:12px;color:var(--text-2);background:var(--accent-soft);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:12px;}
+.cities-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 16px;margin-bottom:10px;}
+.city-chip{font-size:13px;color:var(--text-2);cursor:pointer;}
+.city-chip:hover{color:var(--accent);}
+.tip{font-size:12px;color:var(--text-2);margin-bottom:16px;}
+.selected-row{font-size:13px;color:var(--text-2);margin-bottom:20px;}
+.selected-name{font-family:'Fraunces',serif;font-weight:600;color:var(--text-1);font-size:15px;}
+.gauge-row{margin-bottom:16px;}
+.gauge-label-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;}
+.gauge-track{width:100%;height:8px;border-radius:999px;background:var(--border);overflow:hidden;}
+.gauge-fill{height:100%;border-radius:999px;background:var(--accent);}
+.brief{background:var(--accent-soft);border-left:2px solid var(--accent);padding:16px;border-radius:8px;margin-bottom:16px;}
+.article-row{padding:12px 0;border-bottom:1px solid var(--border);}
+.article-snippet{font-size:13px;color:var(--text-2);margin-top:4px;}
+.sources-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.source-chip{font-size:11px;color:var(--text-2);border:1px solid var(--border);border-radius:999px;padding:3px 10px;}
+.notes-area{width:100%;min-height:260px;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-1);font-family:'Inter',sans-serif;font-size:14px;outline:none;resize:vertical;}
+.file-row{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border);}
+.file-icon{font-size:20px;width:32px;text-align:center;}
+.file-name{font-size:13px;font-weight:600;}
+.file-sub{font-size:11px;color:var(--text-2);margin-top:2px;}
+.dropzone{border:1px dashed var(--border);border-radius:10px;padding:20px;text-align:center;font-size:12px;color:var(--text-2);margin-top:8px;}
+
+@media(max-width:800px){
+  .rail{position:fixed;top:64px;left:0;bottom:0;width:min(380px,88vw);z-index:30;transform:translateX(-100%);transition:transform .25s ease;box-shadow:none;}
+  .rail.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.3);}
+  .edit-inputs-btn{display:inline-block;}
+  .menu-btn{display:flex !important;}
+  .rail-scrim{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:25;display:none;}
+  .rail-scrim.open{display:block;}
+}
+.menu-btn{display:none;}
+</style>
+</head>
+<body>
+<div class="app-root">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="header-left">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" data-feather="menu"></button>
+      <span class="logo">InvestScape</span>
+      <nav class="nav" id="navTabs"></nav>
+    </div>
+    <div class="header-right">
+      <div class="settings-wrap">
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" data-feather="settings"></button>
+        <div class="settings-panel" id="settingsPanel">
+          <div class="settings-heading">Appearance</div>
+          <div class="settings-label" style="margin-bottom:6px;">Theme</div>
+          <button class="theme-row" id="setThemeDark"><span class="radio-dot" id="dotDark"></span><span class="settings-label">Dark mode</span></button>
+          <button class="theme-row" id="setThemeLight"><span class="radio-dot" id="dotLight"></span><span class="settings-label">Light mode</span></button>
+          <div class="settings-divider"></div>
+          <button class="theme-row" id="toggleGlow"><span class="checkbox-mark" id="glowMark"></span><span class="settings-label">Highlight critical inputs (glow)</span></button>
+        </div>
+      </div>
+      <div class="avatar">EK</div>
+    </div>
+  </div>
+
+  <!-- ROUTE: DEAL ANALYZER -->
+  <div class="body-row route" id="route-deal-analyzer">
+    <div class="rail-scrim" id="daScrim"></div>
+    <div class="rail" id="daRail">
+      <div class="section" data-section="property">
+        <button class="section-header open"><span class="chev" data-feather="chevron-down" style="width:15px;height:15px;"></span><span data-feather="home" style="width:15px;height:15px;"></span><span>Property</span><span class="section-badge">5 fields</span></button>
+        <div class="section-body open">
+          <label class="label">Address<span style="color:var(--red);">*</span></label>
+          <input type="text" class="input glow" data-glow="1" id="da_address" placeholder="123 Main Street, City, Province" />
+          <div class="hint">Property lookup coming soon</div>
+          <div class="two-col">
+            <div>
+              <label class="label">Asset type</label>
+              <select class="input" id="da_assetType">
+                <option value="single-family">Single-family</option>
+                <option value="multifamily-2-4">Multifamily 2–4 units</option>
+                <option value="multifamily-5-10">Multifamily 5–10 units</option>
+                <option value="multifamily-11-25">Multifamily 11–25 units</option>
+                <option value="condo">Condo</option>
+                <option value="mixed-use">Mixed-use</option>
+                <option value="retail">Retail</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Jurisdiction</label>
+              <select class="input" id="da_jurisdiction">
+                <option value="Canada">Canada</option>
+                <option value="United States">United States</option>
+              </select>
+            </div>
+          </div>
+          <label class="label">Purchase price<span style="color:var(--red);">*</span></label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input glow input-nopad" data-glow="1" id="da_purchasePrice" /></div>
+        </div>
+      </div>
+      <div class="section" data-section="financing">
+        <button class="section-header open"><span class="chev" data-feather="chevron-down" style="width:15px;height:15px;"></span><span data-feather="dollar-sign" style="width:15px;height:15px;"></span><span>Financing</span><span class="section-badge">4 fields</span></button>
+        <div class="section-body open">
+          <label class="label">Loan amount<span style="color:var(--red);">*</span></label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input glow input-nopad" data-glow="1" id="da_loanAmount" /></div>
+          <label class="label">Interest rate (%)</label>
+          <input type="number" step="0.1" class="input" id="da_interestRate" />
+          <label class="label">Amortization period</label>
+          <select class="input" id="da_amortizationPeriod">
+            <option value="15">15 years</option><option value="20">20 years</option><option value="25">25 years</option><option value="30">30 years</option>
+          </select>
+          <label class="label">Loan type</label>
+          <select class="input" id="da_loanType">
+            <option value="Conventional">Conventional</option><option value="Insured">Insured</option><option value="Bridge">Bridge</option><option value="Private">Private</option>
+          </select>
+        </div>
+      </div>
+      <div class="section" data-section="income">
+        <button class="section-header open"><span class="chev" data-feather="chevron-down" style="width:15px;height:15px;"></span><span data-feather="trending-up" style="width:15px;height:15px;"></span><span>Income</span><span class="section-badge">3 fields</span></button>
+        <div class="section-body open">
+          <label class="label">Monthly rent<span style="color:var(--red);">*</span></label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input glow input-nopad" data-glow="1" id="da_monthlyRent" /></div>
+          <label class="label">Rent growth (%/yr)</label>
+          <input type="number" step="0.1" class="input" id="da_rentGrowth" />
+          <label class="label">Vacancy rate (%)</label>
+          <input type="number" class="input" id="da_vacancyRate" />
+        </div>
+      </div>
+      <div class="section" data-section="expenses">
+        <button class="section-header open"><span class="chev" data-feather="chevron-down" style="width:15px;height:15px;"></span><span data-feather="shopping-bag" style="width:15px;height:15px;"></span><span>Expenses</span><span class="section-badge">4 fields</span></button>
+        <div class="section-body open">
+          <label class="label">Property tax (annual)</label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input input-nopad" id="da_propertyTax" /></div>
+          <label class="label">Insurance (annual)</label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input input-nopad" id="da_insurance" /></div>
+          <label class="label">Maintenance (annual)</label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input input-nopad" id="da_maintenance" /></div>
+          <label class="label">Property management fees (%)</label>
+          <input type="number" class="input" id="da_propertyMgmtFees" />
+        </div>
+      </div>
+      <div class="section" data-section="exit">
+        <button class="section-header"><span class="chev" data-feather="chevron-right" style="width:15px;height:15px;"></span><span data-feather="log-out" style="width:15px;height:15px;"></span><span>Exit &amp; assumptions</span><span class="section-badge">3 fields</span></button>
+        <div class="section-body">
+          <label class="label">Hold period (years)</label>
+          <input type="number" class="input" id="da_holdPeriod" />
+          <label class="label">Exit cap rate (%)</label>
+          <input type="number" step="0.1" class="input" id="da_exitCapRate" />
+          <label class="label">Sale costs (%)</label>
+          <input type="number" class="input" id="da_saleCosts" />
+        </div>
+      </div>
+      <button class="calc-btn" id="da_calculateBtn">Calculate</button>
+    </div>
+
+    <div class="canvas">
+      <button class="edit-inputs-btn" id="daEditInputsBtn">Edit inputs</button>
+      <div class="tab-bar" id="daTabBar"></div>
+      <div class="sub-tab-bar">
+        <button class="sub-tab active" data-view="tabs">Analysis</button>
+        <button class="sub-tab" data-view="files">📎 Deal Files</button>
+        <button class="sub-tab" data-view="notes">📝 Notes</button>
+      </div>
+
+      <div class="card" id="daFilesPanel" style="display:none;">
+        <div class="card-title">Deal Files</div>
+        <div id="daFilesList"></div>
+        <div class="dropzone">Drop files or click to upload</div>
+      </div>
+
+      <div class="card" id="daNotesPanel" style="display:none;">
+        <div class="card-title">Notes</div>
+        <textarea class="notes-area" id="da_notes" placeholder="Add notes about this deal..."></textarea>
+      </div>
+
+      <div id="daTabPanels">
+        <div class="tab-panel active" data-tabpanel="0">
+          <div class="kpi-grid" id="daOverviewCards"></div>
+          <div class="meta-card">
+            <div class="meta-row"><span class="meta-key">Address</span><span class="meta-val" id="daMetaAddress"></span></div>
+            <div class="meta-row"><span class="meta-key">Purchase price</span><span class="meta-val" id="daMetaPrice"></span></div>
+            <div class="meta-row" style="border-bottom:none;"><span class="meta-key">Deal status</span><span class="status-pill">Analyzing</span></div>
+          </div>
+          <div class="narrative"><div class="narrative-title">Go/No-Go signal</div><span id="daNarrative"></span></div>
+        </div>
+        <div class="tab-panel" data-tabpanel="1">
+          <div class="kpi-grid" id="daCashflowCards"></div>
+          <div class="card"><div class="card-title">Cash flow projection</div><div id="daCfChart" style="height:300px;width:100%"></div></div>
+          <div class="card"><div class="card-title">Annual summary</div><div class="table-scroll"><table class="data-table">
+            <thead><tr><th>Year</th><th>Gross income</th><th>Op. exp</th><th>NOI</th><th>Cash flow</th></tr></thead>
+            <tbody id="daCashFlowRows"></tbody>
+          </table></div></div>
+        </div>
+        <div class="tab-panel" data-tabpanel="2">
+          <div class="kpi-grid" id="daReturnsCards"></div>
+          <div class="card"><div class="card-title">Returns breakdown</div><div id="daReturnsChart" style="width:100%"></div></div>
+          <div class="locked-box"><div class="locked-content"><div class="card-title">Exit cap rate sensitivity</div><table class="data-table">
+            <thead><tr><th>Cap rate</th><th>5 yr</th><th>10 yr</th></tr></thead>
+            <tbody id="daSensitivityRows"></tbody>
+          </table></div><div class="lock-badge"><span data-feather="lock" style="width:22px;height:22px;"></span><span>Upgrade to Pro for sensitivity matrix</span></div></div>
+        </div>
+        <div class="tab-panel" data-tabpanel="3">
+          <div class="kpi-grid" id="daFinancingCards"></div>
+          <div class="card"><div class="card-title">Principal vs interest</div><div id="daFinancingChart" style="max-width:280px;margin:0 auto"></div></div>
+          <div class="card"><div class="card-title">Amortization schedule</div><div class="table-scroll"><table class="data-table">
+            <thead><tr><th>Month</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead>
+            <tbody id="daAmortRows"></tbody>
+          </table></div></div>
+          <div class="card"><div class="card-title">Qualification ratios (<span id="daQualJurisdiction"></span>)</div><table class="data-table">
+            <thead><tr><th>Ratio</th><th>Value</th><th>Threshold</th><th>Status</th></tr></thead>
+            <tbody id="daQualRows"></tbody>
+          </table></div>
+        </div>
+        <div class="tab-panel" data-tabpanel="4">
+          <div class="locked-box"><div class="locked-content">
+            <div class="card-title">Scenario builder</div>
+            <div class="kpi-grid">
+              <div class="sens-out-card"><div class="kpi-label">IRR</div><div class="big-mono" id="daScenIrr"></div></div>
+              <div class="sens-out-card"><div class="kpi-label">Equity multiple</div><div class="big-mono" id="daScenEM"></div></div>
+            </div>
+          </div><div class="lock-badge"><span data-feather="lock" style="width:22px;height:22px;"></span><span>Upgrade to Pro to model scenarios</span></div></div>
+        </div>
+        <div class="tab-panel" data-tabpanel="5">
+          <div class="locked-box"><div class="locked-content">
+            <div class="card-title">Sale proceeds</div>
+            <table class="data-table"><tbody>
+              <tr><td>Gross sale price</td><td id="daExitSalePrice"></td></tr>
+              <tr><td>Net proceeds to equity</td><td id="daExitNetProceeds"></td></tr>
+            </tbody></table>
+          </div><div class="lock-badge"><span data-feather="lock" style="width:22px;height:22px;"></span><span>Upgrade to Pro for exit analysis</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTE: DEVELOPMENT STUDIO -->
+  <div class="body-row route" id="route-dev-studio">
+    <div class="rail-scrim" id="dsScrim"></div>
+    <div class="rail" id="dsRail">
+      <div class="section" data-section="budget">
+        <button class="section-header open"><span class="chev" data-feather="chevron-down" style="width:15px;height:15px;"></span><span>Development budget</span></button>
+        <div class="section-body open">
+          <label class="label">Land cost</label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input glow input-nopad" data-glow="1" id="ds_landCost" /></div>
+          <label class="label">Hard construction cost</label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input input-nopad" id="ds_hardCosts" /></div>
+          <label class="label">Soft costs</label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input input-nopad" id="ds_softCosts" /></div>
+          <label class="label">Financing costs</label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input input-nopad" id="ds_financingCosts" /></div>
+          <label class="label">Contingency (%)</label>
+          <input type="number" class="input" id="ds_contingencyPct" />
+        </div>
+      </div>
+      <div class="section" data-section="assumptions">
+        <button class="section-header open"><span class="chev" data-feather="chevron-down" style="width:15px;height:15px;"></span><span>Exit assumptions</span></button>
+        <div class="section-body open">
+          <label class="label">Gross development value (GDV)<span style="color:var(--red);">*</span></label>
+          <div class="currency-wrap"><span class="currency-prefix">$</span><input type="number" class="input glow input-nopad" data-glow="1" id="ds_gdv" /></div>
+          <label class="label">Market cap rate (%)</label>
+          <input type="number" step="0.1" class="input" id="ds_marketCapRate" />
+          <label class="label">Loan-to-cost (%)</label>
+          <input type="number" class="input" id="ds_loanToCostPct" />
+          <label class="label">Hold period (months)</label>
+          <input type="number" class="input" id="ds_holdMonths" />
+        </div>
+      </div>
+      <div class="section" data-section="presale">
+        <button class="section-header"><span class="chev" data-feather="chevron-right" style="width:15px;height:15px;"></span><span>Presales</span></button>
+        <div class="section-body">
+          <label class="label">Presale gate required (%)</label>
+          <input type="number" class="input" id="ds_presaleGatePct" />
+          <label class="label">Current presales (%)</label>
+          <input type="number" class="input" id="ds_currentPresalesPct" />
+        </div>
+      </div>
+    </div>
+    <div class="canvas">
+      <button class="edit-inputs-btn" id="dsEditInputsBtn">Edit inputs</button>
+      <div class="tab-panel active">
+        <div class="kpi-grid" id="dsMetricCards"></div>
+        <div class="two-col-grid">
+          <div class="card"><div class="card-title">Budget allocation</div><div id="dsChart" style="max-width:280px;margin:0 auto"></div></div>
+          <div class="card">
+            <div class="card-title">Presale gate</div>
+            <div class="big-mono" id="dsGateStatus" style="margin-bottom:8px;"></div>
+            <div class="hint" id="dsGateHint" style="margin-bottom:0;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTE: PORTFOLIO -->
+  <div class="route simple" id="route-portfolio">
+    <div class="canvas" style="padding:24px;">
+      <div class="header-row"><h2 class="page-title">Portfolio</h2><button class="edit-inputs-btn" style="display:inline-block;" id="goToDA">+ Add property</button></div>
+      <div class="kpi-grid" id="pfSummaryCards" style="margin-bottom:24px;"></div>
+      <div class="two-col-grid" style="margin-bottom:24px;">
+        <div class="card"><div class="card-title">Equity distribution</div><div id="pfEquityChart" style="width:100%"></div></div>
+        <div class="card"><div class="card-title">Cash flow distribution</div><div id="pfCashflowChart" style="width:100%"></div></div>
+      </div>
+      <h3 style="font-family:'Fraunces',serif;font-weight:600;font-size:16px;margin-bottom:12px;">Properties</h3>
+      <div class="pf-grid" id="pfPropertyCards"></div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO MODAL -->
+  <div class="modal-scrim" id="pfModalScrim">
+    <div class="modal" id="pfModal">
+      <div class="modal-header">
+        <div><div class="modal-title" id="pfModalTitle"></div><div class="modal-subtitle" id="pfModalSubtitle"></div></div>
+        <button class="icon-btn" id="pfModalClose" data-feather="x"></button>
+      </div>
+      <div class="tab-bar" id="pfModalTabBar"></div>
+      <div id="pfModalBody"></div>
+    </div>
+  </div>
+
+  <!-- ROUTE: MARKET (Market Research / Market Intel) -->
+  <div class="route simple" id="route-market">
+    <div class="canvas" style="padding:24px;">
+      <h2 class="page-title">Market Intel</h2>
+      <div class="kpi-grid" id="miSummaryCards" style="margin-bottom:24px;"></div>
+      <div class="two-col-grid" style="margin-bottom:24px;">
+        <div class="card"><div class="card-title">Cap rate trend (5-yr, all markets)</div><div id="miCapRateChart" style="width:100%"></div></div>
+        <div class="card"><div class="card-title">Mortgage rate trend (5-yr)</div><div id="miMortgageChart" style="width:100%"></div></div>
+        <div class="card"><div class="card-title">10-yr bond yield trend (5-yr)</div><div id="miBondChart" style="width:100%"></div></div>
+        <div class="card"><div class="card-title">Market growth index (5-yr)</div><div id="miGrowthChart" style="width:100%"></div></div>
+      </div>
+      <div class="card" style="margin-bottom:24px;"><div class="card-title">Regional heat map — cap rate by region</div><div id="miRegionHeatChart" style="width:100%"></div></div>
+      <div class="card">
+        <div class="card-title">Market news &amp; research</div>
+        <div class="brief"><div class="narrative-title">AI morning brief</div>Cap rates across tracked markets held near 5.2% this week, with mortgage rates easing slightly and bond yields flat. Appreciation remains positive but volatility is elevated versus the 5-year average.</div>
+        <div id="miArticles"></div>
+        <div class="sources-row"><span class="kpi-label" style="margin:0;">Data sources</span><span class="source-chip">FRED</span><span class="source-chip">Bank of Canada</span><span class="source-chip">CREA</span><span class="source-chip">Zillow Research</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTE: NEIGHBOURHOOD INTEL -->
+  <div class="route simple" id="route-neighbourhood-intel">
+    <div class="canvas" style="padding:24px;">
+      <h2 class="page-title">Neighbourhood Intel</h2>
+      <div style="margin-bottom:12px;"><input type="text" class="input search-input" id="nbSearch" placeholder="Type a city name (e.g., 'Vancouver', 'Denver')" style="margin-bottom:0;" /></div>
+      <div class="map-wrap"><div id="nbMap" style="width:100%;height:100%"></div></div>
+      <div class="proto-notice">ⓘ Prototype: this is a functional mockup with 10 sample cities. In production, this will support 1,000+ neighborhoods.</div>
+      <div class="cities-grid" id="nbCityChips"></div>
+      <div class="tip">💡 Click a marker on the map or type a city name and press Enter to search.</div>
+      <div class="selected-row">Selected: <span class="selected-name" id="mktSelectedLabel"></span></div>
+      <div class="kpi-grid" id="mktSummaryCards" style="margin-bottom:24px;"></div>
+      <div class="card" style="margin-bottom:24px;"><div class="card-title">Regional heat map — cap rate by neighborhood</div><div id="mktHeatChart" style="width:100%"></div></div>
+      <div class="three-col-grid" style="margin-bottom:12px;">
+        <div class="card"><div class="card-title">Avg price trend (5-yr)</div><div id="mktPriceChart" style="width:100%"></div></div>
+        <div class="card"><div class="card-title">Avg rent trend (5-yr)</div><div id="mktRentChart" style="width:100%"></div></div>
+        <div class="card"><div class="card-title">Appreciation rate (5-yr)</div><div id="mktApprChart" style="width:100%"></div></div>
+      </div>
+      <div class="proto-notice">📊 Mock data: trend figures are illustrative and regenerate per selected city. Production will pull live comparables and historical pricing feeds.</div>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">Comparables</div>
+        <div class="table-scroll"><table class="data-table">
+          <thead><tr><th>Address</th><th>Price</th><th>Days sold</th><th>Cap rate</th></tr></thead>
+          <tbody id="mktCompsRows"></tbody>
+        </table></div>
+      </div>
+      <div class="two-col-grid" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="card-title">Demographics &amp; education</div>
+          <div class="meta-row"><span class="meta-key">Population</span><span class="meta-val" id="niPopulation"></span></div>
+          <div class="meta-row" style="border-bottom:none;"><span class="meta-key">Median age</span><span class="meta-val" id="niMedianAge"></span></div>
+          <table class="data-table" style="margin-top:12px;"><thead><tr><th>School level</th><th>Count</th><th>Avg rating</th></tr></thead>
+            <tbody id="niSchoolRows"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">Walkability &amp; transit</div>
+          <div id="niGauges"></div>
+        </div>
+      </div>
+      <div class="two-col-grid" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="card-title">Safety</div>
+          <div class="meta-row" style="border-bottom:none;"><span class="meta-key">Crime rate (per 1,000)</span><span class="meta-val" id="niCrimeRate"></span></div>
+          <div id="niCrimeTrendChart" style="width:100%"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Crime breakdown by type</div>
+          <div id="niCrimeBreakdownChart" style="width:100%"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lifestyle &amp; amenities</div>
+        <div class="kpi-grid" id="niAmenityCards"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTE: COMMUNITY / LIBRARY (placeholder) -->
+  <div class="route simple" id="route-community">
+    <div class="canvas" style="padding:24px;"><div class="placeholder-card"><h2 class="page-title">Community</h2><p style="font-size:14px;color:var(--text-2);margin:0;">Coming soon — this module isn't built yet in the prototype.</p></div></div>
+  </div>
+  <div class="route simple" id="route-library">
+    <div class="canvas" style="padding:24px;"><div class="placeholder-card"><h2 class="page-title">Library</h2><p style="font-size:14px;color:var(--text-2);margin:0;">Coming soon — this module isn't built yet in the prototype.</p></div></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   ENGINE — ported verbatim from InvestScape.dc (Tier 1 to Tier 3)
+   ============================================================ */
+function monthlyPayment(principal, ratePct, years) {
+  const r = ratePct / 100 / 12, n = years * 12;
+  if (!principal || !years) return 0;
+  if (r === 0) return principal / n;
+  return principal * r / (1 - Math.pow(1 + r, -n));
+}
+function irrFromCashflows(cfs) {
+  function npv(rate) { return cfs.reduce((s, cf, i) => s + cf / Math.pow(1 + rate, i), 0); }
+  let lo = -0.9, hi = 5;
+  if (npv(lo) * npv(hi) > 0) return null;
+  for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (npv(lo) * npv(mid) <= 0) hi = mid; else lo = mid; }
+  return (lo + hi) / 2;
+}
+function fmtUSD(n) { if (n == null || isNaN(n)) return '—'; const neg = n < 0; return (neg ? '-' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('en-US'); }
+function fmtPctVal(n, d) { if (n == null || isNaN(n)) return '—'; return (n * 100).toFixed(d == null ? 1 : d) + '%'; }
+function remainingBalance(principal, ratePct, years, elapsedYears) {
+  const r = ratePct / 100 / 12, pmt = monthlyPayment(principal, ratePct, years), k = Math.round(elapsedYears * 12);
+  if (!principal) return 0;
+  if (r === 0) return Math.max(0, principal - pmt * k);
+  return Math.max(0, principal * Math.pow(1 + r, k) - pmt * ((Math.pow(1 + r, k) - 1) / r));
+}
+function amortizationSchedule(principal, ratePct, years) {
+  const r = ratePct / 100 / 12, n = years * 12, pmt = monthlyPayment(principal, ratePct, years);
+  let bal = principal; const rows = [];
+  for (let m = 1; m <= n; m++) { const interest = bal * r; const princ = Math.min(bal, pmt - interest); bal = Math.max(0, bal - princ); rows.push({ month: m, payment: pmt, principal: princ, interest, balance: bal }); }
+  return rows;
+}
+function seededRand(seed) { const x = Math.sin(seed) * 10000; return x - Math.floor(x); }
+function lerpColor(a, b, t) {
+  const ah = parseInt(a.slice(1), 16), bh = parseInt(b.slice(1), 16);
+  const ar = (ah >> 16) & 255, ag = (ah >> 8) & 255, ab = ah & 255, br = (bh >> 16) & 255, bg = (bh >> 8) & 255, bb = bh & 255;
+  const rr = Math.round(ar + (br - ar) * t), rg = Math.round(ag + (bg - ag) * t), rb = Math.round(ab + (bb - ab) * t);
+  return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb).toString(16).slice(1);
+}
+
+function daMetrics(deal) {
+  const grossAnnualRent = deal.monthlyRent * 12;
+  const effectiveIncome = grossAnnualRent * (1 - deal.vacancyRate / 100);
+  const mgmtFee = grossAnnualRent * (deal.propertyMgmtFees / 100);
+  const opEx = deal.propertyTax + deal.insurance + deal.maintenance + mgmtFee;
+  const noi = effectiveIncome - opEx;
+  const pmt = monthlyPayment(deal.loanAmount, deal.interestRate, deal.amortizationPeriod);
+  const annualDebtService = pmt * 12;
+  const annualCashFlow = noi - annualDebtService;
+  const equity = deal.purchasePrice - deal.loanAmount;
+  const capRate = deal.purchasePrice ? noi / deal.purchasePrice : 0;
+  const cashOnCash = equity ? annualCashFlow / equity : 0;
+  const dscr = annualDebtService ? noi / annualDebtService : 0;
+  const ltv = deal.purchasePrice ? deal.loanAmount / deal.purchasePrice : 0;
+  const salePrice = deal.exitCapRate ? noi / (deal.exitCapRate / 100) : 0;
+  const netProceeds = salePrice * (1 - deal.saleCosts / 100) - deal.loanAmount;
+  const totalCashFlow = annualCashFlow * deal.holdPeriod;
+  const totalReturned = netProceeds + totalCashFlow;
+  const equityMultiple = equity ? totalReturned / equity : 0;
+  const cfs = [-equity]; for (let y = 1; y < deal.holdPeriod; y++) cfs.push(annualCashFlow); cfs.push(annualCashFlow + netProceeds);
+  const irr = irrFromCashflows(cfs);
+  const frontEnd = grossAnnualRent ? Math.min(0.99, (annualDebtService + deal.propertyTax + deal.insurance) / grossAnnualRent * 0.9) : 0;
+  const backEnd = Math.min(0.99, frontEnd + 0.06);
+  const totalInterest = Math.max(0, annualDebtService * deal.amortizationPeriod - deal.loanAmount);
+  const balanceAtExit = remainingBalance(deal.loanAmount, deal.interestRate, deal.amortizationPeriod, deal.holdPeriod);
+  const equityPaydown = Math.max(0, deal.loanAmount - balanceAtExit);
+  const appreciation = Math.max(0, salePrice - deal.purchasePrice);
+  return { noi, annualDebtService, monthlyCashFlow: annualCashFlow / 12, annualCashFlow, equity, capRate, cashOnCash, dscr, ltv, salePrice, netProceeds, equityMultiple, irr, frontEnd, backEnd, opEx, grossAnnualRent, vacancyLoss: grossAnnualRent - effectiveIncome, effectiveIncome, totalCashFlow, totalInterest, equityPaydown, appreciation };
+}
+function daCashFlowRows(deal, metrics) {
+  const rows = [];
+  for (let y = 1; y <= 5; y++) {
+    const growth = Math.pow(1 + deal.rentGrowth / 100, y - 1);
+    const gross = deal.monthlyRent * 12 * growth;
+    const opExY = metrics.opEx * Math.pow(1.02, y - 1);
+    const noiY = gross * (1 - deal.vacancyRate / 100) - opExY;
+    const cf = noiY - metrics.annualDebtService;
+    rows.push({ year: y, gross, opEx: opExY, noi: noiY, cashFlow: cf });
+  }
+  return rows;
+}
+function daAmortDisplayRows(deal) {
+  const rows = amortizationSchedule(deal.loanAmount, deal.interestRate, deal.amortizationPeriod);
+  const first = rows.slice(0, 12), mid = rows.slice(48, 60);
+  return [...first.map(r => ({ ...r, ellipsis: false })), { ellipsis: true }, ...mid.map(r => ({ ...r, ellipsis: false }))];
+}
+function dsMetrics(inp) {
+  const totalCost = inp.landCost + inp.hardCosts + inp.softCosts + inp.financingCosts;
+  const contingencyAmt = (inp.hardCosts + inp.softCosts) * inp.contingencyPct / 100;
+  const totalCostWithContingency = totalCost + contingencyAmt;
+  const profitAmt = inp.gdv - totalCostWithContingency;
+  const profitOnCost = totalCostWithContingency ? profitAmt / totalCostWithContingency : 0;
+  const holdYears = Math.max(0.5, inp.holdMonths / 12);
+  const yieldOnCost = profitOnCost / holdYears;
+  const developmentSpread = yieldOnCost - inp.marketCapRate / 100;
+  const loanAmt = totalCostWithContingency * inp.loanToCostPct / 100;
+  const peakEquity = totalCostWithContingency - loanAmt;
+  const residualLandValue = inp.gdv - inp.hardCosts - inp.softCosts - inp.financingCosts - contingencyAmt;
+  const cfs = [-peakEquity, peakEquity + profitAmt];
+  const irr = irrFromCashflows(cfs);
+  const irrAnnual = irr != null ? Math.pow(1 + irr, 1 / holdYears) - 1 : null;
+  return { totalCost, contingencyAmt, totalCostWithContingency, profitAmt, profitOnCost, yieldOnCost, developmentSpread, peakEquity, residualLandValue, irrAnnual, gateMet: inp.currentPresalesPct >= inp.presaleGatePct };
+}
+
+/* ---- Market / neighbourhood mock data generator (ported verbatim) ---- */
+const MARKET_NEIGHBORHOODS = ['Vancouver, BC', 'Toronto, ON', 'Denver, CO', 'Austin, TX', 'Calgary, AB', 'Seattle, WA', 'Boston, MA', 'Portland, OR', 'Miami, FL', 'Phoenix, AZ'];
+const NEIGHBORHOOD_COORDS = [[49.2827, -123.1207], [43.6532, -79.3832], [39.7392, -104.9903], [30.2672, -97.7431], [51.0447, -114.0719], [47.6062, -122.3321], [42.3601, -71.0589], [45.5152, -122.6784], [25.7617, -80.1918], [33.4484, -112.0740]];
+const MARKET_STREETS = ['Main St', 'Oak Rd', 'Park Ave', 'Elm St', 'Cedar Ln', 'Birch Ct', 'Maple Dr', 'Pine St', 'Willow Way', 'Spruce Ave', 'Aspen Ct', 'Cypress Rd', 'Fir Ln', 'Sequoia Dr', 'Redwood Ave'];
+function marketDataFor(idx) {
+  const avgPrice = 550000 + idx * 37000 + Math.round(seededRand(idx * 2 + 1) * 40000);
+  const capRate = +(4.2 + seededRand(idx * 7 + 1) * 2.6).toFixed(1);
+  const avgRent = Math.round((avgPrice * (capRate / 100) / 12) / 0.62);
+  const daysOnMarket = Math.round(28 + seededRand(idx * 3 + 2) * 40);
+  const yoyAppreciation = +(1.5 + seededRand(idx * 5 + 3) * 4.5).toFixed(1);
+  const priceRentRatio = +(avgPrice / (avgRent * 12)).toFixed(1);
+  const priceTrend = [0, 1, 2, 3, 4].map(y => Math.round(avgPrice * Math.pow(1 + (yoyAppreciation / 100) * 0.9, y - 4)));
+  const rentTrend = [0, 1, 2, 3, 4].map(y => Math.round(avgRent * Math.pow(1.025, y - 4)));
+  const apprTrend = [0, 1, 2, 3, 4].map(y => +(yoyAppreciation + (seededRand(idx * 11 + y) - 0.5) * 3).toFixed(1));
+  const comparables = Array.from({ length: 15 }, (_, i) => ({
+    address: `${100 + i * 40} ${MARKET_STREETS[i]}, ${MARKET_NEIGHBORHOODS[idx].split(',')[0]}`,
+    price: Math.round(avgPrice * (0.82 + seededRand(idx * 13 + i) * 0.38)),
+    days: Math.round(18 + seededRand(idx * 17 + i) * 60),
+    cap: +(capRate + (seededRand(idx * 19 + i) - 0.5) * 1.2).toFixed(1)
+  }));
+  const population = 30000 + idx * 4200 + Math.round(seededRand(idx * 23 + 1) * 15000);
+  const medianAge = Math.round(32 + seededRand(idx * 29 + 2) * 12);
+  const schools = {
+    elementary: { count: 2 + Math.round(seededRand(idx * 31 + 3) * 3), rating: +(7 + seededRand(idx * 37 + 4) * 2).toFixed(1) },
+    middle: { count: 1 + Math.round(seededRand(idx * 41 + 5) * 2), rating: +(7 + seededRand(idx * 43 + 6) * 2).toFixed(1) },
+    high: { count: 1 + Math.round(seededRand(idx * 47 + 7) * 2), rating: +(7 + seededRand(idx * 53 + 8) * 2).toFixed(1) }
+  };
+  const walkScore = Math.round(55 + seededRand(idx * 59 + 9) * 40);
+  const transitScore = Math.round(45 + seededRand(idx * 61 + 10) * 45);
+  const bikeScore = Math.round(50 + seededRand(idx * 67 + 11) * 40);
+  const crimeRate = Math.round(20 + seededRand(idx * 71 + 12) * 30);
+  const crimeTrend = [0, 1, 2, 3, 4].map(y => Math.round(crimeRate * (1.15 - y * 0.03)));
+  const topCrimes = [
+    { type: 'Theft', value: Math.round(crimeRate * 0.4) }, { type: 'Break-in', value: Math.round(crimeRate * 0.25) },
+    { type: 'Vandalism', value: Math.round(crimeRate * 0.2) }, { type: 'Assault', value: Math.round(crimeRate * 0.15) }
+  ];
+  const amenities = {
+    restaurants: 40 + Math.round(seededRand(idx * 73 + 13) * 100), grocery: 4 + Math.round(seededRand(idx * 79 + 14) * 8),
+    parks: 5 + Math.round(seededRand(idx * 83 + 15) * 15), entertainment: 10 + Math.round(seededRand(idx * 89 + 16) * 30)
+  };
+  return { avgPrice, capRate, avgRent, daysOnMarket, yoyAppreciation, priceRentRatio, priceTrend, rentTrend, apprTrend, comparables, population, medianAge, schools, walkScore, transitScore, bikeScore, crimeRate, crimeTrend, topCrimes, amenities };
+}
+
+const THEME_DARK = { bg: '#0C1B2E', bgElevated: '#141821', bgCard: '#171B26', textPrimary: '#F7F5EF', textSecondary: 'rgba(247,245,239,0.6)', accent: '#D9B04A', accentSoft: 'rgba(217,176,74,0.14)', green: '#4ADE80', red: '#F87171', blue: '#7DD3FC', border: 'rgba(255,255,255,0.08)', borderStrong: 'rgba(255,255,255,0.16)' };
+const THEME_LIGHT = { bg: '#f5f3ed', bgElevated: '#fefdfb', bgCard: '#fefdfb', textPrimary: '#2d2520', textSecondary: '#5a5248', accent: '#A8791A', accentSoft: 'rgba(168,121,26,0.09)', green: '#16A34A', red: '#DC2626', blue: '#0284C7', border: '#d9d5cd', borderStrong: '#c4beb2' };
+
+const PF_PROPERTIES = [
+  { id: 'p1', address: '123 Main Street, Toronto, ON', typeKey: 'residential', typeLabel: 'Residential', price: 950000, equity: 500000, monthlyCashFlow: 1200, capRate: 0.055, coc: 0.082, status: 'Stabilized', monthlyRent: 6200, opEx: 1850, debtService: 3150, purchaseDate: 'Jun 2023',
+    docs: [{ icon: '📄', name: 'Lease agreements (6).pdf', sub: '3.1 MB' }, { icon: '📊', name: 'Annual statement 2025.pdf', sub: '1.4 MB' }],
+    history: [{ date: 'Jun 2023', text: 'Acquired for $920,000' }, { date: 'Jan 2024', text: 'Refinanced at 5.1%' }, { date: 'Mar 2025', text: 'Full occupancy reached' }] },
+  { id: 'p2', address: '456 Park Ave, Denver, CO', typeKey: 'commercial', typeLabel: 'Commercial', price: 1450000, equity: 350000, monthlyCashFlow: 2100, capRate: 0.068, coc: 0.114, status: 'Stabilized', monthlyRent: 11200, opEx: 3400, debtService: 5700, purchaseDate: 'Sep 2022',
+    docs: [{ icon: '📄', name: 'Tenant estoppels.pdf', sub: '2.2 MB' }, { icon: '🖼', name: 'Site photos.zip', sub: '58 MB' }],
+    history: [{ date: 'Sep 2022', text: 'Acquired for $1,380,000' }, { date: 'Feb 2024', text: 'Anchor tenant renewed 5-yr lease' }] },
+  { id: 'p3', address: '789 Oak Rd, Vancouver, BC', typeKey: 'residential', typeLabel: 'Residential', price: 1100000, equity: 400000, monthlyCashFlow: -300, capRate: 0.039, coc: -0.021, status: 'Analyzing', monthlyRent: 5100, opEx: 2200, debtService: 3200, purchaseDate: 'Nov 2024',
+    docs: [{ icon: '📄', name: 'Inspection report.pdf', sub: '4.0 MB' }],
+    history: [{ date: 'Nov 2024', text: 'Acquired for $1,100,000' }, { date: 'Jan 2026', text: 'Flagged for negative cash flow review' }] },
+  { id: 'p4', address: '22 Commerce Blvd, Calgary, AB', typeKey: 'development', typeLabel: 'Development', price: 2100000, equity: 620000, monthlyCashFlow: 0, capRate: null, coc: null, status: 'In development', monthlyRent: 0, opEx: 0, debtService: 0, purchaseDate: 'Apr 2025',
+    docs: [{ icon: '📐', name: 'Site plans.pdf', sub: '12 MB' }, { icon: '📄', name: 'Development permit.pdf', sub: '900 KB' }],
+    history: [{ date: 'Apr 2025', text: 'Land acquired' }, { date: 'Oct 2025', text: 'Permits approved' }] },
+  { id: 'p5', address: '910 Bay Street, Vancouver, BC', typeKey: 'commercial', typeLabel: 'Commercial', price: 1600000, equity: 480000, monthlyCashFlow: 1850, capRate: 0.061, coc: 0.097, status: 'Stabilized', monthlyRent: 9800, opEx: 2900, debtService: 5050, purchaseDate: 'Jan 2021',
+    docs: [{ icon: '📄', name: 'Rent roll.pdf', sub: '1.1 MB' }],
+    history: [{ date: 'Jan 2021', text: 'Acquired for $1,480,000' }, { date: 'Jul 2023', text: 'Cap-ex roof replacement completed' }] }
+];
+
+const NAV_DEFS = [
+  { key: 'portfolio', label: 'Portfolio' }, { key: 'deal-analyzer', label: 'Deal Analyzer' }, { key: 'dev-studio', label: 'Development Studio' },
+  { key: 'market', label: 'Market Research' }, { key: 'neighbourhood-intel', label: 'Neighbourhood Intel' }, { key: 'community', label: 'Community' }, { key: 'library', label: 'Library' }
+];
+
+const MI_TREND_YEARS = ['Y1', 'Y2', 'Y3', 'Y4', 'Y5'];
+const MI_CAP_RATE_TREND = [4.8, 4.9, 5.0, 5.1, 5.2];
+const MI_MORTGAGE_TREND = [5.10, 5.25, 5.40, 5.50, 5.45];
+const MI_BOND_TREND = [3.95, 4.00, 4.10, 4.20, 4.20];
+const MI_GROWTH_TREND = [2.1, 2.4, 2.6, 2.9, 2.8];
+const MI_REGIONS = ['Western Canada', 'Central Canada', 'Eastern Canada', 'US West', 'US Midwest', 'US Northeast', 'US South'];
+const MI_REGION_CAP_RATES = [4.6, 5.0, 5.4, 4.3, 5.6, 4.1, 5.9];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  theme: localStorage.getItem('is-theme') || 'dark',
+  glowEnabled: localStorage.getItem('is-glow') !== 'false',
+  settingsOpen: false,
+  activeRoute: 'deal-analyzer',
+  da: {
+    railOpen: false, activeTab: 0, viewMode: 'tabs',
+    sectionsOpen: { property: true, financing: true, income: true, expenses: true, exit: false },
+    deal: { address: '123 Main Street, Toronto, ON', assetType: 'multifamily-5-10', jurisdiction: 'Canada', purchasePrice: 450000, loanAmount: 292500, interestRate: 5.0, amortizationPeriod: 25, loanType: 'Conventional', monthlyRent: 3600, rentGrowth: 3.0, vacancyRate: 5, propertyTax: 3600, insurance: 1200, maintenance: 2400, propertyMgmtFees: 8, holdPeriod: 5, exitCapRate: 5.0, saleCosts: 6, notes: '' }
+  },
+  ds: {
+    railOpen: false,
+    sectionsOpen: { budget: true, assumptions: true, presale: false },
+    inputs: { landCost: 1200000, hardCosts: 3400000, softCosts: 850000, financingCosts: 320000, contingencyPct: 8, gdv: 8200000, marketCapRate: 5, loanToCostPct: 65, holdMonths: 24, presaleGatePct: 60, currentPresalesPct: 45 }
+  },
+  portfolio: {},
+  market: { selectedIndex: 0, searchText: 'Vancouver, BC' }
+};
+
+function theme() { return state.theme === 'light' ? THEME_LIGHT : THEME_DARK; }
+function chartText() { return state.theme === 'light' ? '#5a5248' : '#c9d1d9'; }
+
+/* ============================================================
+   RENDER HELPERS
+   ============================================================ */
+function kpiCard(label, value, color, sizeClass) {
+  const cls = 'kpi-value' + (sizeClass ? ' ' + sizeClass : '') + (color === 'green' ? ' green' : color === 'red' ? ' red' : '');
+  return `<div class="kpi-card"><div class="kpi-label">${label}</div><div class="${cls}">${value}</div></div>`;
+}
+function charts() { return {}; }
+const chartInstances = {};
+function mountChart(key, elId, options) {
+  const el = document.getElementById(elId);
+  if (!el || !window.ApexCharts) return;
+  if (chartInstances[key]) { try { chartInstances[key].destroy(); } catch (e) {} }
+  chartInstances[key] = new window.ApexCharts(el, options);
+  chartInstances[key].render();
+}
+const baseChartChrome = { toolbar: { show: false, tools: { zoomin: false, zoomout: false, zoom: false, pan: false } }, zoom: { enabled: false, allowMouseWheelZoom: false } };
+
+/* ============================================================
+   DEAL ANALYZER
+   ============================================================ */
+function bindDAInputs() {
+  const d = state.da.deal;
+  document.getElementById('da_address').value = d.address;
+  document.getElementById('da_assetType').value = d.assetType;
+  document.getElementById('da_jurisdiction').value = d.jurisdiction;
+  document.getElementById('da_purchasePrice').value = d.purchasePrice;
+  document.getElementById('da_loanAmount').value = d.loanAmount;
+  document.getElementById('da_interestRate').value = d.interestRate;
+  document.getElementById('da_amortizationPeriod').value = d.amortizationPeriod;
+  document.getElementById('da_loanType').value = d.loanType;
+  document.getElementById('da_monthlyRent').value = d.monthlyRent;
+  document.getElementById('da_rentGrowth').value = d.rentGrowth;
+  document.getElementById('da_vacancyRate').value = d.vacancyRate;
+  document.getElementById('da_propertyTax').value = d.propertyTax;
+  document.getElementById('da_insurance').value = d.insurance;
+  document.getElementById('da_maintenance').value = d.maintenance;
+  document.getElementById('da_propertyMgmtFees').value = d.propertyMgmtFees;
+  document.getElementById('da_holdPeriod').value = d.holdPeriod;
+  document.getElementById('da_exitCapRate').value = d.exitCapRate;
+  document.getElementById('da_saleCosts').value = d.saleCosts;
+  document.getElementById('da_notes').value = d.notes;
+}
+
+function updateDADisplay() {
+  const deal = state.da.deal;
+  const m = daMetrics(deal);
+  const t = theme();
+
+  document.getElementById('daOverviewCards').innerHTML = [
+    kpiCard('Monthly cash flow', fmtUSD(m.monthlyCashFlow) + '/mo', m.monthlyCashFlow >= 0 ? 'green' : 'red'),
+    kpiCard('Cash-on-cash', fmtPctVal(m.cashOnCash, 1), m.cashOnCash >= 0 ? 'green' : 'red'),
+    kpiCard('Cap rate', fmtPctVal(m.capRate, 1)),
+    kpiCard('DSCR', m.dscr.toFixed(2) + 'x', m.dscr >= 1.2 ? 'green' : (m.dscr < 1.0 ? 'red' : null)),
+    kpiCard('LTV / Equity', fmtPctVal(m.ltv, 0) + ' / ' + fmtUSD(m.equity)),
+    kpiCard('IRR', m.irr != null ? fmtPctVal(m.irr, 1) : '—', m.irr != null && m.irr >= 0 ? 'green' : 'red')
+  ].join('');
+  document.getElementById('daMetaAddress').textContent = deal.address;
+  document.getElementById('daMetaPrice').textContent = fmtUSD(deal.purchasePrice);
+  document.getElementById('daNarrative').textContent = `This deal shows cash-on-cash return of ${fmtPctVal(m.cashOnCash, 1)} and DSCR of ${m.dscr.toFixed(2)}x, with LTV at ${fmtPctVal(m.ltv, 0)}.`;
+
+  document.getElementById('daCashflowCards').innerHTML = [
+    kpiCard('Gross annual rent', fmtUSD(m.grossAnnualRent), null, 'md'),
+    kpiCard('Vacancy loss', fmtUSD(-m.vacancyLoss), 'red', 'md'),
+    kpiCard('Effective income', fmtUSD(m.effectiveIncome), null, 'md'),
+    kpiCard('Operating expenses', fmtUSD(m.opEx), null, 'md'),
+    kpiCard('Net operating income', fmtUSD(m.noi), 'green', 'md'),
+    kpiCard('Annual debt service', fmtUSD(m.annualDebtService), null, 'md')
+  ].join('');
+  const cfRows = daCashFlowRows(deal, m);
+  document.getElementById('daCashFlowRows').innerHTML = cfRows.map(r =>
+    `<tr><td>${r.year}</td><td>${fmtUSD(r.gross)}</td><td>${fmtUSD(r.opEx)}</td><td>${fmtUSD(r.noi)}</td><td style="color:${r.cashFlow >= 0 ? t.green : t.red}">${fmtUSD(r.cashFlow)}</td></tr>`
+  ).join('');
+
+  document.getElementById('daReturnsCards').innerHTML = [
+    kpiCard('Projected sale price', fmtUSD(m.salePrice)),
+    kpiCard('IRR', m.irr != null ? fmtPctVal(m.irr, 1) : '—', m.irr != null && m.irr >= 0 ? 'green' : 'red'),
+    kpiCard('Equity multiple', m.equityMultiple.toFixed(2) + 'x'),
+    kpiCard(`Total cash flow (${deal.holdPeriod}-yr)`, fmtUSD(m.totalCashFlow), m.totalCashFlow >= 0 ? 'green' : 'red'),
+    kpiCard('Net proceeds', fmtUSD(m.netProceeds)),
+    kpiCard('Cap rate (exit)', fmtPctVal(deal.exitCapRate / 100, 1))
+  ].join('');
+  document.getElementById('daSensitivityRows').innerHTML = [4.5, 5.0, 5.5, 6.0].map(rate => {
+    const v5 = 18 - (rate - 4.5) * 4, v10 = 11 - (rate - 4.5) * 4;
+    const cellColor = (v) => v >= 15 ? t.green : (v >= 10 ? t.accent : t.red);
+    return `<tr><td>${rate.toFixed(1)}%</td><td style="color:${cellColor(v5)}">${v5.toFixed(0)}%</td><td style="color:${cellColor(v10)}">${v10.toFixed(0)}%</td></tr>`;
+  }).join('');
+  document.getElementById('daScenIrr').textContent = m.irr != null ? fmtPctVal(m.irr, 1) : '—';
+  document.getElementById('daScenEM').textContent = m.equityMultiple.toFixed(2) + 'x';
+  document.getElementById('daExitSalePrice').textContent = fmtUSD(m.salePrice);
+  document.getElementById('daExitNetProceeds').textContent = fmtUSD(m.netProceeds);
+
+  document.getElementById('daFinancingCards').innerHTML = [
+    kpiCard('Loan amount', fmtUSD(deal.loanAmount), null, 'md'),
+    kpiCard('LTV', fmtPctVal(m.ltv, 0), null, 'md'),
+    kpiCard('Monthly payment', fmtUSD(monthlyPayment(deal.loanAmount, deal.interestRate, deal.amortizationPeriod)), null, 'md'),
+    kpiCard('Interest rate', deal.interestRate.toFixed(1) + '%', null, 'md'),
+    kpiCard('Amortization', deal.amortizationPeriod + ' years', null, 'md'),
+    kpiCard('Total interest', fmtUSD(m.totalInterest), null, 'md')
+  ].join('');
+  document.getElementById('daAmortRows').innerHTML = daAmortDisplayRows(deal).map(r => r.ellipsis
+    ? `<tr><td colspan="5">···</td></tr>`
+    : `<tr><td>${r.month}</td><td>${fmtUSD(r.payment)}</td><td>${fmtUSD(r.principal)}</td><td>${fmtUSD(r.interest)}</td><td>${fmtUSD(r.balance)}</td></tr>`
+  ).join('');
+  const isCA = deal.jurisdiction === 'Canada';
+  document.getElementById('daQualJurisdiction').textContent = deal.jurisdiction;
+  const qualDefs = isCA
+    ? [{ name: 'GDS', v: m.frontEnd, threshold: 0.39, thresholdLabel: '39%' }, { name: 'TDS', v: m.backEnd, threshold: 0.44, thresholdLabel: '44%' }]
+    : [{ name: 'Front-end DTI', v: m.frontEnd, threshold: 0.43, thresholdLabel: '43%' }, { name: 'Back-end DTI', v: m.backEnd, threshold: 0.50, thresholdLabel: '50%' }];
+  document.getElementById('daQualRows').innerHTML = qualDefs.map(q => {
+    const pass = q.v <= q.threshold;
+    return `<tr><td>${q.name}</td><td>${fmtPctVal(q.v, 0)}</td><td>${q.thresholdLabel}</td><td style="color:${pass ? t.green : t.red}">${pass ? '✓ Pass' : '✗ Fail'}</td></tr>`;
+  }).join('');
+
+  document.getElementById('daFilesList').innerHTML = [
+    { icon: '📄', name: 'Rent roll — March 2026.pdf', sub: '1.2 MB · ✓ read by AI — 2 units below market' },
+    { icon: '📊', name: 'Depreciation report.pdf', sub: '8.4 MB · ✓ read by AI — roof reserve flagged' },
+    { icon: '🖼', name: 'Inspection photos (14).zip', sub: '46 MB · stored only' }
+  ].map(f => `<div class="file-row"><div class="file-icon">${f.icon}</div><div><div class="file-name">${f.name}</div><div class="file-sub">${f.sub}</div></div></div>`).join('');
+
+  mountChart('daCf', 'daCfChart', {
+    chart: { type: 'bar', stacked: true, background: 'transparent', fontFamily: 'Inter, sans-serif', ...baseChartChrome },
+    series: [{ name: 'Income', data: cfRows.map(r => Math.round(r.gross)) }, { name: 'Expenses', data: cfRows.map(r => -Math.round(r.opEx)) }],
+    xaxis: { categories: cfRows.map(r => 'Year ' + r.year), labels: { style: { colors: t.textSecondary } } },
+    yaxis: { labels: { style: { colors: t.textSecondary } } }, colors: ['#00c853', '#ff5252'], grid: { borderColor: t.border },
+    legend: { labels: { colors: t.textSecondary } }, dataLabels: { enabled: false }
+  });
+  mountChart('daReturns', 'daReturnsChart', {
+    chart: { type: 'bar', stacked: true, background: 'transparent', fontFamily: 'Inter, sans-serif', height: 220, ...baseChartChrome },
+    plotOptions: { bar: { horizontal: true, barHeight: '45%' } },
+    series: [{ name: 'Cash flow', data: [Math.round(m.totalCashFlow)] }, { name: 'Appreciation', data: [Math.round(m.appreciation)] }, { name: 'Equity paydown', data: [Math.round(m.equityPaydown)] }],
+    xaxis: { categories: ['Returns'], labels: { style: { colors: t.textSecondary }, formatter: (v) => fmtUSD(v) } },
+    yaxis: { labels: { style: { colors: t.textSecondary } } }, colors: [t.green, t.accent, t.blue], grid: { borderColor: t.border },
+    legend: { labels: { colors: t.textSecondary } }, dataLabels: { enabled: true, formatter: (v) => fmtUSD(v), style: { colors: [t.bg] } }
+  });
+  mountChart('daFinancing', 'daFinancingChart', {
+    chart: { type: 'donut', height: 240, background: 'transparent', fontFamily: 'Inter, sans-serif' }, theme: { mode: state.theme },
+    series: [Math.round(deal.loanAmount), Math.round(m.totalInterest)], labels: ['Principal', 'Interest'],
+    colors: ['#c9a227', '#ff5252'], stroke: { colors: [t.bgCard], width: 2 }, dataLabels: { enabled: false },
+    legend: { position: 'bottom', labels: { colors: t.textSecondary } },
+    plotOptions: { pie: { donut: { size: '70%', labels: { show: true, total: { show: true, label: 'Total paid', color: t.textSecondary, formatter: () => fmtUSD(deal.loanAmount + m.totalInterest) }, value: { color: t.textPrimary } } } } }
+  });
+}
+
+function daTabs() {
+  const defs = [{ label: 'Overview', locked: false }, { label: 'Cash Flow', locked: false }, { label: 'Returns', locked: false }, { label: 'Financing', locked: false }, { label: 'Sensitivity', locked: true }, { label: 'Exit', locked: true }];
+  document.getElementById('daTabBar').innerHTML = defs.map((d, i) =>
+    `<button class="tab-btn${i === state.da.activeTab ? ' active' : ''}" data-datab="${i}">${d.locked ? '<span class="lock" data-feather="lock" style="width:12px;height:12px;"></span>' : ''}${d.label}</button>`
+  ).join('');
+  document.querySelectorAll('[data-datab]').forEach(btn => btn.addEventListener('click', () => {
+    state.da.activeTab = parseInt(btn.dataset.datab, 10);
+    state.da.viewMode = 'tabs';
+    renderDA();
+  }));
+  document.querySelectorAll('.tab-panel[data-tabpanel]').forEach(p => p.classList.toggle('active', parseInt(p.dataset.tabpanel, 10) === state.da.activeTab));
+}
+
+function renderDA() {
+  document.getElementById('daTabPanels').style.display = state.da.viewMode === 'tabs' ? 'block' : 'none';
+  document.getElementById('daFilesPanel').style.display = state.da.viewMode === 'files' ? 'block' : 'none';
+  document.getElementById('daNotesPanel').style.display = state.da.viewMode === 'notes' ? 'block' : 'none';
+  document.querySelectorAll('.sub-tab').forEach(b => b.classList.toggle('active', b.dataset.view === state.da.viewMode));
+  daTabs();
+  updateDADisplay();
+  if (window.feather) feather.replace();
+}
+
+/* ============================================================
+   DEVELOPMENT STUDIO
+   ============================================================ */
+function bindDSInputs() {
+  const i = state.ds.inputs;
+  document.getElementById('ds_landCost').value = i.landCost;
+  document.getElementById('ds_hardCosts').value = i.hardCosts;
+  document.getElementById('ds_softCosts').value = i.softCosts;
+  document.getElementById('ds_financingCosts').value = i.financingCosts;
+  document.getElementById('ds_contingencyPct').value = i.contingencyPct;
+  document.getElementById('ds_gdv').value = i.gdv;
+  document.getElementById('ds_marketCapRate').value = i.marketCapRate;
+  document.getElementById('ds_loanToCostPct').value = i.loanToCostPct;
+  document.getElementById('ds_holdMonths').value = i.holdMonths;
+  document.getElementById('ds_presaleGatePct').value = i.presaleGatePct;
+  document.getElementById('ds_currentPresalesPct').value = i.currentPresalesPct;
+}
+function renderDS() {
+  const inp = state.ds.inputs;
+  const m = dsMetrics(inp);
+  const t = theme();
+  document.getElementById('dsMetricCards').innerHTML = [
+    kpiCard('Total dev cost', fmtUSD(m.totalCostWithContingency), null, 'md'),
+    kpiCard('Contingency', fmtUSD(m.contingencyAmt), null, 'md'),
+    kpiCard('Profit on cost', fmtPctVal(m.profitOnCost, 1), m.profitOnCost >= 0.15 ? 'green' : (m.profitOnCost < 0.08 ? 'red' : null), 'md'),
+    kpiCard('Yield on cost (annualized)', fmtPctVal(m.yieldOnCost, 1), null, 'md'),
+    kpiCard('Development spread', fmtPctVal(m.developmentSpread, 1), m.developmentSpread >= 0 ? 'green' : 'red', 'md'),
+    kpiCard('Peak equity', fmtUSD(m.peakEquity), null, 'md'),
+    kpiCard('Residual land value', fmtUSD(m.residualLandValue), null, 'md'),
+    kpiCard('IRR (annualized)', m.irrAnnual != null ? fmtPctVal(m.irrAnnual, 1) : '—', m.irrAnnual != null && m.irrAnnual >= 0 ? 'green' : 'red', 'md')
+  ].join('');
+  document.getElementById('dsGateStatus').textContent = m.gateMet ? '✓ Gate met — cleared to start construction' : '✗ Gate not met — presales below threshold';
+  document.getElementById('dsGateStatus').style.color = m.gateMet ? t.green : t.red;
+  document.getElementById('dsGateHint').textContent = `${inp.currentPresalesPct}% presold vs ${inp.presaleGatePct}% required`;
+  mountChart('ds', 'dsChart', {
+    chart: { type: 'donut', height: 280, background: 'transparent', fontFamily: 'Inter, sans-serif' }, theme: { mode: state.theme },
+    series: [inp.landCost, inp.hardCosts, inp.softCosts, inp.financingCosts], labels: ['Land', 'Hard', 'Soft', 'Financing'],
+    colors: [t.accent, t.blue, t.green, t.red], stroke: { colors: [t.bgCard], width: 2 }, dataLabels: { enabled: false }, legend: { position: 'bottom', labels: { colors: t.textSecondary } },
+    plotOptions: { pie: { donut: { size: '70%', labels: { show: true, total: { show: true, label: 'Total cost', color: t.textSecondary, formatter: () => fmtUSD(inp.landCost + inp.hardCosts + inp.softCosts + inp.financingCosts) }, value: { color: t.textPrimary } } } } }
+  });
+}
+
+/* ============================================================
+   PORTFOLIO
+   ============================================================ */
+function renderPortfolio() {
+  const t = theme();
+  const totalEquity = PF_PROPERTIES.reduce((s, p) => s + p.equity, 0);
+  const totalMonthlyCF = PF_PROPERTIES.reduce((s, p) => s + p.monthlyCashFlow, 0);
+  const capRated = PF_PROPERTIES.filter(p => p.capRate != null);
+  const weightedCapRate = capRated.reduce((s, p) => s + p.capRate * p.price, 0) / capRated.reduce((s, p) => s + p.price, 0);
+  const cocProps = PF_PROPERTIES.filter(p => p.coc != null);
+  const avgCoc = cocProps.reduce((s, p) => s + p.coc, 0) / cocProps.length;
+
+  document.getElementById('pfSummaryCards').innerHTML = [
+    kpiCard('Total equity (CAD)', fmtUSD(totalEquity), null, 'md'),
+    kpiCard('Total properties', String(PF_PROPERTIES.length), null, 'md'),
+    kpiCard('Portfolio cap rate', fmtPctVal(weightedCapRate, 1), null, 'md'),
+    kpiCard('Total monthly cash flow', fmtUSD(totalMonthlyCF), totalMonthlyCF >= 0 ? 'green' : 'red', 'md'),
+    kpiCard('Avg CoC return', fmtPctVal(avgCoc, 1), avgCoc >= 0 ? 'green' : 'red', 'md'),
+    kpiCard('Portfolio IRR', fmtPctVal(0.148, 1), 'green', 'md')
+  ].join('');
+
+  document.getElementById('pfPropertyCards').innerHTML = PF_PROPERTIES.map(p => `
+    <button class="kpi-card clickable" data-pfid="${p.id}">
+      <div class="pf-card-top"><span class="pf-type-badge" style="color:${p.typeKey === 'residential' ? t.accent : p.typeKey === 'commercial' ? t.blue : t.green}">${p.typeLabel}</span><span class="pf-status-pill">${p.status}</span></div>
+      <div class="pf-address">${p.address}</div>
+      <div class="pf-stats-row">
+        <div><div class="kpi-label">Equity</div><div class="pf-stat-val">${fmtUSD(p.equity)}</div></div>
+        <div><div class="kpi-label">Monthly CF</div><div class="pf-stat-val" style="color:${p.monthlyCashFlow >= 0 ? t.green : t.red}">${fmtUSD(p.monthlyCashFlow)}/mo</div></div>
+        <div><div class="kpi-label">Cap rate</div><div class="pf-stat-val">${p.capRate != null ? fmtPctVal(p.capRate, 1) : '—'}</div></div>
+        <div><div class="kpi-label">CoC</div><div class="pf-stat-val">${p.coc != null ? fmtPctVal(p.coc, 1) : '—'}</div></div>
+      </div>
+      <div class="pf-view-link">View details →</div>
+    </button>`).join('');
+  document.querySelectorAll('[data-pfid]').forEach(btn => btn.addEventListener('click', () => openPortfolioModal(btn.dataset.pfid)));
+
+  const chartTxt = chartText();
+  mountChart('pfEquity', 'pfEquityChart', {
+    chart: { type: 'bar', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 260, ...baseChartChrome },
+    plotOptions: { bar: { horizontal: true, barHeight: '55%', distributed: true } },
+    series: [{ name: 'Equity', data: PF_PROPERTIES.map(p => p.equity) }],
+    xaxis: { categories: PF_PROPERTIES.map(p => p.address.split(',')[0]), labels: { style: { colors: chartTxt }, formatter: (v) => fmtUSD(v) } },
+    yaxis: { labels: { style: { colors: chartTxt } } },
+    colors: PF_PROPERTIES.map(p => p.typeKey === 'residential' ? '#c9a227' : p.typeKey === 'commercial' ? t.blue : '#00c853'),
+    legend: { show: false }, grid: { borderColor: t.border }, dataLabels: { enabled: false },
+    tooltip: { theme: state.theme, y: { formatter: (v) => fmtUSD(v) + ' (' + ((v / totalEquity) * 100).toFixed(1) + '% of total)' } }
+  });
+  mountChart('pfCashflow', 'pfCashflowChart', {
+    chart: { type: 'bar', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 260, ...baseChartChrome },
+    plotOptions: { bar: { columnWidth: '50%', distributed: true } },
+    series: [{ name: 'Annual cash flow', data: PF_PROPERTIES.map(p => Math.round(p.monthlyCashFlow * 12)) }],
+    xaxis: { categories: PF_PROPERTIES.map(p => p.address.split(',')[0]), labels: { style: { colors: chartTxt } } },
+    yaxis: { labels: { style: { colors: chartTxt }, formatter: (v) => fmtUSD(v) } },
+    colors: PF_PROPERTIES.map(p => p.monthlyCashFlow >= 0 ? '#00c853' : '#ff5252'),
+    legend: { show: false }, grid: { borderColor: t.border }, dataLabels: { enabled: false },
+    tooltip: { theme: state.theme, y: { formatter: (v) => fmtUSD(v) + '/yr' } }
+  });
+}
+function openPortfolioModal(id) {
+  const p = PF_PROPERTIES.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('pfModalTitle').textContent = p.address;
+  document.getElementById('pfModalSubtitle').textContent = `${p.typeLabel} · ${p.status}`;
+  const overviewCards = [
+    kpiCard('Purchase price', fmtUSD(p.price), null, 'sm'),
+    kpiCard('Equity', fmtUSD(p.equity), null, 'sm'),
+    kpiCard('Cap rate', p.capRate != null ? fmtPctVal(p.capRate, 1) : '—', null, 'sm'),
+    kpiCard('CoC return', p.coc != null ? fmtPctVal(p.coc, 1) : '—', (p.coc || 0) >= 0 ? 'green' : 'red', 'sm'),
+    kpiCard('Monthly cash flow', fmtUSD(p.monthlyCashFlow) + '/mo', (p.monthlyCashFlow || 0) >= 0 ? 'green' : 'red', 'sm'),
+    kpiCard('Purchased', p.purchaseDate || '—', null, 'sm')
+  ].join('');
+  const financialRows = [
+    { label: 'Monthly rent', value: fmtUSD(p.monthlyRent) }, { label: 'Operating expenses', value: fmtUSD(p.opEx) },
+    { label: 'Debt service', value: fmtUSD(p.debtService) }, { label: 'Net monthly cash flow', value: fmtUSD(p.monthlyCashFlow) }
+  ].map(r => `<tr><td>${r.label}</td><td>${r.value}</td></tr>`).join('');
+  const docs = (p.docs || []).map(d => `<div class="file-row"><div class="file-icon">${d.icon}</div><div><div class="file-name">${d.name}</div><div class="file-sub">${d.sub}</div></div></div>`).join('');
+  const history = (p.history || []).map(h => `<div class="file-row"><div class="file-sub" style="width:80px;flex-shrink:0;font-family:'DM Mono',monospace;">${h.date}</div><div class="file-name" style="font-weight:400;">${h.text}</div></div>`).join('');
+  document.getElementById('pfModalTabBar').innerHTML = `<button class="tab-btn active" data-pftab="overview">Overview</button><button class="tab-btn" data-pftab="financials">Financials</button><button class="tab-btn" data-pftab="documents">Documents</button><button class="tab-btn" data-pftab="history">History</button>`;
+  const bodies = {
+    overview: `<div class="kpi-grid">${overviewCards}</div>`,
+    financials: `<table class="data-table"><tbody>${financialRows}</tbody></table>`,
+    documents: docs || '<p style="color:var(--text-2);font-size:13px;">No documents.</p>',
+    history: history || '<p style="color:var(--text-2);font-size:13px;">No history.</p>'
+  };
+  const setTab = (key) => {
+    document.getElementById('pfModalBody').innerHTML = bodies[key];
+    document.querySelectorAll('[data-pftab]').forEach(b => b.classList.toggle('active', b.dataset.pftab === key));
+  };
+  setTab('overview');
+  document.querySelectorAll('[data-pftab]').forEach(b => b.addEventListener('click', () => setTab(b.dataset.pftab)));
+  document.getElementById('pfModalScrim').classList.add('open');
+}
+function closePortfolioModal() {
+  document.getElementById('pfModalScrim').classList.remove('open');
+}
+
+/* ============================================================
+   MARKET (Market Research / macro intel)
+   ============================================================ */
+function renderMarket() {
+  document.getElementById('miSummaryCards').innerHTML = [
+    kpiCard('Avg cap rate (all markets)', '5.2%', null, 'md'),
+    kpiCard('Federal funds rate', '4.75%', null, 'md'),
+    kpiCard('5-yr mortgage rate', '5.45%', null, 'md'),
+    kpiCard('10-yr bond yield', '4.20%', null, 'md'),
+    kpiCard('Market appreciation (YoY)', '2.8%', 'green', 'md'),
+    kpiCard('Price volatility index', '12%', null, 'md')
+  ].join('');
+  const articles = [
+    { title: 'Cap rates stabilize as rate cuts loom', source: 'FRED Economic Data', snippet: 'Multifamily cap rates held steady this quarter as markets priced in a slower pace of rate cuts.' },
+    { title: 'Mortgage rates ease off 2025 highs', source: 'Bank of Canada', snippet: 'Five-year fixed rates dipped modestly, improving debt-service coverage for new acquisitions.' },
+    { title: 'Bond yields and real estate: what to watch', source: 'CREA Research', snippet: 'Treasury yield movements continue to be the leading signal for exit cap rate assumptions.' }
+  ];
+  document.getElementById('miArticles').innerHTML = articles.map(a => `<div class="article-row"><div class="pf-address" style="font-size:14px;">${a.title}</div><div class="kpi-label" style="margin:2px 0 0;">${a.source}</div><div class="article-snippet">${a.snippet}</div></div>`).join('');
+
+  const t = theme(); const ct = chartText();
+  const lineOpts = (series, name, color, fmt) => ({
+    chart: { type: 'line', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 220, ...baseChartChrome },
+    series: [{ name, data: series }], stroke: { curve: 'smooth', width: 3 }, colors: [color], markers: { size: 4, colors: [color] },
+    xaxis: { categories: MI_TREND_YEARS, labels: { style: { colors: ct } } }, yaxis: { labels: { style: { colors: ct }, formatter: fmt } },
+    grid: { borderColor: t.border }, dataLabels: { enabled: false }, tooltip: { theme: state.theme, y: { formatter: fmt } }
+  });
+  mountChart('miCap', 'miCapRateChart', lineOpts(MI_CAP_RATE_TREND, 'Cap rate', '#2196F3', v => v.toFixed(1) + '%'));
+  mountChart('miMortgage', 'miMortgageChart', lineOpts(MI_MORTGAGE_TREND, 'Mortgage rate', '#ff9800', v => v.toFixed(2) + '%'));
+  mountChart('miBond', 'miBondChart', lineOpts(MI_BOND_TREND, 'Bond yield', '#c9a227', v => v.toFixed(2) + '%'));
+  mountChart('miGrowth', 'miGrowthChart', lineOpts(MI_GROWTH_TREND, 'Market growth', '#00c853', v => v.toFixed(1) + '%'));
+
+  const min = Math.min(...MI_REGION_CAP_RATES), max = Math.max(...MI_REGION_CAP_RATES);
+  const heatColors = MI_REGION_CAP_RATES.map(r => { const tt = max > min ? (r - min) / (max - min) : 0; return tt < 0.5 ? lerpColor(t.blue, '#c9a227', tt * 2) : lerpColor('#c9a227', '#ff5252', (tt - 0.5) * 2); });
+  mountChart('miHeat', 'miRegionHeatChart', {
+    chart: { type: 'bar', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 280, ...baseChartChrome },
+    plotOptions: { bar: { horizontal: true, barHeight: '60%', distributed: true } },
+    series: [{ name: 'Cap rate', data: MI_REGION_CAP_RATES }],
+    xaxis: { categories: MI_REGIONS, labels: { style: { colors: ct }, formatter: (v) => v.toFixed(1) + '%' } },
+    yaxis: { labels: { style: { colors: ct } } },
+    colors: heatColors, legend: { show: false }, grid: { borderColor: t.border }, dataLabels: { enabled: false },
+    tooltip: { theme: state.theme, y: { formatter: (v) => v.toFixed(1) + '% cap rate' } }
+  });
+}
+
+/* ============================================================
+   NEIGHBOURHOOD INTEL
+   ============================================================ */
+let nbMap = null, nbMarkers = [], nbLastPanned = null;
+function mountNeighborhoodMap() {
+  const el = document.getElementById('nbMap');
+  if (!el || !window.L) return;
+  if (!nbMap) {
+    nbMap = window.L.map(el, { scrollWheelZoom: false }).setView([40, -100], 3);
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(nbMap);
+    nbMarkers = NEIGHBORHOOD_COORDS.map((coord, i) => window.L.circleMarker(coord, { radius: 9, weight: 2, fillOpacity: 0.85 })
+      .addTo(nbMap).bindTooltip(MARKET_NEIGHBORHOODS[i].split(',')[0])
+      .on('click', () => { state.market.selectedIndex = i; state.market.searchText = MARKET_NEIGHBORHOODS[i]; renderNeighbourhood(); }));
+    setTimeout(() => nbMap.invalidateSize(), 200);
+  }
+  const selIdx = state.market.selectedIndex;
+  nbMarkers.forEach((m, i) => m.setStyle({ color: '#c9a227', fillColor: '#c9a227', radius: i === selIdx ? 13 : 9, weight: i === selIdx ? 3 : 2, fillOpacity: i === selIdx ? 1 : 0.7 }));
+  if (nbLastPanned !== selIdx) { nbMap.flyTo(NEIGHBORHOOD_COORDS[selIdx], 8, { duration: 0.6 }); nbLastPanned = selIdx; }
+}
+function renderNeighbourhood() {
+  const idx = state.market.selectedIndex;
+  const d = marketDataFor(idx);
+  const t = theme(); const ct = chartText();
+
+  document.getElementById('nbSearch').value = state.market.searchText;
+  document.getElementById('nbCityChips').innerHTML = MARKET_NEIGHBORHOODS.map((n, i) => `<div class="city-chip" data-city="${i}">✓ ${n}</div>`).join('');
+  document.querySelectorAll('[data-city]').forEach(c => c.addEventListener('click', () => { state.market.selectedIndex = parseInt(c.dataset.city, 10); state.market.searchText = MARKET_NEIGHBORHOODS[state.market.selectedIndex]; renderNeighbourhood(); }));
+  document.getElementById('mktSelectedLabel').textContent = MARKET_NEIGHBORHOODS[idx];
+
+  document.getElementById('mktSummaryCards').innerHTML = [
+    kpiCard('Avg property price', fmtUSD(d.avgPrice), null, 'md'),
+    kpiCard('Avg rent ($/mo)', fmtUSD(d.avgRent), null, 'md'),
+    kpiCard('Avg cap rate', d.capRate.toFixed(1) + '%', null, 'md'),
+    kpiCard('Avg days on market', String(d.daysOnMarket), null, 'md'),
+    kpiCard('YoY appreciation', d.yoyAppreciation.toFixed(1) + '%', 'green', 'md'),
+    kpiCard('Price/rent ratio', d.priceRentRatio.toFixed(1), null, 'md')
+  ].join('');
+
+  const rates = MARKET_NEIGHBORHOODS.map((n, i) => marketDataFor(i).capRate);
+  const min = Math.min(...rates), max = Math.max(...rates);
+  const heatColors = rates.map(r => { const tt = max > min ? (r - min) / (max - min) : 0; return tt < 0.5 ? lerpColor(t.blue, '#c9a227', tt * 2) : lerpColor('#c9a227', '#ff5252', (tt - 0.5) * 2); });
+  mountChart('mktHeat', 'mktHeatChart', {
+    chart: { type: 'bar', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 320,
+      events: { dataPointSelection: (e, ctx, cfg) => { state.market.selectedIndex = cfg.dataPointIndex; state.market.searchText = MARKET_NEIGHBORHOODS[cfg.dataPointIndex]; renderNeighbourhood(); } }, ...baseChartChrome },
+    plotOptions: { bar: { horizontal: true, barHeight: '60%', distributed: true } },
+    series: [{ name: 'Cap rate', data: rates }],
+    xaxis: { categories: MARKET_NEIGHBORHOODS, labels: { style: { colors: ct }, formatter: (v) => v.toFixed(1) + '%' } },
+    yaxis: { labels: { style: { colors: ct } } },
+    colors: heatColors, legend: { show: false }, grid: { borderColor: t.border }, dataLabels: { enabled: false },
+    tooltip: { theme: state.theme, y: { formatter: (v) => v.toFixed(1) + '% cap rate' } }
+  });
+
+  const years = [0, 1, 2, 3, 4].map(y => 'Y' + (y - 4 + 5));
+  mountChart('mktPrice', 'mktPriceChart', {
+    chart: { type: 'line', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 240, ...baseChartChrome },
+    series: [{ name: 'Avg price', data: d.priceTrend }], stroke: { curve: 'smooth', width: 3 }, colors: ['#c9a227'], markers: { size: 4, colors: ['#c9a227'] },
+    xaxis: { categories: years, labels: { style: { colors: ct } } }, yaxis: { labels: { style: { colors: ct }, formatter: (v) => fmtUSD(v) } },
+    grid: { borderColor: t.border }, dataLabels: { enabled: false }, tooltip: { theme: state.theme, y: { formatter: (v) => fmtUSD(v) } }
+  });
+  mountChart('mktRent', 'mktRentChart', {
+    chart: { type: 'line', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 240, ...baseChartChrome },
+    series: [{ name: 'Avg rent', data: d.rentTrend }], stroke: { curve: 'smooth', width: 3 }, colors: ['#00c853'], markers: { size: 4, colors: ['#00c853'] },
+    xaxis: { categories: years, labels: { style: { colors: ct } } }, yaxis: { labels: { style: { colors: ct }, formatter: (v) => fmtUSD(v) } },
+    grid: { borderColor: t.border }, dataLabels: { enabled: false }, tooltip: { theme: state.theme, y: { formatter: (v) => fmtUSD(v) + '/mo' } }
+  });
+  mountChart('mktAppr', 'mktApprChart', {
+    chart: { type: 'bar', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 240, ...baseChartChrome },
+    plotOptions: { bar: { columnWidth: '55%' } },
+    series: [{ name: 'Appreciation', data: d.apprTrend }],
+    xaxis: { categories: years, labels: { style: { colors: ct } } }, yaxis: { labels: { style: { colors: ct }, formatter: (v) => v.toFixed(1) + '%' } },
+    colors: ['#ff9800'], legend: { show: false }, grid: { borderColor: t.border }, dataLabels: { enabled: false }, tooltip: { theme: state.theme, y: { formatter: (v) => v.toFixed(1) + '%' } }
+  });
+
+  const comps = [...d.comparables].sort((a, b) => a.price - b.price).slice(0, 10);
+  document.getElementById('mktCompsRows').innerHTML = comps.map(c => `<tr><td>${c.address}</td><td>${fmtUSD(c.price)}</td><td>${c.days}d</td><td>${c.cap.toFixed(1)}%</td></tr>`).join('');
+
+  document.getElementById('niPopulation').textContent = d.population.toLocaleString('en-US');
+  document.getElementById('niMedianAge').textContent = String(d.medianAge);
+  document.getElementById('niSchoolRows').innerHTML = [
+    { level: 'Elementary', s: d.schools.elementary }, { level: 'Middle', s: d.schools.middle }, { level: 'High', s: d.schools.high }
+  ].map(r => `<tr><td>${r.level}</td><td>${r.s.count}</td><td>${r.s.rating.toFixed(1)}/10</td></tr>`).join('');
+  document.getElementById('niGauges').innerHTML = [
+    { label: 'Walk score', value: d.walkScore }, { label: 'Transit score', value: d.transitScore }, { label: 'Bike score', value: d.bikeScore }
+  ].map(g => `<div class="gauge-row"><div class="gauge-label-row"><span class="kpi-label" style="margin:0;">${g.label}</span><span class="meta-val">${g.value}/100</span></div><div class="gauge-track"><div class="gauge-fill" style="width:${g.value}%"></div></div></div>`).join('');
+  document.getElementById('niCrimeRate').textContent = d.crimeRate + ' / 1,000';
+  document.getElementById('niAmenityCards').innerHTML = [
+    kpiCard('Restaurants', d.amenities.restaurants + '+', null, 'sm'),
+    kpiCard('Grocery stores', String(d.amenities.grocery), null, 'sm'),
+    kpiCard('Parks & recreation', String(d.amenities.parks), null, 'sm'),
+    kpiCard('Entertainment venues', d.amenities.entertainment + '+', null, 'sm')
+  ].join('');
+
+  const crimeYears = [0, 1, 2, 3, 4].map(y => 'Y' + (y - 4 + 5));
+  mountChart('niCrimeTrend', 'niCrimeTrendChart', {
+    chart: { type: 'line', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 220, ...baseChartChrome },
+    series: [{ name: 'Crime rate', data: d.crimeTrend }], stroke: { curve: 'smooth', width: 3 }, colors: ['#ff5252'], markers: { size: 4, colors: ['#ff5252'] },
+    xaxis: { categories: crimeYears, labels: { style: { colors: ct } } }, yaxis: { labels: { style: { colors: ct } } },
+    grid: { borderColor: t.border }, dataLabels: { enabled: false }, tooltip: { theme: state.theme, y: { formatter: (v) => v + ' per 1,000' } }
+  });
+  mountChart('niCrimeBreakdown', 'niCrimeBreakdownChart', {
+    chart: { type: 'bar', background: 'transparent', fontFamily: 'Inter, sans-serif', height: 220, ...baseChartChrome },
+    plotOptions: { bar: { columnWidth: '55%', distributed: true } },
+    series: [{ name: 'Incidents', data: d.topCrimes.map(c => c.value) }],
+    xaxis: { categories: d.topCrimes.map(c => c.type), labels: { style: { colors: ct } } }, yaxis: { labels: { style: { colors: ct } } },
+    colors: ['#ff5252', '#ff9800', '#c9a227', '#8b949e'], legend: { show: false }, grid: { borderColor: t.border }, dataLabels: { enabled: false }
+  });
+
+  if (window.L) mountNeighborhoodMap(); else setTimeout(mountNeighborhoodMap, 300);
+}
+
+/* ============================================================
+   ROUTING / TOP-LEVEL RENDER
+   ============================================================ */
+function renderNav() {
+  document.getElementById('navTabs').innerHTML = NAV_DEFS.map(n => `<button class="nav-tab${state.activeRoute === n.key ? ' active' : ''}" data-route="${n.key}">${n.label}</button>`).join('');
+  document.querySelectorAll('[data-route]').forEach(btn => btn.addEventListener('click', () => setRoute(btn.dataset.route)));
+}
+function setRoute(key) {
+  state.activeRoute = key;
+  state.settingsOpen = false;
+  document.getElementById('settingsPanel').classList.remove('open');
+  document.querySelectorAll('.route').forEach(r => r.classList.remove('active'));
+  const el = document.getElementById('route-' + key);
+  if (el) el.classList.add('active');
+  // Hide hamburger on routes that have no rail
+  document.getElementById('menuBtn').style.display =
+    (key === 'deal-analyzer' || key === 'dev-studio') ? '' : 'none';
+  renderNav();
+  renderRoute();
+}
+function renderRoute() {
+  if (state.activeRoute === 'deal-analyzer') renderDA();
+  else if (state.activeRoute === 'dev-studio') renderDS();
+  else if (state.activeRoute === 'portfolio') renderPortfolio();
+  else if (state.activeRoute === 'market') renderMarket();
+  else if (state.activeRoute === 'neighbourhood-intel') renderNeighbourhood();
+  if (window.feather) feather.replace();
+
+  // feather.replace() swaps data-feather elements for brand-new <svg> nodes,
+  // which silently drops any listeners attached to the originals. Re-attach
+  // to whatever element currently occupies each id.
+  const settingsBtnEl = document.getElementById('settingsBtn');
+  if (settingsBtnEl) {
+    settingsBtnEl.removeEventListener('click', toggleSettings);
+    settingsBtnEl.addEventListener('click', toggleSettings);
+  }
+  const pfModalCloseBtn = document.getElementById('pfModalClose');
+  if (pfModalCloseBtn) {
+    pfModalCloseBtn.removeEventListener('click', closePortfolioModal);
+    pfModalCloseBtn.addEventListener('click', closePortfolioModal);
+  }
+  const menuBtnEl = document.getElementById('menuBtn');
+  if (menuBtnEl) {
+    menuBtnEl.removeEventListener('click', toggleMobileRail);
+    menuBtnEl.addEventListener('click', toggleMobileRail);
+  }
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.getElementById('dotDark').classList.toggle('on', state.theme === 'dark');
+  document.getElementById('dotLight').classList.toggle('on', state.theme === 'light');
+  document.getElementById('glowMark').classList.toggle('on', state.glowEnabled);
+  document.getElementById('glowMark').textContent = state.glowEnabled ? '✓' : '';
+  document.querySelectorAll('[data-glow]').forEach(el => el.classList.toggle('glow', state.glowEnabled));
+  renderRoute();
+}
+
+/* ============================================================
+   EVENT WIRING
+   ============================================================ */
+function toggleSettings() {
+  state.settingsOpen = !state.settingsOpen;
+  document.getElementById('settingsPanel').classList.toggle('open', state.settingsOpen);
+}
+document.getElementById('settingsBtn')?.addEventListener('click', toggleSettings);
+document.getElementById('setThemeDark').addEventListener('click', () => { state.theme = 'dark'; localStorage.setItem('is-theme', 'dark'); applyTheme(); });
+document.getElementById('setThemeLight').addEventListener('click', () => { state.theme = 'light'; localStorage.setItem('is-theme', 'light'); applyTheme(); });
+document.getElementById('toggleGlow').addEventListener('click', () => { state.glowEnabled = !state.glowEnabled; localStorage.setItem('is-glow', String(state.glowEnabled)); applyTheme(); });
+function toggleMobileRail() {
+  const rail = state.activeRoute === 'dev-studio' ? document.getElementById('dsRail') : document.getElementById('daRail');
+  const scrim = state.activeRoute === 'dev-studio' ? document.getElementById('dsScrim') : document.getElementById('daScrim');
+  rail.classList.toggle('open'); scrim.classList.toggle('open');
+}
+document.getElementById('menuBtn')?.addEventListener('click', toggleMobileRail);
+[['daScrim', 'daRail'], ['dsScrim', 'dsRail']].forEach(([scrimId, railId]) => {
+  document.getElementById(scrimId).addEventListener('click', () => { document.getElementById(railId).classList.remove('open'); document.getElementById(scrimId).classList.remove('open'); });
+});
+document.getElementById('daEditInputsBtn').addEventListener('click', () => { document.getElementById('daRail').classList.add('open'); document.getElementById('daScrim').classList.add('open'); });
+document.getElementById('dsEditInputsBtn').addEventListener('click', () => { document.getElementById('dsRail').classList.add('open'); document.getElementById('dsScrim').classList.add('open'); });
+
+// Close settings panel when clicking outside it
+document.addEventListener('click', (e) => {
+  if (state.settingsOpen && !e.target.closest('.settings-wrap')) {
+    state.settingsOpen = false;
+    document.getElementById('settingsPanel').classList.remove('open');
+  }
+});
+
+document.querySelectorAll('.section-header').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const body = btn.nextElementSibling;
+    const nowOpen = !body.classList.contains('open');
+    body.classList.toggle('open', nowOpen);
+    btn.classList.toggle('open', nowOpen);
+    const feathIcon = btn.querySelector('.chev');
+    if (feathIcon) { feathIcon.setAttribute('data-feather', nowOpen ? 'chevron-down' : 'chevron-right'); if (window.feather) feather.replace(); }
+  });
+});
+
+document.querySelectorAll('.sub-tab').forEach(btn => btn.addEventListener('click', () => { state.da.viewMode = btn.dataset.view; renderDA(); }));
+
+const DA_FIELD_MAP = { da_address: ['address', false], da_assetType: ['assetType', false], da_jurisdiction: ['jurisdiction', false], da_purchasePrice: ['purchasePrice', true], da_loanAmount: ['loanAmount', true], da_interestRate: ['interestRate', true], da_amortizationPeriod: ['amortizationPeriod', true], da_loanType: ['loanType', false], da_monthlyRent: ['monthlyRent', true], da_rentGrowth: ['rentGrowth', true], da_vacancyRate: ['vacancyRate', true], da_propertyTax: ['propertyTax', true], da_insurance: ['insurance', true], da_maintenance: ['maintenance', true], da_propertyMgmtFees: ['propertyMgmtFees', true], da_holdPeriod: ['holdPeriod', true], da_exitCapRate: ['exitCapRate', true], da_saleCosts: ['saleCosts', true], da_notes: ['notes', false] };
+Object.keys(DA_FIELD_MAP).forEach(id => {
+  const [key, numeric] = DA_FIELD_MAP[id];
+  document.getElementById(id).addEventListener('input', (e) => {
+    state.da.deal[key] = numeric ? (parseFloat(e.target.value) || 0) : e.target.value;
+    updateDADisplay();
+  });
+});
+document.getElementById('da_calculateBtn').addEventListener('click', () => {
+  updateDADisplay();
+  const btn = document.getElementById('da_calculateBtn');
+  const original = btn.textContent;
+  btn.textContent = '✓ Calculated — all figures live';
+  setTimeout(() => { btn.textContent = original; }, 900);
+});
+
+const DS_FIELD_MAP = { ds_landCost: 'landCost', ds_hardCosts: 'hardCosts', ds_softCosts: 'softCosts', ds_financingCosts: 'financingCosts', ds_contingencyPct: 'contingencyPct', ds_gdv: 'gdv', ds_marketCapRate: 'marketCapRate', ds_loanToCostPct: 'loanToCostPct', ds_holdMonths: 'holdMonths', ds_presaleGatePct: 'presaleGatePct', ds_currentPresalesPct: 'currentPresalesPct' };
+Object.keys(DS_FIELD_MAP).forEach(id => {
+  document.getElementById(id).addEventListener('input', (e) => {
+    state.ds.inputs[DS_FIELD_MAP[id]] = parseFloat(e.target.value) || 0;
+    renderDS();
+  });
+});
+
+document.getElementById('goToDA').addEventListener('click', () => setRoute('deal-analyzer'));
+document.getElementById('pfModalClose').addEventListener('click', closePortfolioModal);
+document.getElementById('pfModalScrim').addEventListener('click', (e) => { if (e.target.id === 'pfModalScrim') closePortfolioModal(); });
+
+document.getElementById('nbSearch').addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  const q = e.target.value.trim().toLowerCase();
+  const idx = MARKET_NEIGHBORHOODS.findIndex(n => n.toLowerCase().includes(q));
+  if (idx >= 0) { state.market.selectedIndex = idx; renderNeighbourhood(); }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.documentElement.setAttribute('data-theme', state.theme);
+document.getElementById('route-' + state.activeRoute).classList.add('active');
+// Hide hamburger on routes that have no rail (needed on initial load)
+document.getElementById('menuBtn').style.display =
+  (state.activeRoute === 'deal-analyzer' || state.activeRoute === 'dev-studio') ? '' : 'none';
+bindDAInputs();
+bindDSInputs();
+renderNav();
+applyTheme();
+</script>
+</body>
+</html>
