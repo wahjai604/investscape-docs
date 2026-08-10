@@ -27,7 +27,7 @@ Numbered documents under `canonical-docs/current/` are the authoritative referen
 
 ## Related Repositories
 
-- [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) — financial calculation engines, E1–E27
+- [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) — financial calculation engines, E1–E28
 - [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) — economic data engines, E29–E45
 - [investscape-api](https://github.com/wahjai604/investscape-api) — HTTP API wrapping both engines
 
