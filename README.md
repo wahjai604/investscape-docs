@@ -10,7 +10,7 @@ Reference documentation for the InvestScape engines: formula specifications, sch
 
 ## Scope
 
-Documentation currently covers the engines implemented in [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) (E1–E27) and [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) (E29–E45). E28 is not an engine — it does not exist in either engine repo. A separate repo, `investscape-tax-engine` (E46–E53), exists but is not yet cross-referenced from this documentation set.
+Documentation currently covers the engines implemented in [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) (E1–E28) and [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) (E29–E45). A separate repo, `investscape-tax-engine` (E46–E53), exists but is not yet cross-referenced from this documentation set.
 
 ## Structure
 
