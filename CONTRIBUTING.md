@@ -23,9 +23,11 @@ Thank you for your interest in InvestScape™ Calculation Engines!
 
 InvestScape™ represents **hundreds of hours of research, validation, and development** across three major domains:
 
-1. **Financial Calculations (E1–E11)** — Validated against FCAC stress-test requirements, OSFI guidelines, and CMHC insurance standards
-2. **Advanced Finance & Tax (E12–E27)** — Jurisdiction-specific rules for CRA (Canada) and IRS (US), commercial real estate methodologies, tax optimization algorithms
-3. **Market Research & Construction (E29–E45)** — Neighborhood composite scoring, construction project management, development budgeting
+1. **Financial Calculations (E1–E28)** — Validated against FCAC stress-test requirements, OSFI guidelines, and CMHC insurance standards
+2. **Market & Economic Research (E29–E45)** — Neighborhood composite scoring, macro/micro sensitivity, market cycle and appreciation forecasting (E36 excluded pending legal review)
+3. **Tax Engines (E46–E53)** — Jurisdiction-specific rules for CRA (Canada) and IRS (US), depreciation/recapture, passive activity loss, GST/HST
+
+See [ENGINE-REFERENCE.md](ENGINE-REFERENCE.md) for a full breakdown of all 52 active engines.
 
 **This is our competitive moat.** Keeping InvestScape™ proprietary allows us to:
 - Build a sustainable business (InvestScape.app SaaS)
@@ -118,4 +120,4 @@ Key points:
 
 © 2026 Lighthouse Research Ltd. All rights reserved.  
 InvestScape™ is a registered trademark of Lighthouse Research Ltd.  
-Last updated: August 8, 2026
+Last updated: August 10, 2026

@@ -10,7 +10,14 @@ Reference documentation for the InvestScape engines: formula specifications, sch
 
 ## Scope
 
-Documentation currently covers the engines implemented in [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) (E1–E28) and [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) (E29–E45). A separate repo, `investscape-tax-engine` (E46–E53), exists but is not yet cross-referenced from this documentation set.
+Documentation covers all 52 active engines across three repositories:
+- [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) — Financial engines (E1–E28)
+- [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) — Economic engines (E29–E45)
+- [investscape-tax-engine](https://github.com/wahjai604/investscape-tax-engine) — Tax engines (E46–E53)
+
+Note: E36 excluded pending legal review.
+
+For a comprehensive reference of what each engine does, see [ENGINE-REFERENCE.md](ENGINE-REFERENCE.md).
 
 ## Structure
 
@@ -29,7 +36,8 @@ Numbered documents under `canonical-docs/current/` are the authoritative referen
 
 - [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) — financial calculation engines, E1–E28
 - [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) — economic data engines, E29–E45
-- [investscape-api](https://github.com/wahjai604/investscape-api) — HTTP API wrapping both engines
+- [investscape-tax-engine](https://github.com/wahjai604/investscape-tax-engine) — tax calculation engines, E46–E53
+- [investscape-api](https://github.com/wahjai604/investscape-api) — HTTP API wrapping all three engine suites (52 active endpoints)
 
 ## License & Disclaimer
 
