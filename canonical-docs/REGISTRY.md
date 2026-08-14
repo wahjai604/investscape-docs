@@ -66,4 +66,5 @@ Append-only. Retired numbers are never reused. Governed by Doc 56 Versioning Con
 | 60 | US Reference Deal Pack | Current | — |
 | 61 | Bubble Reference Inventory | Current | — |
 | 62 | API Hardening Gap Report and Market Intelligence Contract | Current | — |
+| 63 | Market Intelligence Engine E54-E67 Reference | Current | — |
 | supersession | supersession map | Current | — |
