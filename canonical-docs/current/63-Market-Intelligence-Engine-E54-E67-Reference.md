@@ -3,12 +3,15 @@
 **Lighthouse Research Ltd. · 14 August 2026**
 **Companion to Doc 62 (API Hardening Gap Report and Market Intelligence Contract), which this doc's E-numbers were proposed against.**
 
+**Update, same day:** §3's table and §0's commit reference below were extended after the original E54–E67 pass to cover a Phase 2 scaffold-completeness fix (regression/back-testing/portfolio-covariance interfaces added at commit `880b6dd`). §1's numbering rule is unchanged and still applies to the new contracts — see §3.
+
 ## 0. Source verified
 
 **Repository:** https://github.com/wahjai604/investscape-market-intelligence-engine
-**Commit documented:** `4c945f2c1bc9173f5ac8094fbae6aed2a6663d59` (`4c945f2`), branch `master` — pushed and confirmed present on `origin/master` at time of writing.
+**Commit documented (E54–E67, §2):** `4c945f2c1bc9173f5ac8094fbae6aed2a6663d59` (`4c945f2`), branch `master`.
+**Commit documented (Phase 2 scaffold additions, §3):** `880b6dd30d4beb7b412ba03c08af0c9819094c58` (`880b6dd`), branch `master` — pushed and confirmed present on `origin/master` at time of writing.
 
-Every export listed below was verified directly against this commit's source (`grep`'d for `export function`/`export const` in each file, not copied from a prior spec or plan) before this doc was written.
+Every export listed below was verified directly against the relevant commit's source (`grep`'d for `export function`/`export const` in each file, not copied from a prior spec or plan) before this doc was written or updated.
 
 ## 1. Numbering convention
 
@@ -42,9 +45,12 @@ E54 continues directly from E53 (the last tax-engine number, `investscape-tax-en
 | File | Contents | Status |
 |---|---|---|
 | `statistical-risk/phase2-contracts.ts` | `MonteCarloRequest`, `ProbabilityResult`, `runMonteCarloSimulation()` | Typed interfaces only. `runMonteCarloSimulation()` throws `"Phase 2 not implemented..."` immediately. |
+| `statistical-risk/phase2-contracts.ts` | `PortfolioCovarianceRequest`, `PortfolioCovarianceResult`, `runPortfolioCovarianceAnalysis()` | Typed interfaces only, added at `880b6dd`. Flagged **"PHASE 2+"** in its own doc comment — the master spec's own Phase Scope Matrix marks portfolio covariance/correlation risk one notch further out than the rest of Phase 2. `runPortfolioCovarianceAnalysis()` throws `"Phase 2+ not implemented..."` (distinct message from the other five `run*()` functions, deliberately). Kept generic (`series: Record<string, number[]>`) rather than `MarketObservation`-typed — a documented placement exception, see the file's own doc comment for why. |
 | `market-intelligence/phase2-contracts.ts` | `ForecastRequest`, `ForecastPoint`, `ForecastResult`, `runForecast()` | Typed interfaces only. `runForecast()` throws `"Phase 2 not implemented..."` immediately. |
+| `market-intelligence/phase2-contracts.ts` | `RegressionRequest`, `RegressionCoefficient`, `ModelDiagnostics`, `RegressionResult`, `runRegression()` | Typed interfaces only, added at `880b6dd`. Closes a scaffold gap a completeness audit found against the master spec's Section 13. The spec gives a category ("regression models") rather than a code block for `ModelDiagnostics` — its field names (`rSquared`, `adjustedRSquared`, `standardError`, `sampleSize`, `coefficients`, `residualDiagnostics`) are a documented judgment call, not a spec transcription (see `docs/README.md` §8 in the source repo). `runRegression()` throws `"Phase 2 not implemented..."` immediately. |
+| `market-intelligence/phase2-contracts.ts` | `BacktestRequest`, `BacktestDiagnostics`, `runBacktest()` | Typed interfaces only, added at `880b6dd`. A separate interface from `ModelDiagnostics` since back-testing validates predictions against held-out actuals for either a forecast or a regression fit. MAE/RMSE/MAPE/coverage fields per the parent Master Implementation Blueprint's release-gate language. `runBacktest()` throws `"Phase 2 not implemented..."` immediately. |
 
-E-numbers will be assigned when these are actually implemented, not before — consistent with §1's rule against numbering unimplemented code.
+E-numbers will be assigned when these are actually implemented, not before — consistent with §1's rule against numbering unimplemented code. This now applies to five reserved contract groups across the two files, not two.
 
 ## 4. Not registered behind `investscape-api`
 
