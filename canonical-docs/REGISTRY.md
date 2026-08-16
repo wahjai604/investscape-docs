@@ -68,4 +68,6 @@ Append-only. Retired numbers are never reused. Governed by Doc 56 Versioning Con
 | 62 | API Hardening Gap Report and Market Intelligence Contract | Current | — |
 | 63 | Market Intelligence Engine E54-E67 Reference | Current | — |
 | 64 | US Tax Strategies and Syndication Waterfall E68-E72 Reference | Current | — |
+| 65 | US Qualifier Engine E73-E77 Reference | Current | — |
+| 66 | Engine-to-Repo Map | Current | — |
 | supersession | supersession map | Current | — |

@@ -2,6 +2,7 @@
 
 **Lighthouse Research Ltd. · 15 August 2026**
 **No companion proposal doc.** Unlike Doc 63 (proposed against Doc 62), E68–E72 were built directly from two same-night modular prompts, not from a prior gap-analysis pass. This doc's role is the same as Doc 63's: register the E-numbers these two commits actually claimed, verified against the pushed source.
+**Update, same day:** §3 was added after the original E68–E72 pass to register three Phase 2 scaffold files added the same night, matching how Doc 63 got a same-day update for its own Phase 2 contracts. The original §3 ("Not registered behind `investscape-api`") is renumbered §4; no other content changed.
 
 ## 0. Source verified
 
@@ -37,7 +38,19 @@ E68 continues directly from E67 (the last Market Intelligence Engine number, Doc
 
 Sourced conventions, defaults, and citations for these five engines live in each repo's own docs, not duplicated here: `investscape-tax-engine/docs/US-TAX-STRATEGIES-SOURCES.md` (E68–E70) and `investscape-calc-engine/docs/SYNDICATION-WATERFALL-SOURCES.md` (E71–E72).
 
-## 3. Not registered behind `investscape-api`
+## 3. Reserved, not yet implemented (Phase 2 — no E-number assigned)
+
+Three files, five functions, added the same night as E68–E72 but deliberately **not** E-numbered — consistent with Doc 63 §1's rule (restated in Doc 65 §1): no E-number is assigned to unimplemented code. All five throw immediately rather than compute anything.
+
+| File | Repo | Contents | Status | Commit |
+|---|---|---|---|---|
+| `phase2-scaffolds-str.ts` | `investscape-calc-engine` | `STRRevenueProjectionRequest`/`Result`, `projectSTRRevenue()`; `STRRegulatoryStatusRequest`/`Result`, `checkSTRRegulatoryStatus()` | Typed interfaces only. Both functions throw `"Phase 2 not implemented: ..."` immediately. | `e2b6daa` |
+| `phase2-scaffolds-climate-risk.ts` | `investscape-calc-engine` | `ClimateRiskAssessmentRequest`/`Result`, `assessClimateRisk()` | Typed interface only. `assessClimateRisk()` throws `"Phase 2 not implemented: ..."` immediately. File's own header comment documents that E24 (Insurance Estimate) was checked before writing this and does not overlap — E24 estimates insurance premiums from property characteristics; this scaffold is for hazard/climate-exposure scoring, a different computation with no shared ground. | `e2b6daa` |
+| `phase2-scaffolds-international.ts` | `investscape-tax-engine` | `CrossBorderWithholdingRequest`/`Result`, `calculateCrossBorderWithholding()`; `UKPropertyTaxRequest`/`Result`, `calculateUKPropertyTax()`; `AustraliaPropertyTaxRequest`/`Result`, `calculateAustraliaPropertyTax()` | Typed interfaces only. All three throw `"Phase 2 not implemented: ..."` immediately. Doc comments distinguish scope: `calculateCrossBorderWithholding` is flagged smaller/more-relevant/simply-unbuilt; `calculateUKPropertyTax`/`calculateAustraliaPropertyTax` are flagged go-to-market-blocked (a product/market decision, not a build-order one). | `f933215` |
+
+E-numbers will be assigned to these when actually implemented, not before.
+
+## 4. Not registered behind `investscape-api`
 
 As of commit `3886a9c` / `502ff78`, `investscape-api` has not been modified to expose any of E68–E72 — no new routes, no new dependency on either package. This section will be revisited if a later same-night pass adds dormant (unregistered) route scaffolding for these engines, following the same "built but not wired into the active router" pattern Doc 63 §4 documents for E54–E67 — see that section for the precedent this would follow, and Doc 62 §3.3 for the open product decisions blocking full registration.
 
