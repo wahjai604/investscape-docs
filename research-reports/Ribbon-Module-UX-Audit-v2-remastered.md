@@ -1,11 +1,12 @@
 ---
 title: Ribbon Module UX Audit (v2-remastered)
-status: Batches A, B, C, D all shipped (#3, #18 Tier 1, #19, #21, #22, #23, #24). Open: #18 Tier 2 (deferred, revisit next), #25 (logged, not fixed). Then full Deal Analyzer + Dev Studio module audits queued.
+status: Batches A, B, C, D all shipped (#3, #18 Tier 1, #19, #21, #22, #23, #24, #25). Open: #18 Tier 2 (deferred). See the new [[00 Projects/Investscape Rebuild/Legacy Mockup Porting Audit (2026-08-18).md|Legacy Mockup Porting Audit]] for the full 9-file re-examination Eric requested next — not yet triaged into fixes.
 created: 2026-08-16
 updated: 2026-08-18
 target_file: "C:\\Users\\Eric\\Investscape-Retired-Reconstruction\\investscape-v2-remastered.html"
 reference_file: "C:\\Users\\Eric\\Investscape-Retired-Reconstruction\\investscape-v2-unified.html"
 parent: "[[00 Projects/Investscape Rebuild/Investscape Rebuild Project Description.md|Investscape Rebuild]]"
+related: "[[00 Projects/Investscape Rebuild/Legacy Mockup Porting Audit (2026-08-18).md|Legacy Mockup Porting Audit (2026-08-18)]]"
 ---
 
 # Ribbon Module UX Audit — v2-remastered.html
@@ -220,14 +221,19 @@ Syntax-checked clean (`node --check`), CSS brace-balanced (301/301). Not yet cli
 
 **Carrying forward:** same mini-audit-plus-research treatment queued for Deal Analyzer's and Development Studio's own sub-tab sprawl once their dedicated audits start (see [[00 Projects/Investscape Rebuild/Deal Analyzer Module UX Audit (planned).md|Deal Analyzer Module UX Audit (planned)]]). The Full Provenance Audit's Table B/C has already been given a light pass today (two Low-severity items confirmed resolved) but its full re-grade is intentionally deferred until the Deal Analyzer and Dev Studio audits are also done, so it's re-graded once, not three times — see that doc's 2026-08-18 update note.
 
-## 25. Portfolio Analytics KPI cards look "scattered" — inconsistent widths/heights 🧩 logged 2026-08-18, not yet fixed
+## 25. Portfolio Analytics KPI cards look "scattered" — inconsistent widths/heights ✅ shipped 2026-08-18
 **Eric's report:** the Portfolio Analytics cards look scattered, different widths and heights, harder to read than they should be.
 
 **Finding, root-caused in CSS, not guessed at:** two compounding causes.
 1. `.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:start;}` (line ~173) is used for essentially every two-card row on this tab — Property/IRR table + Concentration Risk chart, Attribution + Benchmark Spread, and (via `portfolioGeoAndFxHtml()`) Investor Profile / Geographic Diversification / Currency Risk Exposure. Two problems baked into that one rule: **(a)** `align-items:start` means each card sizes to its own content and does NOT stretch to match its row partner's height — a short card and a tall card in the same row just end at different heights, by design, not by accident. **(b)** the fixed `1.5fr 1fr` column split is applied uniformly regardless of what's actually in each card, so a table with 7 rows sits next to a single donut chart at a completely different natural height.
 2. **Investor Profile / Geographic Diversification / Currency Risk Exposure is 3 cards rendered into a 2-column `.grid2`** (`portfolioGeoAndFxHtml()`, ~line 4030) — 3 items in 2 columns always produces an visually odd "2 on top, 1 alone underneath" layout regardless of height, on top of the height-mismatch problem above (Investor Profile is one short dropdown; Currency Risk Exposure is a full gauge chart + text).
 
-**Not yet fixed — this is a real CSS/layout decision, not a one-line tweak**, given how many cards reuse `.grid2` app-wide (touching its `align-items` default would ripple beyond just this tab). Proposed direction for when this is picked up: switch `align-items` to `stretch` (or a per-section grid override) so row partners match height, and give the 3-card risk group its own 3-column (or full-width stacked) layout instead of forcing it into the generic 2-column grid. Needs a real pass with Eric's sign-off before shipping, not a guess — likely worth doing together with the #24 follow-through once that's been click-tested live.
+**Shipped, per the proposed direction above:** `.grid2`'s app-wide default was deliberately left untouched (Deal Analyzer, Development Studio, and Property Detail all reuse it — changing the default risked side effects well beyond this tab). Instead:
+- New opt-in modifier `.grid2-stretch` (`align-items:stretch`) applied only to the three Portfolio Analytics rows that needed matching row-partner heights (Property/IRR table + Concentration Risk, Attribution + Benchmark Spread, Market Watchlist + Portfolio Alerts).
+- New `.grid3` class (3 equal columns, responsive to 2 then 1) replaces `.grid2` for the Investor Profile / Geographic Diversification / Currency Risk Exposure group (`portfolioGeoAndFxHtml()`) — no longer forced into an awkward "2 + 1 orphan" 2-column layout.
+- Cards don't get artificially resized — a short card (e.g. Investor Profile, one dropdown) still just has empty space below its content, matching its taller row partner's outer box height rather than floating at a different height than its neighbor.
+
+Syntax-checked clean, CSS brace-balanced (320/320). Not yet click-tested live.
 
 ---
 
