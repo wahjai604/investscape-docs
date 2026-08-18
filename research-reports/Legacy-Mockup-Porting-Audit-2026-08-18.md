@@ -1,6 +1,6 @@
 ---
 title: Legacy Mockup Porting Audit (2026-08-18)
-status: Research complete, no fixes applied yet — triage/decisions pending
+status: Batch E shipped (cross-cutting multi-instance foundation + empty-Portfolio state). Remaining ~35 items across Portfolio/Deal Analyzer/Dev Studio/global still untriaged — see "Batch E" section below.
 created: 2026-08-18
 target_file: "C:\\Users\\Eric\\Investscape-Retired-Reconstruction\\investscape-v2-remastered.html"
 source_files: "investscape-v2-shell.html, investscape-v2-unified.html, investscape-v2-unified-addendum.html, investscape-analyzer-suite.html, investscape-devstudio-drilldown.html, investscape-portfolio-drilldown.html, investscape-ecosystem.html, investscape-v3-unified-WORKING.html, InvestScape-logic.js — all in C:\\Users\\Eric\\Investscape-Retired-Reconstruction\\"
@@ -98,5 +98,28 @@ Confirmed genuinely well-ported/upgraded: ApexGantt and ApexTree are both real (
 
 ---
 
+## Batch E — shipped 2026-08-18 (the cross-cutting foundation)
+
+Eric asked to integrate everything found in this audit. Given the size (~40 items, several genuinely large builds, some possibly-abandoned old designs rather than bugs), scoped it the same way the rest of this session has worked: two real decisions confirmed first (build real multi-instance support now; keep the fixed Deal Analyzer tabs rather than reviving the old Analysis Modules toggle system), then shipped the one foundational piece that several other findings were downstream of, rather than attempting all ~40 items in one uncontrolled pass.
+
+**Real multi-deal support (Deal Analyzer):**
+- New `state.analyzer.deals[]` — a real saved-deal list, each entry `{id, name, deal, extra, createdAt, updatedAt}`. `state.analyzer.deal`/`extra` remain the single always-live "active" scratch object every existing input handler/calc call already reads (no 100+-reference refactor) — `activeDealId` points at which saved entry (if any) that scratch object currently represents.
+- New **"My Deals"** sub-tab (front of Deal Analyzer's tab list) — lists every saved deal with a real computed IRR/DSCR per row (`runDealPipeline()`, not cached), `+ New Deal`, click-to-open, delete.
+- Editing auto-syncs back into the matching saved-deal entry on every recompute (`syncActiveDealToList()`, called from `paintAnalyzer()`) — no separate save button, since this is in-screen editing of your own saved deal, not a cross-module write like #22/#23's linked sessions.
+- **This also finally fixes the persistence gap the #23 audit flagged** — `state.analyzer.deal` was never in `saveLS()`'s payload before; a refresh silently lost it. Now genuinely persisted via whichever saved deal is active.
+- The three existing linked-session modes (#22/#23: editing an existing Portfolio property, a DevStudio conversion queue, a plain add-property flow) all now explicitly clear `activeDealId` at their entry points, so none of them accidentally overwrite an unrelated saved deal.
+
+**Real multi-project support (Development Studio), same pattern:**
+- New `state.devstudio.projects[]`, `activeProjectId`, `currentProjectName`/`currentProjectSubtitle` (replacing the old hardcoded `DEVSTUDIO_PROJECT_NAME` constant, now a live-reading function). New **"My Projects"** sub-tab, same list/create/open/delete/auto-sync/persist pattern, using `devstudioCompute(overrideInputs)` (already parametrized) to show real TDC/margin per project without needing to swap global state to preview a row.
+- Seeded with the pre-existing single demo deal/project as each list's first entry, so neither list is empty on first load and the prior single-instance demo experience is preserved exactly.
+
+**"+New" is now real:** `chooseIntent()`'s "Analyze a Deal" and "Plan a Development" cards now call `createNewDeal()`/`createNewProject()` before navigating — genuinely creates a new, separate, named, saved instance instead of just navigating to whatever was already sitting in the shared scratch object. Directly resolves [[00 Projects/Investscape Rebuild/Deal Analyzer Module UX Audit (planned).md|Deal Analyzer Module UX Audit (planned)]]'s finding #2 and half of finding #1.
+
+**Real empty-Portfolio state:** ported `investscape-v2-unified-addendum.html`'s "Your portfolio starts here" screen (previously dead CSS, never wired to any real zero-property branch — seed data always shipped 7 demo properties, so this literally couldn't render). Added a genuine **"Remove from Portfolio"** action on Property Detail (`removePropertyFromPortfolio()`, native `confirm()` gate, no undo mechanism exists in this build so this is honest about being permanent) — this is also what makes the empty state reachable at all now, not dead code again. Empty state applies uniformly across all three Portfolio sub-tabs (Overview/Analytics/Notes all mean nothing at zero holdings), with "+ Add Your First Property" (reuses #22's flow) and "Try a Sample Deal →" (jumps to Deal Analyzer) actions.
+
+Syntax-checked clean (`node --check`), CSS brace-balanced (321/321). Not yet click-tested live — this is the most structurally involved change of the whole session (new list sub-tabs, a new persistence shape, a genuinely destructive delete action); recommend testing the full loop (create a deal → save → refresh → confirm it's still there → delete a property → confirm empty state renders → add one back) before trusting it fully.
+
+**Deliberately not attempted in this pass** — the remaining ~35 items below (deal grade badges, AI narrative, itemized budgets, Budget-vs-Actuals, Sources≡Uses, milestone rails, etc.) are each their own real scope decision or feature build, not something to guess through in bulk. Suggested next step below still applies to those.
+
 ## Suggested next step
-This doc is long on purpose — it's meant to be a complete inventory, not a pre-filtered list. Recommend the same triage approach used for the rest of this audit series: go through it together, mark each item Won't Do / Someday / Now, and only the "Now" items get scoped into real mini-specs. The cross-cutting multi-project/empty-state theme is probably worth deciding first, since several individual items above are downstream of that one data-model decision.
+This doc is long on purpose — it's meant to be a complete inventory, not a pre-filtered list. Recommend the same triage approach used for the rest of this audit series: go through it together, mark each item Won't Do / Someday / Now, and only the "Now" items get scoped into real mini-specs.
