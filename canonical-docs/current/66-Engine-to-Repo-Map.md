@@ -16,6 +16,8 @@ Every row below was verified directly against each repo's real files (`ls src/E*
 | 5 | US Tax Strategies | E68–E70 | `investscape-tax-engine` |
 | 6 | Syndication Waterfall | E71–E72 | `investscape-calc-engine` |
 | 7 | US Qualifier Engine | E73–E77 | `investscape-calc-engine` |
+| 8 | Financing & Deal Quality | E78–E82 | `investscape-calc-engine` |
+| 9 | E9 Extensions (Cap Rate, Cash-on-Cash) | E9+ | `investscape-calc-engine` |
 
 **Repos group by functional domain, not by engine.** An engine family can span multiple E-number blocks within the same repo (`investscape-calc-engine` alone houses three separate families: #1, #6, #7), and a repo can house multiple engine families that were never contiguous with each other (`investscape-tax-engine` houses #3 and #5, split by the #4 block that landed in between on the flat cross-repo sequence). Contiguity in the E-number sequence does **not** imply contiguity in repo — see #4 sitting between #3 and #5 despite living in a third repo entirely.
 
@@ -30,6 +32,8 @@ Every row below was verified directly against each repo's real files (`ls src/E*
 - **Row 5 (E68–E70):** `investscape-tax-engine/src/E{68,69,70}-*.ts`, verified in Doc 64 §2 against commit `3886a9c`.
 - **Row 6 (E71–E72):** `investscape-calc-engine/src/E{71,72}-*.ts`, verified in Doc 64 §2 against commit `502ff78`.
 - **Row 7 (E73–E77):** `investscape-calc-engine/src/E{73..77}-*.ts`, verified in Doc 65 §2 against commit `a642bd5`.
+- **Row 8 (E78–E82):** `investscape-calc-engine/src/E{78..82}-*.ts`, verified in Doc 67–71 §2 against Batch F completion (2026-08-20).
+- **Row 9 (E9 Extensions):** `calculateCapRate()` and `calculateCashOnCash()` added to `investscape-calc-engine/src/E9-dscr.ts` (Batch F completion); not separately numbered as they extend existing E9 rather than constitute a new engine.
 
 ## 3. Doc 56 R6 collision check (this doc's own numbering)
 
