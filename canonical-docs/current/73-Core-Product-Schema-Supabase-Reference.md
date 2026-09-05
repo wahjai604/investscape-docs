@@ -1,6 +1,6 @@
 # InvestScape Core Product Schema — Supabase Reference (Doc 73)
 
-**Status:** Live. Schema created and RLS-verified against the real `Investscape-Dev` Supabase project, 2026-09-04. Not yet reachable from WeWeb/PostgREST — see "Known gap" below.
+**Status:** Live. Schema created and RLS-verified against the real `Investscape-Dev` Supabase project, 2026-09-04. **Reachable from PostgREST as of 2026-09-05** — the Exposed Schemas dashboard setting is now enabled and live-verified (see "Known gap" below, kept for the record with its resolution noted inline). Remaining blockers to a real WeWeb screen are no WeWeb project and no InvestScape signup/login UI — not database items.
 
 **Purpose:** Reference for the `investscape` Postgres schema — InvestScape's own product data (deals, dev studio projects, portfolios, user profiles, i18n dictionary). This is a *separate* schema from `lighthouse.*` (the Relationship OS cross-product integration schema, documented in `investscape-api`'s own migration files, not here) — different trust model, different purpose. `lighthouse.*` is service-role-only; `investscape.*` is per-user via `auth.uid()`, since these are personal records WeWeb reads/writes directly.
 
@@ -66,7 +66,7 @@ One row per Supabase Auth user. Verified against `state.session.user` and the Se
 | `first_name`, `last_name`, `email`, `role`, `country` | text | `role` is a closed client-side enum stored as plain text |
 | `created_at`, `updated_at` | timestamptz | |
 
-**Known gap:** no trigger auto-creates a row here on `auth.users` insert, and no InvestScape signup flow exists yet.
+**Closed 2026-09-05:** `0011_user_profiles_auto_provision.sql` adds a `SECURITY DEFINER` trigger on `auth.users` insert that auto-creates a row here (`owner_id`+`email` only, rest left `NULL` by deliberate scope choice). **Still open:** no InvestScape signup/login UI exists yet, so nothing in the product actually triggers this — it's wired and waiting.
 
 ### `investscape.translations`
 i18n dictionary. Populated 2026-09-04 from the existing `I18N` object: 5,580 rows, 1,897 keys, `en`/`fr`/`zh-Hant`/`zh-Hans`.
@@ -77,9 +77,9 @@ i18n dictionary. Populated 2026-09-04 from the existing `I18N` object: 5,580 row
 | `value` | text | |
 | `created_at`, `updated_at` | timestamptz | |
 
-**Different security posture from the other four tables, deliberately:** this is a shared dictionary, not personal data. `SELECT` is open to both `anon` and `authenticated`; all writes are denied to both roles. Population happens via direct service-role connection (an import script), not through the client.
+**Different security posture from the other four tables, deliberately:** this is a shared dictionary, not personal data. `SELECT` is open to both `anon` and `authenticated`; all writes are denied to both roles — **as of `0011_translations_restrictive_write_policies.sql` (2026-09-05), this denial is an explicit `AS RESTRICTIVE` policy on INSERT/UPDATE/DELETE, not grant-only**, closing a defense-in-depth gap flagged in the original RLS verification. Population happens via direct service-role connection (an import script), not through the client.
 
-**Known gap:** 568 of 1,897 keys have no English row — their English text lives in `TABS`/`SUBTABS`-style arrays in the HTML app rather than `t()` call sites, which the current export script doesn't walk. Not silently papered over; logged in the export's own `unparsed.json`.
+**Partially closed 2026-09-05:** of the 568 keys with no English row, 361 were resolved by an English-backfill pass walking the real non-`t()` extraction patterns (`TABS`/`SUBTABS`/`GUIDED_BANNER_COPY`/etc. — see the vault's `i18n-export/README.md` "English backfill" section for the full pattern list). 207 remain genuinely unresolved: 150 are methodology-metadata keys with no real English UI string to extract, 57 are orphaned dead keys no longer referenced anywhere in the live app. Neither is a defect; both are named rather than silently dropped.
 
 ---
 
@@ -91,9 +91,11 @@ All five tables have RLS enabled. `deals`, `dev_studio_projects`, `portfolios`, 
 
 ---
 
-## Known gap: not yet reachable from WeWeb
+## Known gap: not yet reachable from WeWeb — CLOSED 2026-09-05
 
-`investscape` is not on Supabase's Data API "Exposed schemas" allow-list (Project Settings → API → Exposed schemas, a dashboard setting — no migration can set this). Until added, PostgREST — and therefore WeWeb — cannot see these tables at all; requests fail as though the tables don't exist (`PGRST205`/`PGRST106`). This is the single blocking step before any WeWeb screen can bind to real data.
+`investscape` was not on Supabase's Data API "Exposed schemas" allow-list (dashboard location as of 2026-09-05: Project Settings → Integrations → Data API → Exposed schemas — Supabase moved this from the old "API" settings page; no migration can set this). Until added, PostgREST — and therefore WeWeb — could not see these tables at all; requests failed as though the tables didn't exist (`PGRST205`/`PGRST106`).
+
+**Resolved and live-verified 2026-09-05:** `investscape` added to the exposed-schema list. Verified with a real `curl GET .../rest/v1/deals?select=*` using `Accept-Profile: investscape` and the anon/publishable key: response was `42501 permission denied for table deals` (a grant-level denial — `anon` was deliberately never granted table access on the per-owner tables), **not** `PGRST205`/`PGRST106`. That distinction confirms PostgREST now genuinely resolves the schema and table, and that anonymous access is still correctly blocked by design. Remaining blockers to a real WeWeb screen are no WeWeb project and no InvestScape signup/login UI — neither is a database item.
 
 ---
 
