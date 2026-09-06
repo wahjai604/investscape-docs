@@ -10,6 +10,8 @@ Separately: WeWeb's own "Connect Supabase" button uses OAuth at the Supabase *or
 
 **Purpose:** Reference for the `investscape` Postgres schema — InvestScape's own product data (deals, dev studio projects, portfolios, user profiles, i18n dictionary). This is a *separate* schema from `lighthouse.*` (the Relationship OS cross-product integration schema, documented in `investscape-api`'s own migration files, not here) — different trust model, different purpose. `lighthouse.*` is service-role-only; `investscape.*` is per-user via `auth.uid()`, since these are personal records WeWeb reads/writes directly.
 
+**Open cross-product dependency (2026-09-06):** Stage 8's `lighthouse.delegated_portfolio_management` needs a real representation-authority signal from Relationship OS that doesn't exist yet — see `src/lighthouse/domain/delegationMandate.ts`'s header comment and the vault's `Requirement — Relationship OS Representation-Authority Signal (2026-09-06).md` for the full spec. Not a schema change on the `investscape` side; noted here only as a pointer.
+
 Full narrative and verification detail lives in the vault, not duplicated here in full:
 - `00 Projects/Investscape Phase 2 (WeWeb+Supabase)/RLS Verification (2026-09-04).md`
 - `00 Projects/Investscape Phase 2 (WeWeb+Supabase)/WeWeb Setup Pack (2026-09-04).md`
