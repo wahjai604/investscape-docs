@@ -71,4 +71,5 @@ Append-only. Retired numbers are never reused. Governed by Doc 56 Versioning Con
 | 65 | US Qualifier Engine E73-E77 Reference | Current | — |
 | 66 | Engine-to-Repo Map | Current | — |
 | 74 | Market Intelligence API Routes | Current | — |
+| 75 | E30 Cap Rate Provenance Correction | Current | — |
 | supersession | supersession map | Current | — |
