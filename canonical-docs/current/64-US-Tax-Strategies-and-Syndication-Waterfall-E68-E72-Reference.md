@@ -3,6 +3,7 @@
 **Lighthouse Research Ltd. · 15 August 2026**
 **No companion proposal doc.** Unlike Doc 63 (proposed against Doc 62), E68–E72 were built directly from two same-night modular prompts, not from a prior gap-analysis pass. This doc's role is the same as Doc 63's: register the E-numbers these two commits actually claimed, verified against the pushed source.
 **Update, same day:** §3 was added after the original E68–E72 pass to register three Phase 2 scaffold files added the same night, matching how Doc 63 got a same-day update for its own Phase 2 contracts. The original §3 ("Not registered behind `investscape-api`") is renumbered §4; no other content changed.
+**Update, 22 September 2026:** §0 gained two more verified source entries; §2 gained an E83 row (promoted out of §3's Phase 2 scaffold table, where it previously sat unimplemented) and a note on E71's new opt-in `waterfallMetric`; §3's `phase2-scaffolds-international.ts` entry had its now-implemented Cross-Border Withholding contents removed, leaving the still-scaffolded UK/Australia contents unchanged. §4 is unaffected — neither addition is registered behind `investscape-api`.
 
 ## 0. Source verified
 
@@ -13,6 +14,9 @@ Two repositories, two commits, both confirmed present on `origin/master` at time
 
 **Repository 2:** https://github.com/wahjai604/investscape-calc-engine
 **Commit documented (E71–E72):** `502ff7891a3adced386b087f485654cd715d1b68` (`502ff78`), branch `master`.
+
+**Repository 1, update (E83):** `7b9dc99c30b17dd7e4abafd6485aa0bca564a711` (`7b9dc99`), branch `master` — Cross-Border Withholding, promoted out of §3's Phase 2 scaffold table.
+**Repository 2, update (E71):** `255140cdb46a84c4084dc33522ec8a82cda60681` (`255140c`), branch `master` — adds an opt-in `waterfallMetric` parameter; no export renamed or removed.
 
 Every export listed below was verified with `grep -n "^export "` against the actual file at the commit above — not copied from the modular prompt that requested the work.
 
@@ -35,8 +39,11 @@ E68 continues directly from E67 (the last Market Intelligence Engine number, Doc
 | E70 | `investscape-tax-engine` | `src/E70-opportunity-zones.ts` | Opportunity Zones — legacy (OZ 1.0) and permanent (OZ 2.0) regimes, both explicit (US only) | `opportunityZones` |
 | E71 | `investscape-calc-engine` | `src/E71-syndication-waterfall.ts` | Syndication (LP/GP) Distribution Waterfall — American/deal-by-deal only | `calculateSyndicationWaterfall` |
 | E72 | `investscape-calc-engine` | `src/E72-gp-catchup.ts` | GP Catch-Up — isolated grossed-up formula (highest-bug-risk provision in the domain) | `calculateGrossedUpCatchUpTarget`, `calculateGPCatchUpForPeriod` |
+| E83 | `investscape-tax-engine` | `src/E83-cross-border-withholding.ts` | Canada-US cross-border withholding (FIRPTA, Section 116, Part XIII, and section 871(d)); source-bounded with explicit simplifications and disclaimers — not a filing, a legal conclusion, or tax advice | `calculateCrossBorderWithholding` |
 
-Sourced conventions, defaults, and citations for these five engines live in each repo's own docs, not duplicated here: `investscape-tax-engine/docs/US-TAX-STRATEGIES-SOURCES.md` (E68–E70) and `investscape-calc-engine/docs/SYNDICATION-WATERFALL-SOURCES.md` (E71–E72).
+**E71 update, commit `255140c`:** `calculateSyndicationWaterfall` gained an optional `waterfallMetric: "irr" | "roe"` parameter. The default remains `"irr"` and is byte-identical to prior behavior when the parameter is omitted. `"roe"` mode is an unannualized, running equity-multiple — not an annualized return.
+
+Sourced conventions, defaults, and citations for these engines live in each repo's own docs, not duplicated here: `investscape-tax-engine/docs/US-TAX-STRATEGIES-SOURCES.md` (E68–E70), `investscape-calc-engine/docs/SYNDICATION-WATERFALL-SOURCES.md` (E71–E72), and `investscape-tax-engine/docs/CROSS-BORDER-WITHHOLDING-SOURCES.md` (E83).
 
 ## 3. Reserved, not yet implemented (Phase 2 — no E-number assigned)
 
@@ -46,7 +53,7 @@ Three files, five functions, added the same night as E68–E72 but deliberately 
 |---|---|---|---|---|
 | `phase2-scaffolds-str.ts` | `investscape-calc-engine` | `STRRevenueProjectionRequest`/`Result`, `projectSTRRevenue()`; `STRRegulatoryStatusRequest`/`Result`, `checkSTRRegulatoryStatus()` | Typed interfaces only. Both functions throw `"Phase 2 not implemented: ..."` immediately. | `e2b6daa` |
 | `phase2-scaffolds-climate-risk.ts` | `investscape-calc-engine` | `ClimateRiskAssessmentRequest`/`Result`, `assessClimateRisk()` | Typed interface only. `assessClimateRisk()` throws `"Phase 2 not implemented: ..."` immediately. File's own header comment documents that E24 (Insurance Estimate) was checked before writing this and does not overlap — E24 estimates insurance premiums from property characteristics; this scaffold is for hazard/climate-exposure scoring, a different computation with no shared ground. | `e2b6daa` |
-| `phase2-scaffolds-international.ts` | `investscape-tax-engine` | `CrossBorderWithholdingRequest`/`Result`, `calculateCrossBorderWithholding()`; `UKPropertyTaxRequest`/`Result`, `calculateUKPropertyTax()`; `AustraliaPropertyTaxRequest`/`Result`, `calculateAustraliaPropertyTax()` | Typed interfaces only. All three throw `"Phase 2 not implemented: ..."` immediately. Doc comments distinguish scope: `calculateCrossBorderWithholding` is flagged smaller/more-relevant/simply-unbuilt; `calculateUKPropertyTax`/`calculateAustraliaPropertyTax` are flagged go-to-market-blocked (a product/market decision, not a build-order one). | `f933215` |
+| `phase2-scaffolds-international.ts` | `investscape-tax-engine` | `UKPropertyTaxRequest`/`Result`, `calculateUKPropertyTax()`; `AustraliaPropertyTaxRequest`/`Result`, `calculateAustraliaPropertyTax()` | Typed interfaces only. Both throw `"Phase 2 not implemented: ..."` immediately, flagged go-to-market-blocked (a product/market decision, not a build-order one). **`CrossBorderWithholdingRequest`/`Result` and `calculateCrossBorderWithholding()` were removed from this file 22 September 2026** — implemented and promoted to E83 (`investscape-tax-engine/src/E83-cross-border-withholding.ts`, commit `7b9dc99`); see §2. | `f933215` |
 
 E-numbers will be assigned to these when actually implemented, not before.
 
