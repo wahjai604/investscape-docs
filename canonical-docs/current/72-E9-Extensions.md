@@ -17,7 +17,9 @@ E9 (DSCR) was the first commercial real estate analysis engine, computing NOI an
 - `calculateCapRate()` — the unlevered yield
 - `calculateCashOnCash()` — the levered cash return
 
-These are not assigned new E-numbers (E83, E84) because they are tightly integrated with E9's existing NOI calculation and are best understood as complementary yield metrics, not separate engines. No E-number is assigned until an addition becomes large enough (multiple functions, distinct types file, independent caller pattern) to warrant its own module. Here, both fit naturally in the existing `src/E9-dscr.ts` file alongside `calculateDSCR()`.
+These were not assigned new E-numbers at the time because they are tightly integrated with E9's existing NOI calculation and are best understood as complementary yield metrics, not separate engines. No E-number is assigned until an addition becomes large enough (multiple functions, distinct types file, independent caller pattern) to warrant its own module. Here, both fit naturally in the existing `src/E9-dscr.ts` file alongside `calculateDSCR()`.
+
+**Correction, 22 September 2026:** E83 has since been assigned elsewhere — Cross-Border Withholding, `investscape-tax-engine`, an unrelated capability built independently of this doc's E9 extensions. See Doc 64 §2's E83 entry for the verified source. E84's status is not established by this doc and should not be assumed either way.
 
 ## 2. E9 Extensions
 
@@ -154,4 +156,4 @@ E9 extensions' test suite verifies:
 - Cash-on-cash is the headline metric ("You'll earn 8% cash-on-cash in year 1").
 - Cap rate is supporting detail (unlevered context).
 
-*End of Doc 72 · Companions: Doc 79 (E79 — Deal Grade, which consumes E9 cap rate and cash-on-cash as inputs)*
+*End of Doc 72 · Companions: Doc 68 (E79 — Deal Grade, which consumes E9 cap rate and cash-on-cash as inputs)*
