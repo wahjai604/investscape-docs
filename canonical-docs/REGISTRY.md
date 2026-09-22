@@ -72,4 +72,6 @@ Append-only. Retired numbers are never reused. Governed by Doc 56 Versioning Con
 | 66 | Engine-to-Repo Map | Current | — |
 | 74 | Market Intelligence API Routes | Current | — |
 | 75 | E30 Cap Rate Provenance Correction | Current | — |
+| 76 | E85 Zoning and Land Use Rules Engine Source Reference | Current | — |
+| 77 | E86 P0 CRE Intelligence Narrow Public Surface Reference | Current | — |
 | supersession | supersession map | Current | — |
