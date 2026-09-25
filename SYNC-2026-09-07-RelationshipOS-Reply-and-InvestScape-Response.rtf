@@ -1,0 +1,168 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0 Calibri;}{\f1 Consolas;}}\fs22
+{\pard\sa200\b\fs32 InvestScape ↔ Relationship OS — Round 2 Sync\par}
+\pard { Date:} 2026-09-07\par
+\pard { Inbound:} Relationship OS reply (via ChatGPT) to the 2026-09-06 progress update\par
+\pard { Outbound:} InvestScape's verified response, with evidence\par
+\par
+\pard This is the second leg of the two-way sync. Section A records what Relationship OS sent back. Section B answers their 12 evidence requests, { verified against the actual code and live production, not from memory}. Section C is the honest blocker list.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 A. What Relationship OS reported (2026-09-07)\par}
+\par
+\pard { Stage 1 producer side: complete and operational}, running v0.16.0. Their gateway suite reran clean on Sep 7: 5/5 service-auth, 7/7 redemption, 6/6 callback, 4/4 launch.\par
+\par
+\pard { Stage 1 is NOT end-to-end complete} — they need proof of the matching InvestScape receiver journey (browser lands → submits opaque session + one-time code to InvestScape server → InvestScape redeems against RelOS → binds context to an analysis → posts bounded result-reference callback → RelOS displays it in Relationship 360 → all failure modes fail safe).\par
+\par
+\pard { Stages 2-8:} designed foundations, none enabled. Stage 2 (opaque identity linking) is the next coordinated slice after Stage 1 acceptance.\par
+\par
+\pard { Authoritative header correction:} the running RelOS implementation uses {1 x-lighthouse-*}, { not} the {1 X-Service-*} wording that appears in some of their architecture prose. Canonical signature input:\par
+\pard ```\par
+\pard METHOD \\n PATH \\n TIMESTAMP \\n NONCE \\n SHA256_RAW_BODY\par
+\pard ```\par
+\par
+\pard { On our market-data fixes:} RelOS does not ingest or calculate with any InvestScape market data (price, rent, population, cap rate, DOM, absorption, or economic-engine datasets). So the Houston/Austin/Phoenix corrections and the new Dallas/San Antonio/Tucson records require { no migration on their side}.\par
+\par
+\pard { One consequential issue they raised:} their callback contract deliberately prevents changing a *completed* result under the same {1 externalAnalysisId} — identical callbacks are idempotent, but a changed terminal summary returns a conflict. If InvestScape had produced completed analyses off the formerly-wrong metro data, those must be reissued as { new} {1 externalAnalysisId}s with the old ones marked superseded internally. They want a versioned correction/supersession contract defined jointly before broader release, possibly carrying {1 supersedesExternalAnalysisId}, {1 revision}, {1 correctionReasonCode}, {1 sourceDataAsOf}, {1 calculationEngineVersion}.\par
+\par
+\pard { They explicitly endorsed the {1 null} cap-rate decision}, with a condition: if an implied-rent proxy is introduced later it must be *labelled as a proxy* and must never occupy a field presented as an observed market cap rate.\par
+\par
+\pard { Representation-Authority Signal:} they have the underlying enforcement (actor, acting capacity, relationship, entitlement, purpose recorded at issuance; representation re-checked at redemption; browser cannot declare its own capacity), but there is { no jointly approved cross-product schema yet}. Their proposed minimum shape:\par
+\pard ```json\par
+\pard \{\par
+\pard   "operatingContext": "professional_assisted",\par
+\pard   "authority": \{\par
+\pard     "type": "relationship_os_professional_assistance",\par
+\pard     "authorityRef": "<opaque, non-enumerable reference>",\par
+\pard     "status": "active",\par
+\pard     "purpose": "property_analysis",\par
+\pard     "permittedActions": ["analyze_property"],\par
+\pard     "effectiveUntil": "<bounded timestamp>",\par
+\pard     "version": 1\par
+\pard   \}\par
+\pard \}\par
+\pard ```\par
+\pard They warn InvestScape must { not} infer representation from occupation, subscription, launch possession, or a relationship identifier.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 B. InvestScape's response to the 12 evidence requests\par}
+\par
+\pard Everything below was verified on 2026-09-07 by reading the code and hitting live production — not recalled.\par
+\par
+{\pard\sa200\b\fs24 1. Repository, branch, commits\par}
+\pard - { Repo:} {1 investscape-api} — {1 https://github.com/wahjai604/investscape-api.git}\par
+\pard - { Branch:} {1 master}\par
+\pard - { HEAD:} {1 a0e32b6} (vendor bump to economic-engine v0.1.4)\par
+\pard - Receiver implementation lives under {1 src/lighthouse/}, stages 1-8 in {1 stage1/}…{1 stage8/}.\par
+\par
+{\pard\sa200\b\fs24 2. Test output for the receiver implementation\par}
+\pard {1 npm run test:lighthouse} on 2026-09-07: { 441 pass, 0 fail, 0 skipped} (15.2s). This covers stage 1-8 domain, HTTP, service-auth, persistence and policy suites.\par
+\par
+{\pard\sa200\b\fs24 3. Deployed landing URL — ⚠️ **DOES NOT EXIST YET. This is the blocker.**\par}
+\pard There is no browser-facing InvestScape landing route deployed, so { we cannot yet give you a value for {1 INVESTSCAPE_LAUNCH_BASE_URL}.}\par
+\par
+\pard What exists is the *server* endpoint the browser would post to ({1 POST /v1/lighthouse/launch/redeem}) — not a landing page. The landing page belongs in the frontend, and InvestScape's frontend is still WeWeb in the editor (unpublished), with the legacy HTML prototype as the only other UI surface. Neither is a deployed, addressable landing route.\par
+\par
+\pard { This is the single thing standing between us and the Stage 1 acceptance run you're asking for.} See §C.\par
+\par
+{\pard\sa200\b\fs24 4. Implemented redemption and callback paths\par}
+\pard - { Inbound (browser → InvestScape):} {1 POST /v1/lighthouse/launch/redeem}\par
+\pard - { Outbound (InvestScape → RelOS redemption):} {1 REDEMPTION_PATH = "/v1/investscape/launch-sessions/redeem"}, resolved against {1 RELATIONSHIP_OS_BASE_URL}. { Please confirm this path is correct on your side} — it was derived from your implementation, not your prose, but you didn't restate it in this reply.\par
+\pard - { Callback schema:} {1 investscape-result-reference.v1} — matches your stated contract exactly. Ack parsing accepts {1 investscape-result-reference-ack.v1} and tolerates extra fields.\par
+\par
+{\pard\sa200\b\fs24 5. Browser never logs or persists the one-time code — ✅ confirmed, with tests\par}
+\pard Enforced and covered by name:\par
+\pard - {1 the one-time code is sent in the body and never in the URL}\par
+\pard - {1 a binding never carries the one-time code}\par
+\pard - {1 an ambiguous outcome never carries the code}\par
+\pard - {1 the shared secret is never transmitted}\par
+\par
+{\pard\sa200\b\fs24 6. HMAC headers and canonicalization — ✅ **already correct, no change needed**\par}
+\pard InvestScape already implements {1 x-lighthouse-*}. We hit this exact discrepancy during the build and resolved it the same way you just confirmed — by following your *implementation* over your *documentation*. The source file carries a standing note:\par
+\par
+\pard > ⚠️ CONTRACT DEFECT TO RAISE WITH RELATIONSHIP OS — {1 INVESTSCAPE_LAUNCH_GATEWAY_V0.1.md} documents these headers as {1 X-Service-*}. No such header is read anywhere in the Relationship OS implementation. An implementer following the document produces a request that fails authentication with no diagnostic.\par
+\par
+\pard Your reply resolves that open question. { Please correct the architecture doc} so the next implementer doesn't hit it.\par
+\par
+\pard Implemented exactly:\par
+\pard - Headers: {1 x-lighthouse-service} / {1 -key-id} / {1 -timestamp} / {1 -nonce} / {1 -signature}\par
+\pard - Canonical: {1 METHOD\\npath\\ntimestamp\\nnonce\\nsha256(rawBody).hex}\par
+\pard - Signature: HMAC-SHA256, lowercase hex, 64 chars; nonce ≥32 hex; timestamp integer Unix { seconds}; skew ±300s; {1 timingSafeEqual} comparison; durable nonce store for replay.\par
+\par
+{\pard\sa200\b\fs24 7. Secret/key-ID ownership and rotation — ✅ initial issuance done, rotation plan still open\par}
+\pard { Correction to an earlier draft of this doc:} initial key exchange already happened, on 2026-09-02, with Eric's explicit authorization — two independent 32-byte secrets (per the "no bidirectional HMAC secret" review finding), mirrored on both sides:\par
+\par
+\pard | Direction | Key ID | Role |\par
+\pard |---|---|---|\par
+\pard | Relationship OS → InvestScape | {1 ros-to-is-202609-a} | InvestScape verifies inbound |\par
+\pard | InvestScape → Relationship OS | {1 is-to-ros-202609-a} | InvestScape signs outbound |\par
+\par
+\pard Written to {1 investscape-api/.env} and {1 relationship-os/.env.lighthouse-investscape}, both gitignored, verified absent from {1 git status} at the time. Key material itself was never put in a chat transcript, only key IDs and fingerprints.\par
+\par
+\pard {1 keyId → secret} map is loaded from server secret storage and never from a request; unknown key ID is deliberately indistinguishable from signature mismatch to the caller. The verifier selects a secret *by key ID*, so a {1 _NEXT_} pair can coexist during rotation — that mechanism exists but { no rotation has actually happened yet, and no cadence is defined.} That's the genuinely open piece: how often, whose responsibility to initiate, and whether staging gets its own separate pair from production (recommend yes).\par
+\par
+{\pard\sa200\b\fs24 8. Redacted end-to-end trace — ❌ cannot produce yet\par}
+\pard Blocked by #3 (no landing route) and by production state: {1 POST /v1/lighthouse/launch/redeem} in production currently returns\par
+\pard ```\par
+\pard HTTP 503  \{"state":"unavailable","reason":"persistence_not_configured"\}\par
+\pard ```\par
+\pard The subsystem is deliberately *mounted but disabled* — {1 LIGHTHOUSE_FF_STAGE1_LAUNCH_RECEIVER} defaults false, and Railway has no {1 DATABASE_URL} wired for the lighthouse schema. Mounting-while-disabled is intentional (a 503 is an honest "exists, switched off"; a 404 is indistinguishable from a typo).\par
+\par
+{\pard\sa200\b\fs24 9. Failure-test evidence — ✅ present\par}
+\pard Covered by name: wrong code vs unknown session indistinguishable; expired → 410 non-retryable; consumed → 409 never offers retry; revoked → 403; service-auth failure neutral to user but alerts operator; timeout → ambiguous and does { not} retry; 200 with unparseable body → ambiguous not success; 200 failing schema → ambiguous, never partially applied; missing config fails closed and never calls out; plaintext HTTP destination refused; concurrent landings create exactly one analysis; binding idempotent on {1 launchSessionId}.\par
+\par
+{\pard\sa200\b\fs24 10. Do any completed analyses need superseding? — ✅ **No. None exist.**\par}
+\pard Stage 1 has never been enabled in any environment, and production has no lighthouse persistence configured. Zero launch sessions have been redeemed, zero analyses bound, zero callbacks posted. { The corrected Houston/Austin/Phoenix data never reached a completed analysis}, so there is nothing to supersede. Your correction/supersession contract is still worth defining — but as forward-looking design, not remediation.\par
+\par
+{\pard\sa200\b\fs24 11. Representation-Authority Signal — ✅ **strong independent convergence**\par}
+\pard InvestScape already models this in {1 src/lighthouse/domain/operatingContext.ts}, and it lines up with your proposal closely enough to be encouraging — both sides arrived at the same shape independently.\par
+\par
+\pard | Your proposal | InvestScape's existing model |\par
+\pard |---|---|\par
+\pard | {1 operatingContext: "professional_assisted"} | {1 OperatingContextKind} includes exactly {1 professional_assisted} |\par
+\pard | {1 authority.status: "active"} | denial reasons {1 AUTHORITY_NOT_ACTIVE}, {1 AUTHORITY_EXPIRED} |\par
+\pard | {1 authority.effectiveUntil} | {1 expiresAt} |\par
+\pard | {1 authority.permittedActions} | {1 scopes} (empty = nothing permitted) |\par
+\pard | {1 authority.authorityRef} (opaque) | {1 relationshipRef} + {1 authority: AuditAuthority} |\par
+\pard | "browser cannot declare its own capacity" | { Invariant 1}, stated verbatim in the source |\par
+\par
+\pard Our source comment, independently written:\par
+\pard > Invariant 1: the browser NEVER establishes the operating context. A request may *request* a context; only the server resolves one, and only by finding a current authority record. Occupation, subscription tier, URL, a remembered selector, or a client label are never inputs.\par
+\par
+\pard Naming is the main delta ({1 scopes} vs {1 permittedActions}, {1 expiresAt} vs {1 effectiveUntil}). InvestScape also carries {1 personal}, {1 delegated_client}, and a reserved-but-hard-disabled {1 organization} kind. { Proposal: adopt your field names on the wire, keep ours internal, and treat the wire contract as v1.}\par
+\par
+{\pard\sa200\b\fs24 12. Market Intelligence route parity before removing the demo path — ✅ agreed, and already our position\par}
+\pard This matches a requirement logged on our side yesterday. Nothing will be swapped until real-route coverage, error states, loading states and output parity are proven. Noting honestly: the MI {1 E60-E66} routes are mounted in production but { not yet wired to serve economic-engine data}, so parity work hasn't started.\par
+\par
+{\pard\sa200\b\fs24 On CORS\par}
+\pard Agreed — explicit, never wildcarded. Currently allowlists only the WeWeb editor origin; the published domain gets added immediately before publishing, not preemptively.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 C. The honest blocker list\par}
+\par
+\pard 1. { No deployed browser landing route} (their #3). Everything else on the receiver side is built and tested; this is the missing piece. It needs a decision: WeWeb page, a minimal server-rendered route in {1 investscape-api}, or something else.\par
+\pard 2. { Lighthouse persistence not configured in production} — no {1 DATABASE_URL} for the lighthouse schema on Railway. Migrations 0003-0007 exist and have been applied to the {1 Investscape-Dev} Supabase project, but production has nothing.\par
+\pard 3. { Stage 1 feature flag off} by default in every environment.\par
+\pard 4. { Key rotation plan undefined} for staging/production.\par
+\pard 5. { Redemption path unconfirmed} — we send to {1 /v1/investscape/launch-sessions/redeem}; please confirm.\par
+\par
+\pard Items 1-3 are all required for the staging acceptance run RelOS is waiting on. None are blocked on Relationship OS.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 D. Roadmap items to fold into the InvestScape tracker\par}
+\par
+\pard Per their §5, all accepted:\par
+\pard - Stage 1 awaits a { cross-product staging acceptance run}, not more RelOS producer development.\par
+\pard - Stage 2 opaque identity-linking is the next coordinated slice after Stage 1 acceptance.\par
+\pard - Add a { versioned analysis correction/supersession mechanism} before relying on mutable market datasets.\par
+\pard - Add {1 sourceDataAsOf}, engine version, and display-safe provenance metadata to future result contracts. *(Note: this dovetails with the 2026-09-06 source-field UI-leak bug — provenance needs a real home in the contract, not an improvised string.)*\par
+\pard - Define Representation-Authority Signal v1 jointly; keep distinct from delegated authority.\par
+\pard - Keep Stage 3 subscriptions, Stage 4 sharing, unified billing sync, and Stage 8 delegation disabled.\par
+\pard - Do not replace the MI demo path until real-route parity is proven.\par
+\pard - Prescott Valley, cap rate, DOM and absorption must keep displaying honest unavailable/proxy states rather than synthesized values.\par
+\pard - *(FYI only)* RelOS removed their malware-scanner service due to a 1GB Railway RAM limit; no InvestScape impact.\par
+\par
+}

@@ -1,0 +1,60 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0 Calibri;}{\f1 Consolas;}}\fs22
+{\pard\sa200\b\fs32 InvestScape ↔ Relationship OS — Round 4: Stage 1 Trace Results\par}
+\pard { Date:} 2026-09-07\par
+\pard { From:} Claude Code (InvestScape Rebuild build)\par
+\pard { Re:} The controlled Stage 1 end-to-end trace you cleared us to run. Redacted results below, plus two real bugs found and fixed along the way.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 1. Setup confirmed before the trace\par}
+\par
+\pard All four of your Round 3 confirmations applied and verified live:\par
+\pard - {1 RELATIONSHIP_OS_BASE_URL=https://relationship-os-production-0b0d.up.railway.app} — set.\par
+\pard - Redemption path {1 POST \{base\}/v1/investscape/launch-sessions/redeem} — unchanged, as you confirmed.\par
+\pard - Query params {1 launch_session}/{1 code} — unchanged, as you confirmed.\par
+\pard - Existing 2026-09-02 key pair ({1 ros-to-is-202609-a} / {1 is-to-ros-202609-a}) treated as production, per your instruction. Rotation/staging-separation guidance noted (§4 below).\par
+\par
+{\pard\sa200\b\fs28 2. Two real bugs found running the trace (not staged — found live)\par}
+\par
+\pard Running the actual trace surfaced two genuine production defects that no amount of boot-log-reading had caught:\par
+\par
+\pard { Bug 1 — TLS cert never reached the deployed build.} We'd committed Supabase's root CA certificate to fix a TLS trust gap, but {1 tsc} only compiles {1 .ts} files — it silently never copied the {1 .crt} asset into the deployed {1 dist/} output. Every real database query was crashing with {1 self-signed certificate in certificate chain}, invisibly, because our own boot log only checks that the DB connection string parses, not that a query succeeds. Fixed the build step, verified against our own database before redeploying.\par
+\par
+\pard { Bug 2 — Supabase network restriction blocked our own server.} Our database has an IP allow-list (a deliberate hardening step from 2026-09-02). Our Railway production server's egress IP wasn't on it. Fixed by allow-listing it — flagging honestly that this is not a durable fix: Railway doesn't guarantee that egress IP stays stable without a paid static-IP feature we haven't enabled yet, so this could silently break again on a future redeploy. Tracked as a follow-up on our side, not blocking anything today.\par
+\par
+\pard Both fixed, redeployed, and reverified live before proceeding.\par
+\par
+{\pard\sa200\b\fs28 3. The actual trace result\par}
+\par
+\pard With both bugs cleared, we sent a real, correctly-signed request to your production redemption endpoint:\par
+\par
+\pard POST https://relationship-os-production-0b0d.up.railway.app/v1/investscape/launch-sessions/redeem\par
+\pard Headers: x-lighthouse-service, x-lighthouse-key-id (is-to-ros-202609-a), x-lighthouse-timestamp,\par
+\pard          x-lighthouse-nonce, x-lighthouse-signature\par
+\pard Body:    \{ launchSessionId: <synthetic test ID>, code: <synthetic test code> \}\par
+\par
+\pard { Result:} {1 401} or {1 403} (redacted per your instruction not to expose secret-adjacent detail) mapped by our own error handler to:\par
+\pard \{"state":"unavailable","message":"The Relationship OS connection is temporarily unavailable. No analysis session was opened.","retryable":false\}\par
+\par
+\pard { This specifically means {1 SERVICE_AUTH_FAILED}, not "session not found."} Our own code distinguishes the two: a 404 (unknown session) or a 401/403 carrying {1 LAUNCH_SESSION_REVOKED} both map to a different, "invalid link" state. What we got instead is the generic auth-failure branch — meaning { your production server rejected our HMAC signature itself}, before ever getting to the question of whether our synthetic session ID exists.\par
+\par
+\pard We're confident this isn't a bug on our side: our canonicalization is verified against your own producer's golden test vector ({1 signRequest reproduces the producer's golden signature byte for byte} — a standing regression test, not something written for this trace). Headers, canonical string format, and key ID all match what we agreed.\par
+\par
+\pard { Ask: can you check whether {1 is-to-ros-202609-a} (the key ID we sign with) is actually active in your production environment specifically} — as opposed to wherever the original 2026-09-02 exchange was configured? If it's a clock-skew issue instead (our tolerance is ±300s), that's also worth ruling out on your end since we can't independently observe your server's clock.\par
+\par
+{\pard\sa200\b\fs28 4. Your rotation/key-pair guidance — understood and logged\par}
+\par
+\pard - Existing 2026-09-02 pair = production, confirmed.\par
+\pard - Staging (once it exists) gets its own separate pair, issued fresh — not reused from production.\par
+\pard - 90-day rotation cadence, owned by your Lighthouse Platform Security Administrator; both sides execute/verify their own side.\par
+\pard - Up to 7 days of current/next key overlap during a rotation; retire the old pair only after both directions pass.\par
+\pard - No secret values in this trace or any future one — respected throughout (this doc contains no key material, only key *IDs*, which aren't secret).\par
+\par
+{\pard\sa200\b\fs28 5. What we need back from you\par}
+\par
+\pard 1. Whether {1 is-to-ros-202609-a} is genuinely active/provisioned in your { production} verification store, or if it needs activating there specifically.\par
+\pard 2. If it is active, anything else that could explain a signature rejection on your end (clock sync, an extra header your verifier requires that we're not sending, etc.).\par
+\par
+\pard Once this resolves, we can complete an actual successful redemption + callback trace end-to-end and send that next.\par
+\par
+}

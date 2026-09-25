@@ -1,0 +1,72 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0 Calibri;}{\f1 Consolas;}}\fs22
+{\pard\sa200\b\fs32 InvestScape ↔ Relationship OS — Round 3 Sync\par}
+\pard { Date:} 2026-09-07\par
+\pard { From:} Claude Code (InvestScape Rebuild build)\par
+\pard { Re:} Your Round 2 reply — landing route is now built and live; here's what's left before your Stage 1 staging acceptance run can actually happen.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 1. `INVESTSCAPE_LAUNCH_BASE_URL` — here's the real value\par}
+\par
+\pard https://investscape-api-production.up.railway.app\par
+\par
+\pard Route: {1 GET /relationship-os/launch} — confirmed live in production today (2026-09-07), verified via direct HTTP request, {1 200} with the correct {1 Content-Type: text/html}.\par
+\par
+\pard What it does: reads {1 launch_session} and {1 code} from the query string, scrubs both from the address bar via {1 history.replaceState()} { before any async work} (never touches localStorage/sessionStorage/console), then {1 POST}s {1 \{launchSessionId, code\}} to {1 /v1/lighthouse/launch/redeem} at the same origin. Renders one of the 7 states your {1 mapRedemptionFailure} already defines ({1 loading}/{1 invalid}/{1 expired}/{1 consumed}/{1 unavailable}/{1 error}/{1 success}) — we built to your existing contract, not the other way around.\par
+\par
+\pard One implementation note in case it matters for your redirect construction: we expect the URL shape {1 \{base\}/relationship-os/launch?launch_session=\{id\}&code=\{code\}}, i.e. {1 launch_session} (with underscore), not {1 launchSession} or {1 launch-session}. Flag it if your producer names the param differently.\par
+\par
+\pard Right now this route will show {1 unavailable} for every real link, honestly — see §3, everything on our side is configured except {1 RELATIONSHIP_OS_BASE_URL}, which is the one thing left blocking a real end-to-end attempt.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 2. Confirm our outbound redemption path\par}
+\par
+\pard We call {1 POST \{RELATIONSHIP_OS_BASE_URL\}/v1/investscape/launch-sessions/redeem}. This was derived from your implementation during the original build, not restated in your last reply — { please confirm this is still correct}, or send the actual path if it's changed since.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 3. What's left before your acceptance run — split by who unblocks it\par}
+\par
+\pard We audited exactly what's still missing, and split it by whether it needs your input or is purely ours to configure:\par
+\par
+\pard { Correction to an earlier draft of this doc:} we initially wrote this section as if HMAC key exchange were still an open question. It isn't — it was already done, on 2026-09-02, before this whole sync thread started. Two independent 32-byte secrets ({1 ros-to-is-202609-a} for your calls to us, {1 is-to-ros-202609-a} for our calls to you), mirrored into both sides' gitignored env files at the time, with Eric's explicit authorization. We just hadn't re-checked that history before drafting this doc. Sorry for the noise if you'd already started planning around "how do we exchange a key" — that part's done.\par
+\par
+{\pard\sa200\b\fs24 3a. Ours alone — done, confirmed live 2026-09-07\par}
+\pard - { {1 DATABASE_URL}} for the lighthouse Postgres schema — set. Not new infrastructure: migrations 0001-0007 (lighthouse) already live in the same Supabase project ({1 Investscape-Dev}) that backs the live {1 investscape.*} schema WeWeb uses today.\par
+\pard - { {1 LIGHTHOUSE_FF_STAGE1_LAUNCH_RECEIVER=true}} — set.\par
+\pard - { Real 2026-09-02 HMAC key material now actually in Railway.} Turned out the variables that were already there were {1 .env.example}'s literal placeholder text ({1 is-to-ros-YYYYMM-a}, not the real {1 is-to-ros-202609-a}) — a human on our side copied the real values from the local {1 .env} directly into Railway.\par
+\par
+\pard Confirmed via the live production boot log:\par
+\pard 🔒 lighthouse: mounted · persistence=postgres · sessions=unconfigured · enabled flags=lighthouse.stage1_launch_receiver\par
+\pard {1 persistence=postgres} and the flag being listed both confirm this took effect — not just that variables were saved. The {1 /v1/lighthouse/launch/redeem} endpoint currently still answers {1 503 \{"state":"unavailable"\}} for any real request, which is correct and expected: that's the redemption client's {1 unconfigured} outcome, because {1 RELATIONSHIP_OS_BASE_URL} (§3b) is the one thing still missing. Once that's set, this should be a live, working outbound call using keys already in place.\par
+\par
+{\pard\sa200\b\fs24 3b. Needs coordination with you — this is now the entire remaining gate\par}
+\pard - { {1 RELATIONSHIP_OS_BASE_URL}} — your production (or staging, if that's what this acceptance run targets) base URL for us to call. Still genuinely unset on our side.\par
+\pard - { A formal rotation cadence for the existing key pair.} The mechanism supports it ({1 _NEXT_} variants, cut over, retire old) but no rotation has actually happened since the initial 2026-09-02 issuance, and there's no defined cadence or ownership for who initiates it. Also want to confirm: does your side want staging and production to use separate key pairs from what's already issued? We'd recommend yes, so a staging leak can't touch production — but that means issuing a second pair, which needs the same kind of explicit authorization the first one got.\par
+\par
+\pard We don't have direct Railway/Supabase dashboard access on our side automation-wise — 3a needed a human on our team to actually click it, but is done now. 3b is the only thing left standing between us and your acceptance run.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 4. Everything else from your Round 2 reply — no open questions, just confirming receipt\par}
+\par
+\pard - HMAC header/canonicalization: confirmed already matching ({1 x-lighthouse-*}) — no change needed on our side. Please correct {1 INVESTSCAPE_LAUNCH_GATEWAY_V0.1.md}'s {1 X-Service-*} wording so the next implementer doesn't hit what we hit.\par
+\pard - Superseding: confirmed nothing needs it — zero completed analyses exist anywhere (Stage 1 has never been enabled). Happy to design the versioned correction/supersession contract jointly whenever you want to start — not urgent given the above.\par
+\pard - Representation-Authority: agreed on adopting your field names ({1 operatingContext}/{1 authority}/{1 permittedActions}/{1 effectiveUntil}) on the wire contract, keeping our internal naming ({1 scopes}/{1 expiresAt}) as an implementation detail behind it.\par
+\pard - {1 null} cap rate + proxy labeling requirement: agreed, already how we built it.\par
+\pard - MI demo-path parity requirement: agreed, matches what we'd already decided independently.\par
+\pard - CORS: agreed, staying explicit, will add WeWeb's published domain only once WeWeb is actually published.\par
+\par
+\pard\brdrb\brdrs\brdrw10\brsp20 \par
+\par
+{\pard\sa200\b\fs28 5. What we need back from you\par}
+\par
+\pard 1. Confirm or correct the redemption path (§2).\par
+\pard 2. Confirm the {1 launch_session}/{1 code} query param names (§1).\par
+\pard 3. Whether staging and production should get separate key pairs from the existing 2026-09-02 issuance, and who owns initiating a rotation cadence going forward.\par
+\pard 4. {1 RELATIONSHIP_OS_BASE_URL} for whichever environment this acceptance run targets.\par
+\par
+\pard Once 3b is settled, we can run the actual end-to-end trace your Round 2 reply asked for (issuance through Relationship 360 callback display) and send it back.\par
+\par
+}
