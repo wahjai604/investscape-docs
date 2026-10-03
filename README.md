@@ -8,9 +8,13 @@
 
 Reference documentation for the InvestScape engines: formula specifications, schema documents, and research reports. This repo is markdown/reference material — there is no application code here.
 
+## Current migration checkpoint
+
+See [Doc 78 — Phase 2 native migration and SaaS integration checkpoint](canonical-docs/current/78-Phase2-Native-Migration-and-SaaS-Checkpoint.md) for the 2026-10-02 verified/reported status, pending integration gates and repository boundaries. Native WeWeb Workspace/Quick drafts exist; authenticated saving and Full API integration are pending. This documentation is not a production-readiness claim.
+
 ## Scope
 
-Documentation covers all 52 active engines across three repositories:
+The historical core covers 52 engines across three repositories. Later financial, tax and market-intelligence references are also present; numbering, package exports, API routes and release readiness are distinct and must not be counted interchangeably:
 - [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) — Financial engines (E1–E28)
 - [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) — Economic engines (E29–E45)
 - [investscape-tax-engine](https://github.com/wahjai604/investscape-tax-engine) — Tax engines (E46–E53)
@@ -21,7 +25,7 @@ For a comprehensive reference of what each engine does, see [ENGINE-REFERENCE.md
 
 ## Structure
 
-- `canonical-docs/current/` — current reference documents (numbered, ~62 files)
+- `canonical-docs/current/` — numbered reference documents; see `canonical-docs/REGISTRY.md` and dated status notes
 - `canonical-docs/superseded/` — documents superseded by newer versions
 - `research-reports/` — supporting research
 - `html-prototypes/current/` and `html-prototypes/retired/` — prototype UI references
@@ -37,7 +41,10 @@ Numbered documents under `canonical-docs/current/` are the authoritative referen
 - [investscape-calc-engine](https://github.com/wahjai604/investscape-calc-engine) — financial calculation engines, E1–E28
 - [investscape-economic-engine](https://github.com/wahjai604/investscape-economic-engine) — economic data engines, E29–E45
 - [investscape-tax-engine](https://github.com/wahjai604/investscape-tax-engine) — tax calculation engines, E46–E53
-- [investscape-api](https://github.com/wahjai604/investscape-api) — HTTP API wrapping all three engine suites (52 active endpoints)
+- [investscape-api](https://github.com/wahjai604/investscape-api) — deployed HTTP API with vendored engine packages; current deployment and surface boundaries are in Doc 78
+
+- [investscape-market-intelligence-engine](https://github.com/wahjai604/investscape-market-intelligence-engine) — statistical risk, Market Intel and E85–E88 source; not all modules are packaged or exposed
+- [investscape-retired-reconstruction](https://github.com/wahjai604/investscape-retired-reconstruction) — canonical migration reference and extracted shared development calculations; local checkpoints may be ahead of GitHub
 
 ## License & Disclaimer
 
