@@ -140,10 +140,18 @@ Saved diagnostic configuration now includes an unpublished `/connection-test` pa
 
 The latest isolated staging deployment `076e5501…` verifies the actual editor-origin preflight: 204 with exact allowed-origin response; an untrusted origin receives no Access-Control-Allow-Origin. This establishes preflight behavior, not an authenticated calculation. Production remains unchanged; no PR merge or WeWeb publication occurred.
 
+### Desktop diagnostic acceptance and contrast configuration
+
+**Screenshot-supported user-run acceptance:** Eric's desktop screenshot `image(20261003-221532).png`, inspected by the reviewing agent, shows the bounded synthetic Full diagnostic summary with `status: passed`, `adapterStatus: ok`, `totalCapital: 25076176.895999998` and `wacc: 0.1150775`. The summary lists `financingTable`, `budgetAnalysis`, `sourcesUses` and `acquisitionStructureResult`, with calculation package `0.10.0-p2-6b`. This corroborates the displayed desktop diagnostic result; it is not a fresh cloud-browser execution by the reviewing agent and does not establish financial correctness, user-project persistence or broader browser acceptance.
+
+The separate cloud-browser sign-in attempt retained a failed-fetch error with no HTTP status. Its cause remains unexplained; do not treat it as a resolved authentication failure or override the screenshot-supported desktop outcome. Authentication/session behavior still requires bounded reproduction and valid-token acceptance evidence for the actual execution context.
+
+**Saved configuration, verified by readback:** the diagnostic page root now uses Canvas and Text tokens with `minHeight: 100vh`. A new Control Border AA token (`b0479118-3ec8-4ae5-8a4b-8be2bbb6ab47`) uses light `#767064` and dark `#7d8798` and is applied to the shared Input and Secondary classes. Design guidelines target WCAG 2.1 AA. This is saved configuration evidence; rendered contrast/accessibility testing remains pending. Nothing was published.
+
 ## 9. Source references
 
 - API deployed commit: package.json, package-lock.json, vendor/, src/routes/index.ts, src/http/engineGuards.ts.
 - Market engine b279e22: package.json, src/index.ts, src/statistical-risk/phase2-contracts.ts, src/market-intelligence/phase2-contracts.ts, docs/E86-phase8-production-monitoring-refresh.md, docs/E87-phase7-production-hardening.md, src/construction-cost-engine/index.ts.
 - Reconstruction current local documents: QUICK-FULL-DEVELOPMENT-FIELD-MAP.md, E85-PUBLIC-2-PREVIEW-RECONCILIATION.md, DEVELOPMENT-UI-IMPLEMENTATION-PLAN.md, WEWEB-CALCULATION-INTEGRATION-DESIGN.md, WEWEB-MIGRATION-PARITY-SPEC.md, WEWEB-QUICK-NATIVE-BINDING-SPEC.md, WEWEB-FULL-ADAPTER-CONTRACT-SPEC.md.
-- Follow-up connection evidence: editor screenshots of legacy Supabase datasource/Auth targeting the existing project; signed-in editor browser inspection; MCP `WRONG_ACTION_TYPES` on legacy auth action; saved `/connection-test` diagnostic workflow; staging `076e5501…` actual-origin preflight response. These observations do not establish valid-token Full execution or durable saves.
+- Follow-up connection evidence: editor screenshots of legacy Supabase datasource/Auth targeting the existing project; signed-in editor browser inspection; MCP `WRONG_ACTION_TYPES` on legacy auth action; saved `/connection-test` diagnostic workflow; staging `076e5501…` actual-origin preflight response. The later desktop screenshot supports the bounded synthetic diagnostic outcome described above; these observations do not establish durable saves or comprehensive authenticated acceptance.
 - Related current docs: 53, 66, 73, 74, 75, 76, 77. Historical material is retained; Doc 78 governs this checkpoint's migration/integration status only.
