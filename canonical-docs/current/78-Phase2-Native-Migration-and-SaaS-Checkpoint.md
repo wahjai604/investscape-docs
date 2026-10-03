@@ -146,7 +146,7 @@ The latest isolated staging deployment `076e5501…` verifies the actual editor-
 
 The separate cloud-browser sign-in attempt retained a failed-fetch error with no HTTP status. Its cause remains unexplained; do not treat it as a resolved authentication failure or override the screenshot-supported desktop outcome. Authentication/session behavior still requires bounded reproduction and valid-token acceptance evidence for the actual execution context.
 
-**Saved configuration, verified by readback:** the diagnostic page root now uses Canvas and Text tokens with `minHeight: 100vh`. A new Control Border AA token (`b0479118-3ec8-4ae5-8a4b-8be2bbb6ab47`) uses light `#767064` and dark `#7d8798` and is applied to the shared Input and Secondary classes. Design guidelines target WCAG 2.1 AA. This is saved configuration evidence; rendered contrast/accessibility testing remains pending. Nothing was published.
+**Saved configuration, verified by readback:** the diagnostic page root now uses Canvas and Text tokens with `minHeight: 100vh`. A new Control Border AA token (`b0479118-3ec8-4ae5-8a4b-8be2bbb6ab47`) uses light `#767064` and dark `#7d8798` and is applied to the shared Input and Secondary classes. The original decorative Border token remains light `rgba(64,48,20,0.18)` and dark `rgba(255,255,255,0.16)`; control borders use the new token. Fresh class/token/guideline readback confirms these settings and the WCAG 2.1 AA target. This is saved configuration evidence; rendered contrast/accessibility testing remains pending. The cloud editor tab is now at a WeWeb sign-in screen, so rendering verification is blocked without another authenticated editor session; no new auth attempt was made. Nothing was published.
 
 ## 9. Source references
 
