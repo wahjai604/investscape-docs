@@ -1,3 +1,9 @@
+# Current-status index — 2026-10-02
+
+The original July backup inventory below is retained as historical evidence, not the current repository count. [Doc 78](canonical-docs/current/78-Phase2-Native-Migration-and-SaaS-Checkpoint.md) records current migration/infrastructure status with explicit verification labels. The registry now includes existing Docs 67–73 and new Doc 78; no numbers were reused. Docs 53/73 have dated reconciliation notes without rewriting historical findings. README scope/count language is reconciled. No prototype, runtime, schema or release changes belong to this documentation slice.
+
+---
+
 # InvestScape Docs Backup — Manifest
 
 **Generated:** 31 July 2026, as part of Doc 54 Step 3 (second private GitHub repo for docs/prototype).
