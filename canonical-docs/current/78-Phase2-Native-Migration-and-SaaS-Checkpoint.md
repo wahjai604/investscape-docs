@@ -62,6 +62,8 @@ P2-6B.2 is **user-reported implemented, uncommitted and unwired**: 27 files / 83
 
 Independent P2-6B.1 ZIP review: baseline/build and 27 files pass; 825 executed checks here, four actual-browser checks skipped. Review found a non-enumerable non-finite required stack metric could still return ok. P2-6B.2's reviewed code and synthetic tests close that gap using direct finiteness checks and duplicate issue removal. This accepts the corrective review package for a local checkpoint; it does not establish browser Full behavior, deployment or financial correctness.
 
+P2-6C runtime delivery review on 2026-10-03: ZIP `fa6e05c3111b2637b3ef823f4ee4ec7889e94b2ced9234f64f99bc0c7097bf05` has 64 manifest entries, all independently verified. Runtime tarball SHA-256 `0d1f079e121dd16093a08c50b3a025447efed2b9caa420918e2c4ff38502208d` contains exactly 13 files, all byte-identical to the reviewed package. Raw baseline adapter results equal source results without JSON conversion. Exported logs record one sequential run: 27 files / 832 checks with no browser checks skipped; this is reviewed log evidence, not a new Edge run here. Source checkpoint `175587843b0aca4ef0d1c9f54ec112962ab24a79` is reported local and unpushed. One earlier parity-clock-pin failure remains unexplained, not resolved.
+
 Full contract wraps only devstudioCompute; RLV, staged and tax remain separate operations. Proposed/adopted policy includes exact enum scope BC/ON/US, explicit additive-facility amounts, finite inputs, conditional activation and a versioned 600-month resource limit. Status includes partial with per-section availability. No currency conversion, financial audit or tax-law verification is claimed.
 
 ## 3. Native Quick evidence
