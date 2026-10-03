@@ -92,7 +92,9 @@ Deployment startup logs: CORS allowlist one origin; engine auth flag disabled; s
 
 Verified metadata in `investscape`: deals, dev_studio_projects, portfolios, user_profiles and translations; all RLS enabled. Per-owner tables have auth.uid/owner_id predicates and update USING/WITH CHECK. Inspection did not read personal payload rows or rerun cross-user tests.
 
-Doc 73's earlier migration/view/login evidence is historical. Current WeWeb connection absence does not prove tables, views or Auth users were removed. Reconcile public view definitions, grants, exposed schemas, auth provider and migration source before changing any schema.
+Follow-up verified metadata confirms five public views (deals, dev_studio_projects, portfolios, user_profiles, translations), all security_invoker=true; public has no base tables. Authenticated CRUD grants exist on the four owned tables and their views; anon has no CRUD grant on owned objects and can SELECT translations. Both roles have schema USAGE. Policy roles listed as public are not by themselves an exposure finding: grants and owner predicates jointly govern access.
+
+Doc 73's earlier endpoint/signup/login evidence remains historical, not rerun. Current Data API exposed-schema configuration and live authenticated behavior remain unverified. Reconcile auth provider and migration source before schema changes; current WeWeb connection absence does not prove removed data or views.
 
 Reuse existing owner/payload structures. Do not create duplicate generic projects tables. Snapshot storage and optimistic save revisions are proposed and require a deliberate JSON contract. NaN/Infinity, undefined and -0 must not silently change meaning during HTTP or JSONB serialization.
 
