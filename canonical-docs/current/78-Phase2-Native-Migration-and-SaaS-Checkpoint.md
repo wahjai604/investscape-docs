@@ -128,7 +128,15 @@ Preserve Quick/Full differing revenue/margin bases and single-phase financing-in
 
 Relationship OS, its infrastructure and unrelated session changes are outside these slices. No API deploy, schema mutation, engine release or WeWeb publish was performed by this reconciliation. Research ingestion/reuse and Community authentication/database/moderation remain separate functional systems.
 
-## 8. Source references
+## 8. Follow-up staging evidence — 2026-10-03
+
+Isolated API feature branch `feat/native-full-api-adapter` at `fec3213eef2ff28ddd2716bd49184a25b6ab0028` is deployed only in a new private Railway project, InvestScape Native Full Staging (`227cdcb9-8e2c-4cf2-8e96-805454eccf56`). Its default environment happens to be named production; it is not the existing production project. Service `0a9b03d7-9de1-4cf0-b793-f83454465a40`, deployment `32467e84-fbe2-4ffa-a721-2f59f3046bdf`, URL https://native-full-staging-api-production.up.railway.app.
+
+Verified execution: health 200; Full disabled initially returned 503; after staging-only public Supabase issuer/JWKS configuration and enabling the new flag, missing and invalid tokens returned 401. Configured editor-origin CORS preflight returned 204 with exact ACAO; a denied origin received no ACAO. This does not establish the actual WeWeb preview origin. E85 probe 404 and disabled startup posture remain. No production secrets copied or production settings changed. Latest local API suite: 504 tests, 502 passed, two existing E85 evidence skips, zero failures; install/typecheck/build pass. A browser-safe decoder has six VM/codec tests, not actual WeWeb browser acceptance.
+
+WeWeb Supabase still has no connection. Actual user login, valid Supabase JWT success, native preview CORS, decoded results and persistence remain pending the connector UI handoff. The original production API remains at its prior deployment; no PR merge or WeWeb publication occurred.
+
+## 9. Source references
 
 - API deployed commit: package.json, package-lock.json, vendor/, src/routes/index.ts, src/http/engineGuards.ts.
 - Market engine b279e22: package.json, src/index.ts, src/statistical-risk/phase2-contracts.ts, src/market-intelligence/phase2-contracts.ts, docs/E86-phase8-production-monitoring-refresh.md, docs/E87-phase7-production-hardening.md, src/construction-cost-engine/index.ts.
