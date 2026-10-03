@@ -75,3 +75,11 @@ Append-only. Retired numbers are never reused. Governed by Doc 56 Versioning Con
 | 76 | E85 Zoning and Land Use Rules Engine Source Reference | Current | — |
 | 77 | E86 P0 CRE Intelligence Narrow Public Surface Reference | Current | — |
 | supersession | supersession map | Current | — |
+| 67 | E78 Financing Table | Current | — |
+| 68 | E79 Deal Grade | Current | — |
+| 69 | E80 Budget Actuals | Current | — |
+| 70 | E81 Sources Uses | Current | — |
+| 71 | E82 Acquisition Structure | Current | — |
+| 72 | E9 Extensions | Current | — |
+| 73 | Core Product Schema Supabase Reference | Current | — |
+| 78 | Phase 2 Native Migration and SaaS Integration Checkpoint | Current — dated status snapshot | — |
