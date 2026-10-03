@@ -58,9 +58,9 @@ Reference bundle fingerprints identify content only; release versions UNKNOWN:
 
 ### Full adapter acceptance state
 
-P2-6B.2 is **user-reported implemented, uncommitted and unwired**: 27 files / 832 checks including actual Edge execution, 104 Full adapter checks. Its latest ZIP has not been independently reviewed at this checkpoint.
+P2-6B.2 is **user-reported implemented, uncommitted and unwired**: 27 files / 832 checks including actual Edge execution, 104 Full adapter checks. Independent P2-6B.2 review on 2026-10-03 verified ZIP SHA-256 `f5368fe5f50b879613ab38c430ce979e68a6cae134e1f4747549fa86a7b8e373`, all manifest entries, baseline/build checks and 27 passing test files: 828 executed checks here, with four actual-browser checks skipped because Edge/Chrome is unavailable. The 104 Full adapter checks pass. Compared with P2-6B.1, only full-adapter.js, its test and the contract spec changed (plus manifest). Reference HTML, raw calculations and goldens are unchanged.
 
-Independent P2-6B.1 ZIP review: baseline/build and 27 files pass; 825 executed checks here, four actual-browser checks skipped. Review found a non-enumerable non-finite required stack metric could still return ok. P2-6B.2 reports direct finiteness checks and duplicate issue removal; do not mark accepted until its artifact is reviewed.
+Independent P2-6B.1 ZIP review: baseline/build and 27 files pass; 825 executed checks here, four actual-browser checks skipped. Review found a non-enumerable non-finite required stack metric could still return ok. P2-6B.2's reviewed code and synthetic tests close that gap using direct finiteness checks and duplicate issue removal. This accepts the corrective review package for a local checkpoint; it does not establish browser Full behavior, deployment or financial correctness.
 
 Full contract wraps only devstudioCompute; RLV, staged and tax remain separate operations. Proposed/adopted policy includes exact enum scope BC/ON/US, explicit additive-facility amounts, finite inputs, conditional activation and a versioned 600-month resource limit. Status includes partial with per-section availability. No currency conversion, financial audit or tax-law verification is claimed.
 
