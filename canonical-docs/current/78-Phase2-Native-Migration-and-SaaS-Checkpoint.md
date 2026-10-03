@@ -21,7 +21,7 @@ These labels govern the current checkpoint. Earlier numbered documents retain hi
 | GitHub API | Remote master equals deployed `e2a5ddf216a029ec7fc1f4e0d36dc848375bd53f` | New development adapter is not yet installed |
 | Railway | InvestScape API successful production deployment `37ff669a-1863-4ceb-a61a-b1f30014d75e` (2026-09-28) | Route-specific authenticated Full integration and fresh endpoint acceptance |
 | WeWeb | Native Workspace and Quick drafts exist, unpublished, English | Full page, authenticated saving and other modules pending |
-| Supabase | Existing Investscape-Dev database and core product schema present; direct MCP read-only inspection succeeds | WeWeb Supabase integration installed but connection list empty / not ready |
+| Supabase | Existing Investscape-Dev database and core product schema present; direct MCP read-only inspection succeeds | Legacy Supabase datasource/Auth configured to the existing project (screenshots); modern integration connection list empty / not ready does not establish absence |
 | Quick runtime | Exact `0.9.0-p2-5a` artifact embedded in reusable WeWeb workflow | This is not an externally hosted script; upgrade deliberately |
 | Full runtime | Node adapter implementation reported, no consumer wiring | Corrected package review/checkpoint then API delivery |
 
@@ -98,7 +98,7 @@ Verified metadata in `investscape`: deals, dev_studio_projects, portfolios, user
 
 Follow-up verified metadata confirms five public views (deals, dev_studio_projects, portfolios, user_profiles, translations), all security_invoker=true; public has no base tables. Authenticated CRUD grants exist on the four owned tables and their views; anon has no CRUD grant on owned objects and can SELECT translations. Both roles have schema USAGE. Policy roles listed as public are not by themselves an exposure finding: grants and owner predicates jointly govern access.
 
-Doc 73's earlier endpoint/signup/login evidence remains historical, not rerun. Current Data API exposed-schema configuration and live authenticated behavior remain unverified. Reconcile auth provider and migration source before schema changes; current WeWeb connection absence does not prove removed data or views.
+Doc 73's earlier endpoint/signup/login evidence remains historical, not rerun. Current Data API exposed-schema configuration and live authenticated behavior remain unverified. Reconcile auth provider and migration source before schema changes; the empty modern integration connection list does not prove absence of the legacy datasource/Auth connection, or removed data/views.
 
 Reuse existing owner/payload structures. Do not create duplicate generic projects tables. Snapshot storage and optimistic save revisions are proposed and require a deliberate JSON contract. NaN/Infinity, undefined and -0 must not silently change meaning during HTTP or JSONB serialization.
 
@@ -134,11 +134,16 @@ Isolated API feature branch `feat/native-full-api-adapter` at `fec3213eef2ff28dd
 
 Verified execution: health 200; Full disabled initially returned 503; after staging-only public Supabase issuer/JWKS configuration and enabling the new flag, missing and invalid tokens returned 401. Configured editor-origin CORS preflight returned 204 with exact ACAO; a denied origin received no ACAO. This does not establish the actual WeWeb preview origin. E85 probe 404 and disabled startup posture remain. No production secrets copied or production settings changed. Latest local API suite: 504 tests, 502 passed, two existing E85 evidence skips, zero failures; install/typecheck/build pass. A browser-safe decoder has six VM/codec tests, not actual WeWeb browser acceptance.
 
-WeWeb Supabase still has no connection. Actual user login, valid Supabase JWT success, native preview CORS, decoded results and persistence remain pending the connector UI handoff. The original production API remains at its prior deployment; no PR merge or WeWeb publication occurred.
+The modern WeWeb integration listing reported no connections; later editor screenshots confirm an existing **legacy Supabase datasource/Auth configuration** targeting `hwhkgrwikczwztfnsjir`. The listing does not establish that Supabase is absent. Browser inspection found Investscape Dev signed in at origin `https://joyous-trellis-editor.weweb.io`. Legacy Sign In is available through editor action search, while the corresponding MCP action attempt returns `WRONG_ACTION_TYPES`; this is a legacy/modern action compatibility boundary, not proof of missing Supabase service.
+
+Saved diagnostic configuration now includes an unpublished `/connection-test` page (`1005895d…`), an auth workflow and a Full API test with bounded synthetic inputs. Saved workflows are not authenticated runtime acceptance. The first secure auth test failed without a session; the entered password was cleared. Valid Supabase JWT success, decoded native Full results and persistence remain pending. No credentials or access tokens are recorded here.
+
+The latest isolated staging deployment `076e5501…` verifies the actual editor-origin preflight: 204 with exact allowed-origin response; an untrusted origin receives no Access-Control-Allow-Origin. This establishes preflight behavior, not an authenticated calculation. Production remains unchanged; no PR merge or WeWeb publication occurred.
 
 ## 9. Source references
 
 - API deployed commit: package.json, package-lock.json, vendor/, src/routes/index.ts, src/http/engineGuards.ts.
 - Market engine b279e22: package.json, src/index.ts, src/statistical-risk/phase2-contracts.ts, src/market-intelligence/phase2-contracts.ts, docs/E86-phase8-production-monitoring-refresh.md, docs/E87-phase7-production-hardening.md, src/construction-cost-engine/index.ts.
 - Reconstruction current local documents: QUICK-FULL-DEVELOPMENT-FIELD-MAP.md, E85-PUBLIC-2-PREVIEW-RECONCILIATION.md, DEVELOPMENT-UI-IMPLEMENTATION-PLAN.md, WEWEB-CALCULATION-INTEGRATION-DESIGN.md, WEWEB-MIGRATION-PARITY-SPEC.md, WEWEB-QUICK-NATIVE-BINDING-SPEC.md, WEWEB-FULL-ADAPTER-CONTRACT-SPEC.md.
+- Follow-up connection evidence: editor screenshots of legacy Supabase datasource/Auth targeting the existing project; signed-in editor browser inspection; MCP `WRONG_ACTION_TYPES` on legacy auth action; saved `/connection-test` diagnostic workflow; staging `076e5501…` actual-origin preflight response. These observations do not establish valid-token Full execution or durable saves.
 - Related current docs: 53, 66, 73, 74, 75, 76, 77. Historical material is retained; Doc 78 governs this checkpoint's migration/integration status only.
