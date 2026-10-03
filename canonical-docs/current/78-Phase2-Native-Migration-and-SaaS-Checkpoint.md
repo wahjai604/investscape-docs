@@ -154,6 +154,14 @@ The separate cloud-browser sign-in attempt retained a failed-fetch error with no
 
 **Bounded rendered verification:** the reviewing agent saw the desktop form and confirmed one rendered input accessible name, `Land acquisition amount`, via DOM `aria-label`. A batch inspection of the remaining native accessible names timed out. After browser runtime reset, native credential protection reported that the session could not safely resume; it was not bypassed. MCP project configuration remains readable, but accessible-name completeness is unverified. Full mobile, light/dark and conditional interactive verification remain pending. The design targets WCAG 2.1 AA; no full conformance claim is made. Nothing was published.
 
+### Backend-priority checkpoint
+
+Eric is handling frontend visual iterations; parallel work now prioritizes backend/runtime integration. **Fresh live verification:** isolated Railway staging service is Online, deployment `076e5501…` is SUCCESS, health GET returns HTTP 200 with `{"status":"ok"}`, and unauthenticated POST `/v1/development/full/calculate` returns HTTP 401 with Authentication required. The reviewed native Full adapter package `0.10.0-p2-6b` is already deployed to isolated staging; a local agent's proposed-route wording must not be read as absence of that deployment. No production deployment changed.
+
+The earlier user-run desktop passed diagnostic remains carried screenshot evidence. Credential-protected cloud browser access prevents a fresh native authenticated end-to-end run; that acceptance remains pending. A Full client artifact is in progress and is not itself deployment evidence.
+
+**Fresh vendored inventory:** deployed archive labels remain calc `1.0.0`, economic `0.1.6`, tax `1.0.0`, market intelligence `0.3.0`. The inspected market tarball contains 73 files; E85/E87/E88 implementations are absent from that archive. The E86 cap-rate benchmark route exists, but package presence does not establish its current data coverage or production readiness. Advanced Risk forecasting, regression, back-testing, Monte Carlo and portfolio covariance interfaces throw not implemented. No complete-engine or audited-risk claim follows from this inventory. E85 release gates remain unchanged.
+
 ## 9. Source references
 
 - API deployed commit: package.json, package-lock.json, vendor/, src/routes/index.ts, src/http/engineGuards.ts.
