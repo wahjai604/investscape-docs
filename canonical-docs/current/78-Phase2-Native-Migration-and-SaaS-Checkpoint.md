@@ -86,6 +86,8 @@ Archive package labels are not embedded reference release lineage. The calc arch
 
 **Verified execution:** both packaged calc UMD and ESM builds match all 249 existing Full golden cases at tolerance 0. Their UMD LF-normalized script hash is `8617fcb05b31e15ab9da46cc85cc50da179b93319f1eedf01c7f4b65d66a5c47`, different from the reference script; no byte-identity or all-engine lineage claim.
 
+Individual HTTP route completeness is separate from package completeness: the inspected E78 financing-table router returns a not-yet-implemented stub. The new Full operation should call imported calc functions through the shared adapter, not fan out to existing engine HTTP routes.
+
 Deployment startup logs: CORS allowlist one origin; engine auth flag disabled; session verifier unconfigured; rate 600/min; E85 zoning disabled. These are startup observations, not new live endpoint/security acceptance. Railway configuration reports checkSuites false: a master push may deploy without waiting for CI; keep integration off connected master until validated.
 
 ## 5. Existing Supabase data
