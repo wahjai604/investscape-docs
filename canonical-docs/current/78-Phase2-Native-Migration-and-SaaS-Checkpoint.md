@@ -162,6 +162,16 @@ The earlier user-run desktop passed diagnostic remains carried screenshot eviden
 
 **Fresh vendored inventory:** deployed archive labels remain calc `1.0.0`, economic `0.1.6`, tax `1.0.0`, market intelligence `0.3.0`. The inspected market tarball contains 73 files; E85/E87/E88 implementations are absent from that archive. The E86 cap-rate benchmark route exists, but package presence does not establish its current data coverage or production readiness. Advanced Risk forecasting, regression, back-testing, Monte Carlo and portfolio covariance interfaces throw not implemented. No complete-engine or audited-risk claim follows from this inventory. E85 release gates remain unchanged.
 
+### Full helper deployment and native orchestration — 2026-10-04 UTC
+
+**Verified isolated staging deployment:** API feature commit `2cec0ab519513a34aabbad909c4f24b1472d385c`, deployment `c0f1658f-481b-4579-a297-4ba02963436e`, SUCCESS. The live Full client helper responds HTTP 200, is 17,483 bytes and has SHA-256 `8abbad1340077073ab4b31f3a9a4e10ee7c7a8b6aa9ea55e52beec21540b4f26`. Its response permits the exact WeWeb origin and uses Cross-Origin-Resource-Policy cross-origin; the native loader pins it with SRI. This updates isolated staging only, not production.
+
+**Native saved configuration and bounded browser execution:** Development Studio `d789a8fd-f136-46ed-8ac1-3355db79c635` now has the 36 blank controls, 11 disclosures and 36 edit workflows that increment revision and clear results. On-load pinned-helper readiness was independently verified in the browser. Native form submit performs bounded fetch/auth/freshness orchestration, gates five essential metrics, and reports optional-section availability; optional result tables are not built. In a signed-out browser, Calculate Full visibly requests sign-in and clears loading; live unauthenticated API POST still returns 401.
+
+The reviewing agent has not yet performed an authenticated native Full form acceptance run. Earlier desktop synthetic diagnostic success remains user-run screenshot evidence, separate from native Full acceptance. Independently run orchestration and write-gate tests pass: 12 and seven respectively. Deployed changes cover seven reviewed paths without formula or authentication rewrites.
+
+Remaining gates: Quick navigation/persistence acceptance; Full navigation draft retention; rendered checks for eight conditional-control accessible names; authenticated native Full acceptance. No database/schema, production, WeWeb publication or Relationship OS changes were made. E85 remains NOT_RELEASED with AS_OF DISABLED.
+
 ## 9. Source references
 
 - API deployed commit: package.json, package-lock.json, vendor/, src/routes/index.ts, src/http/engineGuards.ts.
