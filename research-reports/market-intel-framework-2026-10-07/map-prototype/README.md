@@ -54,3 +54,7 @@ Fixture regeneration: generate-fixtures.py requires shapely and original evidenc
 This preview does not verify production API, AI, DB, WeWeb integration or RLS. No production deployment/publication or Community post made. Renderer selection remains revisitable after real device, licensed basemap and production API benchmarks.
 
 The GitHub documentation branch retains a source snapshot and machine-readable results. The complete downloadable bundle also contains generated fixtures, twelve screenshots and vendored renderer assets. To run the source snapshot alone, restore public/data from the bundle or regenerate it from the acquired boundary evidence; npm ci prepares vendored assets.
+
+## Revision 2: movable, collapsible evidence panel
+
+Use Panel position to choose Left/Right on desktop. Pin panel keeps it open while using the map; unpinned panels collapse after map interaction unless selecting evidence. Show/Hide remains available at all times. Preferences persist locally across module switches and reloads. On phones the panel stays below the map. See PANEL-REVISION-REPORT.md and the latest regression results. When replacing an earlier preview, stop the old server and hard-refresh the browser with Ctrl+F5 after starting this version.

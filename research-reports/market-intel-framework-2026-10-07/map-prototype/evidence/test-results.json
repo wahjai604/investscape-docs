@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-07T22:28:08.713Z",
+  "date": "2026-10-07T23:09:43.568Z",
   "api": [
     {
       "name": "Research pagination and link-only text exclusion",
@@ -57,6 +57,10 @@
     },
     {
       "name": "maplibre ribbon retention and hidden renderer disposal",
+      "passed": true
+    },
+    {
+      "name": "maplibre panel side, collapse, pin and reload preferences",
       "passed": true
     },
     {
@@ -132,6 +136,10 @@
       "passed": true
     },
     {
+      "name": "leaflet panel side, collapse, pin and reload preferences",
+      "passed": true
+    },
+    {
       "name": "leaflet keyboard alternate geographic selection",
       "passed": true
     },
@@ -179,7 +187,7 @@
   "performance": [
     {
       "renderer": "maplibre",
-      "ms": 398.19999999995343,
+      "ms": 374.69999999995343,
       "volume": 100,
       "complexity": 0,
       "kind": "point-stress",
@@ -187,7 +195,7 @@
     },
     {
       "renderer": "maplibre",
-      "ms": 507.80000000004657,
+      "ms": 506.89999999990687,
       "volume": 1000,
       "complexity": 0,
       "kind": "point-stress",
@@ -195,7 +203,7 @@
     },
     {
       "renderer": "maplibre",
-      "ms": 506.60000000009313,
+      "ms": 462.5,
       "volume": 10000,
       "complexity": 0,
       "kind": "point-stress",
@@ -203,7 +211,7 @@
     },
     {
       "renderer": "maplibre",
-      "ms": 422.29999999981374,
+      "ms": 388.5,
       "volume": 0,
       "complexity": 1000,
       "kind": "vertex-stress",
@@ -211,7 +219,7 @@
     },
     {
       "renderer": "maplibre",
-      "ms": 551.3000000000466,
+      "ms": 529,
       "volume": 0,
       "complexity": 10000,
       "kind": "vertex-stress",
@@ -219,7 +227,7 @@
     },
     {
       "renderer": "maplibre",
-      "ms": 590.3999999999069,
+      "ms": 591.1999999999534,
       "volume": 0,
       "complexity": 50000,
       "kind": "vertex-stress",
@@ -229,61 +237,61 @@
       "renderer": "maplibre",
       "kind": "cold-http-cache-load",
       "run": 1,
-      "ms": 440.98529899999994
+      "ms": 457.27981999999975
     },
     {
       "renderer": "maplibre",
       "kind": "cold-http-cache-load",
       "run": 2,
-      "ms": 456.7417749999986
+      "ms": 436.60877600000094
     },
     {
       "renderer": "maplibre",
       "kind": "cold-http-cache-load",
       "run": 3,
-      "ms": 469.66252600000007
+      "ms": 453.53818599999795
     },
     {
       "renderer": "maplibre",
       "kind": "cold-http-cache-load",
       "run": 4,
-      "ms": 463.3132820000028
+      "ms": 440.51847599999746
     },
     {
       "renderer": "maplibre",
       "kind": "cold-http-cache-load",
       "run": 5,
-      "ms": 466.3578610000004
+      "ms": 448.80709899999783
     },
     {
       "renderer": "maplibre",
       "kind": "warm-reload",
       "run": 1,
-      "ms": 564.505427
+      "ms": 537.5711850000007
     },
     {
       "renderer": "maplibre",
       "kind": "warm-reload",
       "run": 2,
-      "ms": 568.2763599999998
+      "ms": 495.02079500000036
     },
     {
       "renderer": "maplibre",
       "kind": "warm-reload",
       "run": 3,
-      "ms": 519.1601699999992
+      "ms": 538.9387410000018
     },
     {
       "renderer": "maplibre",
       "kind": "warm-reload",
       "run": 4,
-      "ms": 527.4747009999992
+      "ms": 509.6265000000021
     },
     {
       "renderer": "maplibre",
       "kind": "warm-reload",
       "run": 5,
-      "ms": 487.0345039999993
+      "ms": 483.54545599999983
     },
     {
       "renderer": "maplibre",
@@ -294,7 +302,7 @@
     },
     {
       "renderer": "leaflet",
-      "ms": 27.699999999953434,
+      "ms": 36,
       "volume": 100,
       "complexity": 0,
       "kind": "point-stress",
@@ -302,7 +310,7 @@
     },
     {
       "renderer": "leaflet",
-      "ms": 29.199999999953434,
+      "ms": 30.599999999976717,
       "volume": 1000,
       "complexity": 0,
       "kind": "point-stress",
@@ -310,7 +318,7 @@
     },
     {
       "renderer": "leaflet",
-      "ms": 207.4000000001397,
+      "ms": 184.5,
       "volume": 10000,
       "complexity": 0,
       "kind": "point-stress",
@@ -318,7 +326,7 @@
     },
     {
       "renderer": "leaflet",
-      "ms": 28.800000000046566,
+      "ms": 28.300000000046566,
       "volume": 0,
       "complexity": 1000,
       "kind": "vertex-stress",
@@ -326,7 +334,7 @@
     },
     {
       "renderer": "leaflet",
-      "ms": 29.600000000093132,
+      "ms": 35.09999999997672,
       "volume": 0,
       "complexity": 10000,
       "kind": "vertex-stress",
@@ -334,7 +342,7 @@
     },
     {
       "renderer": "leaflet",
-      "ms": 61.5,
+      "ms": 79.39999999990687,
       "volume": 0,
       "complexity": 50000,
       "kind": "vertex-stress",
@@ -344,67 +352,67 @@
       "renderer": "leaflet",
       "kind": "cold-http-cache-load",
       "run": 1,
-      "ms": 119.2681190000003
+      "ms": 164.5275290000027
     },
     {
       "renderer": "leaflet",
       "kind": "cold-http-cache-load",
       "run": 2,
-      "ms": 117.53817699999854
+      "ms": 135.56023899999855
     },
     {
       "renderer": "leaflet",
       "kind": "cold-http-cache-load",
       "run": 3,
-      "ms": 102.67057800000111
+      "ms": 112.10125299999709
     },
     {
       "renderer": "leaflet",
       "kind": "cold-http-cache-load",
       "run": 4,
-      "ms": 842.0390009999974
+      "ms": 1188.3976920000023
     },
     {
       "renderer": "leaflet",
       "kind": "cold-http-cache-load",
       "run": 5,
-      "ms": 130.62758899999972
+      "ms": 125.06343300000299
     },
     {
       "renderer": "leaflet",
       "kind": "warm-reload",
       "run": 1,
-      "ms": 149.7068020000006
+      "ms": 113.76474800000142
     },
     {
       "renderer": "leaflet",
       "kind": "warm-reload",
       "run": 2,
-      "ms": 100.60080300000118
+      "ms": 100.00058500000159
     },
     {
       "renderer": "leaflet",
       "kind": "warm-reload",
       "run": 3,
-      "ms": 82.90515800000139
+      "ms": 83.53965099999914
     },
     {
       "renderer": "leaflet",
       "kind": "warm-reload",
       "run": 4,
-      "ms": 116.68320799999856
+      "ms": 99.57262699999774
     },
     {
       "renderer": "leaflet",
       "kind": "warm-reload",
       "run": 5,
-      "ms": 100.39725899999758
+      "ms": 83.56697200000053
     },
     {
       "renderer": "leaflet",
       "kind": "panel-dom-after-response",
       "samples": [
-        0.19999999995343387
+        0.09999999997671694
       ]
     }
   ],

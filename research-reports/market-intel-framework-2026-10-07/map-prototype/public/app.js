@@ -2,6 +2,25 @@ const $=s=>document.querySelector(s),empty=()=>({type:'FeatureCollection',featur
 const state={renderer:new URLSearchParams(location.search).get('renderer')||'leaflet',family:'city',selected:null,owner:'A',portfolio:false,shading:true,volume:0,complexity:0,mode:'normal',camera:null,module:'Market Intel',comparison:[]};
 let boundaries,ambiguity,map,leafLayers=[],epoch=0,evidenceEpoch=0,moreCursor=null,renderPromise,controller;const telemetry={renders:[],panels:[],errors:[],network:[],alive:0};
 $('#renderer').value=state.renderer;
+let panelPrefs={side:'right',pinned:false,expanded:true};
+try{const saved=JSON.parse(localStorage.getItem('investscape-map-panel-v1')||'null');if(saved)panelPrefs={side:saved.side==='left'?'left':'right',pinned:saved.pinned===true,expanded:saved.expanded!==false};}catch{}
+function panelUpdate(){
+ const layout=$('.layout');layout.classList.toggle('panel-left',panelPrefs.side==='left');layout.classList.toggle('panel-collapsed',!panelPrefs.expanded);$('#evidence-panel').hidden=!panelPrefs.expanded;$('#panel-side').value=panelPrefs.side;$('#panel-toggle').setAttribute('aria-expanded',String(panelPrefs.expanded));$('#panel-toggle').textContent=panelPrefs.expanded?'Hide evidence panel':'Show evidence panel';$('#panel-pin').setAttribute('aria-pressed',String(panelPrefs.pinned));$('#panel-pin').textContent=panelPrefs.pinned?'Unpin panel':'Pin panel';
+ try{localStorage.setItem('investscape-map-panel-v1',JSON.stringify(panelPrefs));}catch{}
+ const current=map;if(current){const c=state.renderer==='leaflet'?current.getCenter():current.getCenter().toArray(),z=current.getZoom();requestAnimationFrame(()=>{if(map!==current)return;if(state.renderer==='leaflet'){current.invalidateSize({pan:false});current.setView(c,z,{animate:false});}else{current.resize();current.jumpTo({center:c,zoom:z});}});}
+}
+let panelUseVersion=0,mapPointerVersion=null,lastMapPointer=0;
+function panelExpand(){panelUseVersion++;panelPrefs.expanded=true;panelUpdate();}
+function panelCollapse(){if($('#evidence-panel').contains(document.activeElement))$('#panel-toggle').focus();panelPrefs.expanded=false;panelUpdate();}
+$('#panel-toggle').onclick=()=>panelPrefs.expanded?panelCollapse():panelExpand();
+$('#panel-side').onchange=e=>{panelPrefs.side=e.target.value;panelUpdate();};
+$('#panel-pin').onclick=()=>{panelPrefs.pinned=!panelPrefs.pinned;if(panelPrefs.pinned)panelPrefs.expanded=true;panelUpdate();};
+$('#map').addEventListener('pointerdown',()=>{mapPointerVersion=panelUseVersion;lastMapPointer=performance.now();});
+window.addEventListener('pointerup',()=>{if(mapPointerVersion===null)return;const v=mapPointerVersion;mapPointerVersion=null;lastMapPointer=performance.now();setTimeout(()=>{if(!panelPrefs.pinned&&panelUseVersion===v)panelCollapse();},250);});
+$('#map').addEventListener('focusin',()=>{if(!panelPrefs.pinned&&mapPointerVersion===null&&performance.now()-lastMapPointer>300)panelCollapse();});
+$('#evidence-panel').addEventListener('keydown',e=>{if(e.key==='Escape'&&!panelPrefs.pinned){e.preventDefault();panelCollapse();}});
+panelUpdate();
+
 function text(el,t){el.textContent=t;}function status(t){text($('#map-status'),t);}function card(t){const d=document.createElement('div');d.className='card';d.textContent=t;return d;}
 async function get(url,signal){telemetry.network.push(url);const r=await fetch(url,{signal,headers:{'X-Mock-Owner':state.owner}});if(!r.ok)throw new Error(r.status===404?'unavailable':r.status===503?'API error':'Request failed');return r.json();}
 function active(){return(state.family==='ambiguity'?ambiguity:boundaries).features.filter(f=>f.properties.family===state.family);}
@@ -15,8 +34,8 @@ function pointInRing(p,r){let inside=false;for(let i=0,j=r.length-1;i<r.length;j
  if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;
  }return inside?1:0;}
 function contains(p,g){const polys=g.type==='Polygon'?[g.coordinates]:g.coordinates;return polys.some(poly=>{const outer=pointInRing(p,poly[0]);if(!outer)return false;if(outer===2)return true;for(const hole of poly.slice(1)){const v=pointInRing(p,hole);if(v===2)return true;if(v===1)return false;}return true;});}
-function choosePoint(p){const matches=active().filter(f=>contains(p,f.geometry));$('#ambiguity').replaceChildren();if(!matches.length){status('No boundary match. Selection retained.');return;}if(matches.length>1){status('Ambiguous location: choose a boundary below.');for(const f of matches){const b=document.createElement('button');b.textContent=f.properties.name;b.onclick=()=>select(f.properties.id,true);$('#ambiguity').append(b);}return;}select(matches[0].properties.id,false);}
-async function select(id,doFit=false){state.selected=id;$('#area').value=id;$('#ambiguity').replaceChildren();if(doFit)fit(active().find(f=>f.properties.id===id));await evidence();}
+function choosePoint(p){const matches=active().filter(f=>contains(p,f.geometry));$('#ambiguity').replaceChildren();if(!matches.length){status('No boundary match. Selection retained.');return;}if(matches.length>1){panelExpand();status('Ambiguous location: choose a boundary below.');for(const f of matches){const b=document.createElement('button');b.textContent=f.properties.name;b.onclick=()=>select(f.properties.id,true);$('#ambiguity').append(b);}return;}select(matches[0].properties.id,false);}
+async function select(id,doFit=false){state.selected=id;panelExpand();$('#area').value=id;$('#ambiguity').replaceChildren();if(doFit)fit(active().find(f=>f.properties.id===id));await evidence();}
 function metric(f){if(f.properties.family==='state')return null;if(f.properties.family==='city')return f.properties.name==='Vancouver'?0:100;return [...f.properties.id].reduce((a,c)=>a+c.charCodeAt(0),0)%150;}
 function metricColor(v){return v===null?'#9aa8ae':v<50?'#c0e0eb':v<100?'#6aafc4':'#26728d';}
 function paintGeo(geo,type,color){if(state.renderer==='leaflet'){
@@ -57,5 +76,5 @@ $('#owner').onchange=async e=>{state.owner=e.target.value;controller?.abort();ev
 $('#mode').onchange=e=>{state.mode=e.target.value;evidence();};
 $('#theme').onclick=async()=>{document.body.classList.toggle('dark');text($('#theme'),document.body.classList.contains('dark')?'Light mode':'Dark mode');await render();};
 $('#compare').onclick=()=>{const f=active().find(f=>f.properties.id===state.selected);if(!state.comparison.some(x=>x.id===f.properties.id))state.comparison.push({id:f.properties.id,name:f.properties.name,family:f.properties.family});text($('#comparison'),state.comparison.map(x=>x.name+' ('+x.family+')').join(' vs ')+' · Comparison requires compatible definitions, periods, geographic levels and currency.');};
-window.review={state,telemetry,choosePoint,contains,detail,render,pixel:p=>state.renderer==='leaflet'?map.latLngToContainerPoint([p[1],p[0]]):map.project(p),ready:()=>renderPromise};
+window.review={state,panelPrefs,telemetry,choosePoint,contains,detail,render,pixel:p=>state.renderer==='leaflet'?map.latLngToContainerPoint([p[1],p[0]]):map.project(p),ready:()=>renderPromise};
 try{[boundaries,ambiguity]=await Promise.all([get('/data/boundaries.geojson'),get('/data/ambiguity.geojson')]);updateAreas();await render();fit(active()[0]);await evidence();window.review.booted=true;}catch(e){status('Fixture load failed. Reload to retry.');telemetry.errors.push(String(e));}
