@@ -1,0 +1,42 @@
+[
+  {
+    "file": "ambiguity.geojson",
+    "valid": 2,
+    "hashVerified": true
+  },
+  {
+    "file": "boundaries.geojson",
+    "valid": 186,
+    "hashVerified": true
+  },
+  {
+    "file": "points-100.geojson",
+    "valid": 100,
+    "hashVerified": true
+  },
+  {
+    "file": "points-1000.geojson",
+    "valid": 1000,
+    "hashVerified": true
+  },
+  {
+    "file": "points-10000.geojson",
+    "valid": 10000,
+    "hashVerified": true
+  },
+  {
+    "file": "polygon-1000.geojson",
+    "valid": 1,
+    "hashVerified": true
+  },
+  {
+    "file": "polygon-10000.geojson",
+    "valid": 1,
+    "hashVerified": true
+  },
+  {
+    "file": "polygon-50000.geojson",
+    "valid": 1,
+    "hashVerified": true
+  }
+]

@@ -1,0 +1,426 @@
+{
+  "date": "2026-10-07T22:28:08.713Z",
+  "api": [
+    {
+      "name": "Research pagination and link-only text exclusion",
+      "passed": true
+    },
+    {
+      "name": "Direct hidden/withdrawn/withheld detail denied",
+      "passed": true
+    },
+    {
+      "name": "Public audience cannot read member item",
+      "passed": true
+    },
+    {
+      "name": "Link-only direct detail omits text",
+      "passed": true
+    },
+    {
+      "name": "Empty/error/invalid pagination distinguishable",
+      "passed": true
+    },
+    {
+      "name": "Portfolio mock isolation and unauthenticated denial",
+      "passed": true
+    },
+    {
+      "name": "Internal fixture server source not publicly served",
+      "passed": true
+    }
+  ],
+  "browser": [
+    {
+      "name": "maplibre boot real renderer",
+      "passed": true
+    },
+    {
+      "name": "maplibre real map click ambiguity/no-match policy",
+      "passed": true
+    },
+    {
+      "name": "maplibre research pagination, dates and detail states",
+      "passed": true
+    },
+    {
+      "name": "maplibre API empty and error views recover",
+      "passed": true
+    },
+    {
+      "name": "maplibre stale evidence cannot overwrite new geography",
+      "passed": true
+    },
+    {
+      "name": "maplibre portfolio opt-in and account switch clearing",
+      "passed": true
+    },
+    {
+      "name": "maplibre ribbon retention and hidden renderer disposal",
+      "passed": true
+    },
+    {
+      "name": "maplibre keyboard alternate geographic selection",
+      "passed": true
+    },
+    {
+      "name": "maplibre zero and missing quantitative states",
+      "passed": true
+    },
+    {
+      "name": "maplibre 1440 light layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "maplibre 1440 dark layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "maplibre 390 light layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "maplibre 390 dark layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "maplibre 320 light layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "maplibre 320 dark layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "maplibre touch boundary selection",
+      "passed": true
+    },
+    {
+      "name": "maplibre no unexpected renderer errors or external requests",
+      "passed": true
+    },
+    {
+      "name": "maplibre default preview selects Leaflet",
+      "passed": true
+    },
+    {
+      "name": "leaflet boot real renderer",
+      "passed": true
+    },
+    {
+      "name": "leaflet real map click ambiguity/no-match policy",
+      "passed": true
+    },
+    {
+      "name": "leaflet research pagination, dates and detail states",
+      "passed": true
+    },
+    {
+      "name": "leaflet API empty and error views recover",
+      "passed": true
+    },
+    {
+      "name": "leaflet stale evidence cannot overwrite new geography",
+      "passed": true
+    },
+    {
+      "name": "leaflet portfolio opt-in and account switch clearing",
+      "passed": true
+    },
+    {
+      "name": "leaflet ribbon retention and hidden renderer disposal",
+      "passed": true
+    },
+    {
+      "name": "leaflet keyboard alternate geographic selection",
+      "passed": true
+    },
+    {
+      "name": "leaflet zero and missing quantitative states",
+      "passed": true
+    },
+    {
+      "name": "leaflet 1440 light layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "leaflet 1440 dark layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "leaflet 390 light layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "leaflet 390 dark layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "leaflet 320 light layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "leaflet 320 dark layout/a11y",
+      "passed": true
+    },
+    {
+      "name": "leaflet touch boundary selection",
+      "passed": true
+    },
+    {
+      "name": "leaflet no unexpected renderer errors or external requests",
+      "passed": true
+    },
+    {
+      "name": "leaflet default preview selects Leaflet",
+      "passed": true
+    }
+  ],
+  "performance": [
+    {
+      "renderer": "maplibre",
+      "ms": 398.19999999995343,
+      "volume": 100,
+      "complexity": 0,
+      "kind": "point-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "maplibre",
+      "ms": 507.80000000004657,
+      "volume": 1000,
+      "complexity": 0,
+      "kind": "point-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "maplibre",
+      "ms": 506.60000000009313,
+      "volume": 10000,
+      "complexity": 0,
+      "kind": "point-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "maplibre",
+      "ms": 422.29999999981374,
+      "volume": 0,
+      "complexity": 1000,
+      "kind": "vertex-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "maplibre",
+      "ms": 551.3000000000466,
+      "volume": 0,
+      "complexity": 10000,
+      "kind": "vertex-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "maplibre",
+      "ms": 590.3999999999069,
+      "volume": 0,
+      "complexity": 50000,
+      "kind": "vertex-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "cold-http-cache-load",
+      "run": 1,
+      "ms": 440.98529899999994
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "cold-http-cache-load",
+      "run": 2,
+      "ms": 456.7417749999986
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "cold-http-cache-load",
+      "run": 3,
+      "ms": 469.66252600000007
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "cold-http-cache-load",
+      "run": 4,
+      "ms": 463.3132820000028
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "cold-http-cache-load",
+      "run": 5,
+      "ms": 466.3578610000004
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "warm-reload",
+      "run": 1,
+      "ms": 564.505427
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "warm-reload",
+      "run": 2,
+      "ms": 568.2763599999998
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "warm-reload",
+      "run": 3,
+      "ms": 519.1601699999992
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "warm-reload",
+      "run": 4,
+      "ms": 527.4747009999992
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "warm-reload",
+      "run": 5,
+      "ms": 487.0345039999993
+    },
+    {
+      "renderer": "maplibre",
+      "kind": "panel-dom-after-response",
+      "samples": [
+        0.10000000009313226
+      ]
+    },
+    {
+      "renderer": "leaflet",
+      "ms": 27.699999999953434,
+      "volume": 100,
+      "complexity": 0,
+      "kind": "point-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "leaflet",
+      "ms": 29.199999999953434,
+      "volume": 1000,
+      "complexity": 0,
+      "kind": "point-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "leaflet",
+      "ms": 207.4000000001397,
+      "volume": 10000,
+      "complexity": 0,
+      "kind": "point-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "leaflet",
+      "ms": 28.800000000046566,
+      "volume": 0,
+      "complexity": 1000,
+      "kind": "vertex-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "leaflet",
+      "ms": 29.600000000093132,
+      "volume": 0,
+      "complexity": 10000,
+      "kind": "vertex-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "leaflet",
+      "ms": 61.5,
+      "volume": 0,
+      "complexity": 50000,
+      "kind": "vertex-stress",
+      "viewport": "1440x1000"
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "cold-http-cache-load",
+      "run": 1,
+      "ms": 119.2681190000003
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "cold-http-cache-load",
+      "run": 2,
+      "ms": 117.53817699999854
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "cold-http-cache-load",
+      "run": 3,
+      "ms": 102.67057800000111
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "cold-http-cache-load",
+      "run": 4,
+      "ms": 842.0390009999974
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "cold-http-cache-load",
+      "run": 5,
+      "ms": 130.62758899999972
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "warm-reload",
+      "run": 1,
+      "ms": 149.7068020000006
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "warm-reload",
+      "run": 2,
+      "ms": 100.60080300000118
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "warm-reload",
+      "run": 3,
+      "ms": 82.90515800000139
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "warm-reload",
+      "run": 4,
+      "ms": 116.68320799999856
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "warm-reload",
+      "run": 5,
+      "ms": 100.39725899999758
+    },
+    {
+      "renderer": "leaflet",
+      "kind": "panel-dom-after-response",
+      "samples": [
+        0.19999999995343387
+      ]
+    }
+  ],
+  "limitations": [
+    "Mock owner header is not authentication/RLS",
+    "Headless software rendering is not a consumer device/GPU benchmark",
+    "No commercial tiles, geocoder, production AI or Community export",
+    "No real financial observations or investment recommendations"
+  ],
+  "environment": {
+    "browser": "143.0.7499.0",
+    "platform": "linux",
+    "node": "v24.19.0",
+    "rendererPackages": {
+      "maplibre": "5.20.0",
+      "leaflet": "1.9.4"
+    }
+  }
+}
