@@ -470,11 +470,11 @@ If later approved after architecture review:
 
 ### Evidence gates before architecture or implementation
 
-1. **Migration authority:** identify the repo and process that represent the live Dev schema; reconcile the empty connector migration list with existing tables.
+1. **Migration alignment:** source-controlled migrations for the existing product tables are identified above. The live ledger remains intentionally uninspected, so applied-state alignment is unknown; no Market Intel schema is proposed.
 2. **Exposed schemas:** read the current Data API exposed-schema setting and grants from the authenticated project settings. The dashboard session redirected to sign-in during this review, so the setting was not independently verified. The prior handoff's report that `investscape` was exposed remains user/session-reported evidence, not a fresh verification.
 3. **Staging identity:** establish the effective engine-auth flag and verifier configuration without revealing secret values, then validate the member boundary in isolated staging with approved test accounts.
 4. **Data access posture:** decide server-only catalog access versus direct Data API access, minimum grants/RLS, publication visibility, audit access, and separation from user-owned drafts.
 5. **Workload and terms:** estimate observations by metric/geography/period, refresh rate, request and comparison shapes, geometry size, retention limits and source/provider terms; use these to benchmark storage, indexing, caching and tile delivery.
 6. **Operational ownership:** assign ingestion monitoring, stale-data alerts, source corrections, withdrawal handling, geometry/provider support and incident response.
 
-**Outcome:** responsibilities are now mapped at the proposal level. Supabase is a candidate for normalized quantitative records, Railway API is the intended authenticated read boundary, and WeWeb is the client renderer. None is authorized as an implementation decision. No project settings were changed; no schema, service, route, deployment or WeWeb change was made.
+**Outcome:** responsibilities are now mapped at the proposal level. Supabase is a candidate for normalized quantitative records, Railway API is the intended authenticated read boundary, and WeWeb is the client renderer. None is authorized as an implementation decision. The next phase is to resolve the exposed-schema, staging-auth, access-posture, workload/terms and operational-ownership gates before any logical data model review. No project settings were changed; no schema, service, route, deployment or WeWeb change was made.
