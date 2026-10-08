@@ -88,3 +88,27 @@ After an authorized prototype comparison, score each renderer independently for:
 Record any feature that requires a plugin, paid service or provider terms. Choose only after both implementations pass the same functional suite and their measured trade-offs are reviewed.
 
 **Disposition:** test fixture and acceptance matrix are ready for review. Numeric performance thresholds and the prototype authorization remain open. No renderer package, page, component, data store, map tile service or deployment was created.
+
+
+## Official renderer capability review
+
+The current official library documentation supports treating these as different rendering models, not interchangeable skins:
+
+| Capability | MapLibre GL JS | Leaflet | Relevance to InvestScape |
+|---|---|---|---|
+| Core rendering model | WebGL map renderer designed around vector tiles and a style document/layer stack. | General-purpose interactive map with tile/grid layers and vector geometries rendered through SVG or Canvas. Canvas can be selected for paths. | MapLibre is a stronger candidate if the approved production design depends on server-generated vector tiles and many styled thematic layers. Leaflet can remain a viable candidate for a simpler GeoJSON/CSS/SVG/Canvas pilot. |
+| Large datasets | Official guidance recommends loading GeoJSON by URL rather than embedding it in JavaScript, considering vector tiles, and server tiling for very large data. | GridLayer supports tiled display; GeoJSON and vector layers are available, with Canvas as an option. | Neither renderer removes the need to bound data by viewport, simplify shapes, cache results and select an appropriate tile/data service. |
+| Keyboard and motion | The current MapOptions documentation exposes keyboard interaction; map animation respects reduced-motion settings unless explicitly overridden as essential. | Leaflet publishes a map accessibility guide and advises keyboard and screen-reader testing; control/feature labelling must be checked in the constructed interface. | Build control names, focus order, selected-feature announcements and legend semantics into tests for both. Library interactions alone do not make the surrounding UI accessible. |
+| Cost/rights | The rendering library does not provide unrestricted basemap tiles or geocoding. A style source, tile source, hosting and attribution are separate decisions. | Same: the renderer does not grant tile, geocoding or data rights. | Compare full serving/usage terms and operational cost separately from library license. |
+
+**Current planning recommendation:** keep both renderers in the equal-fixture comparison. If the approved scale target requires server-side vector tiles, use MapLibre as the initial benchmark candidate because vector tiles and style-layer rendering are central to its documented model. Do not select it as final until the same prototype fixture, target-device tests, WebGL/device support, accessibility checks and whole-system hosting costs are measured. If the first release remains a small, low-complexity GeoJSON pilot, Leaflet may be simpler to prototype. This is an inference from the libraries' official documented rendering models, not a measured performance conclusion.
+
+### Official library references
+
+- MapLibre GL JS introduction (WebGL, vector tiles and style document): https://maplibre.org/maplibre-gl-js/docs/
+- MapLibre large-data guidance (GeoJSON URL, vector tiles and server tiling): https://maplibre.org/maplibre-gl-js/docs/guides/large-data/
+- MapLibre map options (keyboard, gestures): https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/
+- MapLibre map/keyboard and reduced-motion behavior: https://maplibre.org/maplibre-gl-js/docs/API/classes/Map/
+- Leaflet API reference (SVG/Canvas vector renderer and `preferCanvas`): https://leafletjs.com/reference.html
+- Leaflet accessibility guide: https://leafletjs.com/examples/accessibility/
+- Leaflet GeoJSON guide: https://leafletjs.com/examples/geojson/
