@@ -1,6 +1,6 @@
 # Current-status index — 2026-10-02
 
-The original July backup inventory below is retained as historical evidence, not the current repository count. [Doc 78](canonical-docs/current/78-Phase2-Native-Migration-and-SaaS-Checkpoint.md) records current migration/infrastructure status with explicit verification labels. The registry now includes existing Docs 67–73 and new Doc 78; no numbers were reused. Doc 79 records the Market Intel map read contract, storage/service boundaries and remaining readiness gates (2026-10-08). Docs 53/73 have dated reconciliation notes without rewriting historical findings. README scope/count language is reconciled. No prototype, runtime, schema or release changes belong to this documentation slice.
+The original July backup inventory below is retained as historical evidence, not the current repository count. [Doc 78](canonical-docs/current/78-Phase2-Native-Migration-and-SaaS-Checkpoint.md) records current migration/infrastructure status with explicit verification labels. The registry now includes existing Docs 67–73 and new Doc 78; no numbers were reused. Doc 79 records the Market Intel map read contract, storage/service boundaries, identified existing product-schema migration lineage, and remaining access/workload readiness gates (2026-10-08). Docs 53/73 have dated reconciliation notes without rewriting historical findings. README scope/count language is reconciled. No prototype, runtime, schema or release changes belong to this documentation slice.
 
 ---
 
