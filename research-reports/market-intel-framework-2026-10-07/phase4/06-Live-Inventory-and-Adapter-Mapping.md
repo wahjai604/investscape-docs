@@ -1,6 +1,9 @@
 # Phase 4 — live inventory and adapter mapping
 Reviewed 2026-10-08 UTC. Read-only service/catalog inspection; no user records, credentials, API writes, schema changes, deployment, or WeWeb edits.
 
+## Scope correction (follow-up)
+The findings below about RLS/grants apply to the public schema only. The custom investscape schema has RLS enabled and owner policies on its private tables; see 07-Schema-Authorization-Followup.md. The active native save path/default Data API schema remains unverified. Do not interpret the public-schema inventory as proof that Quick/Full lacks database ownership protection.
+
 ## Current evidence
 - Railway: InvestScape Native Full Staging, service native-full-staging-api, online; successful active deployment c0f1658f-481b-4579-a297-4ba02963436e at API commit 2cec0ab519513a34aabbad909c4f24b1472d385c. One running replica; no reported issues/recent failures in the default eight-hour window. Environment is named production inside this isolated staging project; this is not evidence of a production release. A staged patch with zero reported changes remains pending; it was not applied.
 - Supabase: Investscape-Dev, project hwhkgrwikczwztfnsjir. Public relations found: deals, dev_studio_projects, portfolios, translations, user_profiles. All have RLS disabled. No public-schema policies found. Authenticated role has SELECT/INSERT/UPDATE/DELETE grants on deals, dev_studio_projects, portfolios and user_profiles; translations has anon and authenticated SELECT. PostGIS is not installed.
