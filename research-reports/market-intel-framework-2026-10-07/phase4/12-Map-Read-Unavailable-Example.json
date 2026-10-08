@@ -1,0 +1,43 @@
+{
+  "contractStatus": "proposed_only",
+  "exampleKind": "illustrative_not_runtime",
+  "selection": {
+    "canonicalId": "CA:STATCAN:CSD:5915022",
+    "name": "Vancouver",
+    "geographyType": "municipal_csd",
+    "engineCandidateId": "vancouver-bc",
+    "crosswalkStatus": "unverified_extent"
+  },
+  "boundary": {
+    "status": "unavailable",
+    "reasonCode": "production_manifest_not_approved"
+  },
+  "quantitative": {
+    "status": "unavailable",
+    "reasonCodes": [
+      "fixture_only_engine_path",
+      "geography_mapping_unverified",
+      "provider_provenance_not_cleared"
+    ],
+    "observations": []
+  },
+  "research": {
+    "status": "unavailable",
+    "reasonCode": "approved_catalog_and_audience_unresolved",
+    "items": []
+  },
+  "portfolio": {
+    "status": "not_requested"
+  },
+  "comparison": {
+    "status": "unavailable",
+    "reasonCode": "no_cleared_compatible_observations"
+  },
+  "aiEvidence": {
+    "eligibleObservations": [],
+    "eligibleResearchItems": [],
+    "limitations": [
+      "No current numeric market evidence established by this example."
+    ]
+  }
+}
