@@ -48,3 +48,34 @@ Use the official source’s supported selected-data routes when an authenticated
 - 2024 ACS 5-year variables: https://api.census.gov/data/2024/acs/acs5/variables.html
 
 **Readiness:** Vancouver/Toronto CMA population has an official rendered sample series with keys and estimate-status notes. Other rows remain defined but not observation-validated. No source data were loaded into InvestScape; no schema, API, deployment, or WeWeb change was made.
+
+
+## Additional official rendered sample rows retrieved on 2026-10-08
+
+The public Statistics Canada table outputs now expose the following selected rows. These remain rendered-table observations, not checksummed selected-data CSV/API extracts.
+
+### City CSD population — Statistics Canada 17-10-0155-01
+
+| Geography | CSD SGC | DGUID | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---:|---|---:|---:|---:|---:|---:|
+| Vancouver (CY), British Columbia | `5915022` | `2021A00055915022` | 748,788 | 749,404 | 765,294 | 748,788 | 740,454 |
+| Toronto (C), Ontario | `3520005` | `2021A00053520005` | 2,917,666 | 2,988,742 | 3,134,010 | 3,280,417 | 3,271,830 |
+
+These are July 1 estimates for 2021–2025; follow the table’s final postcensal/updated postcensal/preliminary postcensal status notes for each reference year. Do not substitute 2021 Census population counts for the annual estimate series.
+
+### Toronto and Vancouver CMA QRS rent sample — Statistics Canada 46-10-0092-01
+
+For **Apartment - 2 bedrooms**, the Q2 2026 rendered table gives (monthly dollars):
+
+| CMA | DGUID | Q2 2026 average asking rent | Q2 2026 average paid rent | Table display status |
+|---|---|---:|---:|---|
+| Toronto CMA | `2021S0503535` | $2,650 | $2,160 | Values displayed without a caution/suppression symbol in this period |
+| Vancouver CMA | `2021S0503933` | $3,030 | $2,470 | Values displayed without a caution/suppression symbol in this period |
+
+These are different measures: asking rent reflects asking prices for listed rental units; paid rent is based on a moving average of the last three quarters. Keep the table’s experimental designation and table-level method/limitations visible. Preserve all table symbols on other rows/periods: `..` means unavailable for a specific reference period, `E` means use with caution, and `F` means too unreliable to publish. In particular, do not transform `..` or `F` to zero. The StatCan Daily release notes that one paid-rent observation (Ottawa–Gatineau Ontario part) is suppressed in Q2 2026; the Toronto and Vancouver values above are shown as numeric values in the table.
+
+### Remaining observation gaps
+
+CMHC numeric selected rows for 34-10-0133-01 and 34-10-0130-01 remain pending. The rendered data table pages expose metadata and dimensions, but the available search/open tool has not yielded the selected Toronto and Vancouver record values and associated symbols. ACS 2024 five-year Arizona and Texas observations also remain pending: the official Census API variable/geography documentation is accessible, but the query response itself is not. Third-party pages and other ACS vintages/geography levels were not used as substitutes.
+
+No map geometry file or boundary join was fetched or checked in this pass. Numeric source observations alone do not validate geometry matching.
