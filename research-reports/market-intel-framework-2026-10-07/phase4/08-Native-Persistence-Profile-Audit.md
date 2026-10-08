@@ -1,3 +1,5 @@
+> **Superseded authorization interpretation — 2026-10-08 UTC:** Public objects described below as tables or copies are security-invoker views over the same investscape base tables. Their relrowsecurity=false is not evidence of missing underlying row protection. The claimed public-schema authorization gap and resulting remediation recommendation are withdrawn. No schema switch, migration or grant/RLS change is justified by these findings. See 09-View-Resolution-and-Remaining-Acceptance.md for current conclusions. Earlier text is retained as review history, not current guidance.
+
 # Native persistence profile audit
 Reviewed 2026-10-08 UTC / 2026-10-07 Vancouver. Current WeWeb definitions inspected; not executed.
 
