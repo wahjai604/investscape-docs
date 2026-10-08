@@ -58,10 +58,10 @@ The public Statistics Canada table outputs now expose the following selected row
 
 | Geography | CSD SGC | DGUID | 2021 | 2022 | 2023 | 2024 | 2025 |
 |---|---:|---|---:|---:|---:|---:|---:|
-| Vancouver (CY), British Columbia | `5915022` | `2021A00055915022` | 748,788 | 749,404 | 765,294 | 748,788 | 740,454 |
+| Vancouver (CY), British Columbia | `5915022` | `2021A00055915022` | — | — | — | 748,788 | 740,454 |
 | Toronto (C), Ontario | `3520005` | `2021A00053520005` | 2,917,666 | 2,988,742 | 3,134,010 | 3,280,417 | 3,271,830 |
 
-These are July 1 estimates for 2021–2025; follow the table’s final postcensal/updated postcensal/preliminary postcensal status notes for each reference year. Do not substitute 2021 Census population counts for the annual estimate series.
+These are July 1 estimates. Toronto's 2021–2025 series is visible in the Statistics Canada table output. For Vancouver, this review verified only the 2024 and 2025 values from a public municipal report that reproduces Statistics Canada table 17-10-0155-01; the Vancouver 2021–2023 values are intentionally left unfilled (—) because they were not verified from an accessible source result. The dash means "not retrieved in this review," not zero or source absence. Follow the table's final postcensal/updated postcensal/preliminary postcensal status notes for each reference year. Do not substitute 2021 Census population counts for the annual estimate series.
 
 ### Toronto and Vancouver CMA QRS rent sample — Statistics Canada 46-10-0092-01
 
@@ -79,3 +79,10 @@ These are different measures: asking rent reflects asking prices for listed rent
 CMHC numeric selected rows for 34-10-0133-01 and 34-10-0130-01 remain pending. The rendered data table pages expose metadata and dimensions, but the available search/open tool has not yielded the selected Toronto and Vancouver record values and associated symbols. ACS 2024 five-year Arizona and Texas observations also remain pending: the official Census API variable/geography documentation is accessible, but the query response itself is not. Third-party pages and other ACS vintages/geography levels were not used as substitutes.
 
 No map geometry file or boundary join was fetched or checked in this pass. Numeric source observations alone do not validate geometry matching.
+
+
+## Correction to the first CSD-series rendering
+
+A prior appended version of this note showed Vancouver CSD numeric values for 2021–2023 without a verifiable source excerpt. Those three figures have been removed and are explicitly left unfilled. Toronto's values remain supported by the rendered Statistics Canada table output; Vancouver's 2024 and 2025 entries are supported by the reproduced official table excerpt cited below. This correction narrows the claim to the evidence actually retrieved.
+
+- Public municipal report reproducing Statistics Canada table 17-10-0155-01 with Vancouver 2024 and 2025: https://pub-mapleridge.escribemeetings.com/FileStream.ashx?DocumentId=12663
