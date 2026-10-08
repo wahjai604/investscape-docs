@@ -439,13 +439,21 @@ If later approved after architecture review:
 
 ### Readiness gates before a proposed schema or API implementation
 
-1. Establish the schema/migration source of truth and reconcile why the connected project has tables but the migration list is empty.
+1. **Partially resolved:** the API source of truth for the existing InvestScape core tables is identified in `investscape-api` at `2cec0ab519513a34aabbad909c4f24b1472d385c`: `src/lighthouse/persistence/migrations/0008_investscape_core_schema.sql`, `0009_investscape_core_schema_fixes.sql`, and `0010_investscape_core_schema_part2.sql`. The same pinned source includes `migrate.ts`, which orders SQL files by filename and records checksums in `lighthouse.schema_migrations`. The Supabase connector's empty migrations list does not establish that no app migration files exist. Whether the connected Dev database has these migrations applied remains unverified; its ledger is in the shared `lighthouse` schema and was not inspected under the Relationship OS separation guard. This does not establish a Market Intel catalog schema or migration baseline.
 2. Read back the current Data API exposed-schema configuration through the authorized project settings surface.
 3. Inspect the deploy-time API auth flag and verifier configuration without exposing secrets; verify staging behavior with approved test accounts before enabling map reads.
 4. Define catalog access posture: server-only versus direct Data API, minimum grants, RLS behavior, source visibility, and separation from owner-private saved projects.
 5. Confirm source volume, cadence, history, retention/rights, query patterns and boundary/geometry delivery ownership to finish the Supabase-versus-other-store assessment.
 
-**Phase outcome:** first-pass Supabase evaluation is complete. Supabase is plausible for normalized market observations, but there is no existing catalog and key migration/auth/exposure decisions remain unverified. The next bounded planning deliverable is a storage-and-service responsibility matrix and evidence gate, followed by a proposed logical data model only after these gates are resolved. No SQL, schema, API route, service, deployment, or WeWeb change was made.
+**Phase outcome:** first-pass Supabase evaluation and storage/service responsibility mapping are complete. Supabase is plausible for normalized market observations, but no catalog exists in the inspected schemas. The existing product-schema migration source is identified, while its live application state, current Data API exposed schemas, and staging auth configuration remain unverified. A Market Intel catalog baseline has not been designed. The next phase is to resolve the remaining access and workload evidence gates; a logical data model should follow those checks. No SQL, schema, API route, service, deployment, or WeWeb change was made.
+
+## Next-phase gate review — migration source lineage (read-only, 2026-10-08)
+
+**Verified repository evidence:** the API branch at `2cec0ab519513a34aabbad909c4f24b1472d385c` contains the three core-schema migration files referenced by Doc 73 and the application runner. The runner reads `.sql` files in filename order, applies each transactionally, and tracks filename plus checksum in `lighthouse.schema_migrations`; it rejects edits to previously applied migrations. This establishes where the existing product-table definitions and execution logic are versioned.
+
+**Boundary and limit:** the runner's ledger is under `lighthouse`, which Doc 73 identifies as the cross-product schema. No migration was run and no `lighthouse` database objects were queried. Therefore the repo source is verified, but the exact set/checksums applied to Investscape-Dev, and whether the project is aligned with that source, remain unverified. This review also does not prove the API migration runner was used for the production of the five currently visible `investscape` tables.
+
+**Gate status:** source-controlled migration location — **identified**; live migration ledger alignment — **unverified / intentionally not inspected**; Market Intel catalog schema and migration — **not present in the inventoried public/investscape tables and not proposed**. The next practical read-only evidence item is the current Data API exposed-schema setting and staging auth configuration. Any access to the shared migration ledger requires a separately scoped review that respects the Relationship OS boundary.
 
 ## Storage and service responsibility matrix (read-only planning, 2026-10-08)
 
