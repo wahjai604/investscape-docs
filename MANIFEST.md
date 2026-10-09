@@ -109,3 +109,5 @@ The following project files were left out because they're source reference mater
 
 
 Doc 82 §19 records one installed, manually invoked Dev session-capability diagnostic: public getSession/auth events, stable read, cleanup and exact editor origin verified; result NO_SESSION, so ordinary app-member compatibility remains pending. Supabase current health metadata now agrees. Installed release and hosted app origin remain unexposed; ten focused synthetic tests passed. No publication, database mutation, deployment or map activation occurred.
+
+Doc 82 §20 records the owner's approved existing Dev app member sign-in and one unchanged diagnostic rerun: CAPABILITIES_CONFIRMED, explicitly non-anonymous/unexpired session, stable client/read and subscription cleanup. Full host/JWT/API acceptance and exact hosted/candidate origins remain pending. No account creation, publication, deployment, map activation or configuration/schema change occurred.
