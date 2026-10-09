@@ -107,3 +107,5 @@ The following project files were left out because they're source reference mater
 
 *End of manifest. Next step per Doc 54 Step 3: unzip this into a local folder, `git init`, create a private GitHub repo, and push — same process already used for `investscape-calc-engine`.*
 
+
+Doc 82 §19 records one installed, manually invoked Dev session-capability diagnostic: public getSession/auth events, stable read, cleanup and exact editor origin verified; result NO_SESSION, so ordinary app-member compatibility remains pending. Supabase current health metadata now agrees. Installed release and hosted app origin remain unexposed; ten focused synthetic tests passed. No publication, database mutation, deployment or map activation occurred.
