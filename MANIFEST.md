@@ -8,6 +8,8 @@ The Oct 9 source implementation now completes Doc 82 §11's default-off API comp
 
 The Oct 9 Dev verification now completes Doc 82 §12's bounded catalog metadata and concrete scoped provisioning review package: the private schema and six proposed roles are absent; explicit owner/disabled runtime roles, independent map ledger, candidate hashes and permission assertions are prepared. Six new package tests and 24 existing store tests pass together (30), with typecheck. Upstream legacy session accessors are pinned, while installed-build/effective Auth/origin bindings and the empty Railway patch remain unresolved. Read-only SQL ran; no live mutation, credential binding, appointment, deployment, WeWeb installation or activation occurred.
 
+Doc 82 §13 records the owner's Oct 9 approval of the unchanged disabled-create package, conditional on recovery evidence. Fresh read-only Dev metadata remains consistent. The available recovery point is still unknown: the Supabase connector has no backup-list tool, and a bounded dashboard inspection requires browser-fallback permission. No DDL, backup operation, credential binding, deployment or activation was attempted; no unchanged tests were rerun.
+
 ---
 
 # InvestScape Docs Backup — Manifest
