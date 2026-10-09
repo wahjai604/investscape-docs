@@ -136,3 +136,11 @@ Live implementation is separately pending. After the operator authority decision
 ## 7. Checkpoint verification
 
 This documentation checkpoint includes this Doc 81, a dated forward link in Doc 80, the manifest index, the new 2024 planning geometry and its qualification record. It preserves Doc 79, the Oct 8 registry, all original source uploads, the 2025 fixtures and unrelated checkouts. Checks cover fixture hashes/keys/validity/selected-feature overlap, artifact JSON and relative document links, and exact remote Git blob/file identity. These are artifact checks; no runtime auth, API, WeWeb, deployment, publication or performance tests are claimed.
+
+## 8. Superseding evidence checkpoint — Oct 8 local / Oct 9 UTC
+
+[Doc 82](82-Market-Intel-Map-Dev-Implementation-Scope.md) records the completed cloud sign-in and freshly verified Data API settings: investscape/public/graphql_public exposed, automatic new-table exposure off, extra search path public/extensions, max rows 1000. No setting changed. Earlier sign-in-blocked statements in this document are historical, superseded for those specific settings. They do not establish future catalog roles or no-bypass behavior.
+
+The exact official 2024 ACS detailed-table catalog now supplies a CC0 licence link for ACSDT5Y2024. Its rights evidence record closes the earlier ACS aggregate copyright-reuse evidence gap; required source quality/disclosures and publication review remain. No data was activated. The private Investscape-Dev catalog/API-only-read recommendation is the carried-forward design direction following Eric's instruction to keep going; real membership policy, role provisioning and deployed issuer acceptance remain unresolved.
+
+A separate offline policy reference and 30 passing synthetic policy tests accompany Doc 82. This is not a deployed API or cryptographic JWT acceptance check. See its README for the storage race, adapter and runtime limitations. No existing API source, schema, auth setting, membership or deployment was changed.
