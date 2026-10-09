@@ -16,6 +16,9 @@ Doc 82 §15 records the owner-authorized disabled Dev create on Oct 9 at 15:17:4
 
 Doc 82 §16 records sequential Auth/origin verification and blocked Dev wiring preparation: fresh WeWeb connection metadata and Railway exact staging API domain/deployed commit/1-of-1 running topology, with installed legacy/effective Auth/signing/rendered-origin facts still unknown and WeWeb follow-up reads unavailable. Source-only existing-client bridge adds 11 synthetic tests; final full suite 624 total / 622 passed / 2 existing skips, typecheck/build passing. Wiring defaults remain off/null and no database/platform configuration, credentials, appointment, deployment, WeWeb publication or map activation occurred.
 
+Doc 82 §17 records the owner-approved read-only UI follow-up: WeWeb confirms the installed legacy Supabase Auth plugin and configured Investscape-Dev target; Publications shows no publications yet. Installed release/accessor, rendered app origin and active signing algorithm remain unknown. Supabase dashboard sign-in selected ChatGPT; automatic approval review blocked the separate OpenAI authentication destination. Evidence is saved, wiring stays disabled, and no source/runtime/database/platform configuration, deployment or activation changed.
+
+
 ---
 
 # InvestScape Docs Backup — Manifest
