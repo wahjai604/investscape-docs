@@ -12,6 +12,8 @@ Doc 82 §13 records the owner's Oct 9 approval of the unchanged disabled-create 
 
 Doc 82 §14 closes the concrete recovery-reference gap from the owner's screenshots: scheduled PHYSICAL backup at 2026-10-09 11:16:52 UTC / 04:16:52 Vancouver, listed with Restore; PITR not enabled. This is visually inspected reported screenshot evidence, not a live backup API verification or restore rehearsal. Fresh Dev metadata still has no map schema/role collisions. Owner approval is retained, SQL bytes unchanged, and the expressly read-only inspection made no database, backup, credential, deployment or activation changes.
 
+Doc 82 §15 records the owner-authorized disabled Dev create on Oct 9 at 15:17:48 UTC / 08:17:48 Vancouver: nine owned forced-RLS tables, six NOLOGIN roles, independent map ledger and tool migration history; fixed managed PostgreSQL 17 effective permissions and empty-store counts passed. Applied receipt and permission evidence are saved on the isolated API review branch. The provisioning phase is complete; installed legacy/Auth/origin verification and scoped wiring remain next. No runtime credentials, real appointments, API deployment, WeWeb publication or map activation occurred. Earlier not-applied paragraphs are retained as dated history.
+
 ---
 
 # InvestScape Docs Backup — Manifest
