@@ -1,7 +1,7 @@
 # Market Intel Map — Bounded Dev Implementation Scope (Doc 82)
 
 **Date:** 2026-10-08 America/Vancouver / 2026-10-09 UTC.  
-**Status:** Concrete integration proposal plus tested offline policy reference; no live implementation, database mutation, deployment, auth configuration or WeWeb publication.  
+**Status:** Isolated, unmounted API membership candidate plus tested offline policy reference; no database mutation, deployment, live auth configuration or WeWeb publication.  
 **Parents:** [Doc 80](80-Market-Intel-Map-Pilot-Implementation-Readiness-Plan.md), [Doc 81](81-Market-Intel-Map-Gates-and-Logical-Catalog-Model.md).
 
 ## 1. Direction and freshly closed evidence gaps
@@ -54,7 +54,7 @@ Fresh source references: [Full route](https://github.com/wahjai604/investscape-a
 
 Use Investscape-Dev Auth as the intended standalone Dev issuer; audience authenticated. This is a design target, not a claim about Railway's current effective accepted issuer. Do not inspect raw Railway variable values to establish it. Obtain the allowed non-secret operator statement before configuring or testing staged member acceptance.
 
-Recommend manually provisioned, server-controlled map_read entitlement for the sole operator during the Dev pilot, with expiry/revocation and audited changes. A signed-in account has no implicit map/staff entitlement. No real subject or account is appointed in this proposal. Before later real use, select the canonical membership store and establish an audited provisioning method. Only a separately authorized administrator grants staff capabilities; ingestion and publishing do not grant access-administration authority.
+**Owner decision, 2026-10-08 local / 2026-10-09 UTC:** manual approval is required for now because automated approval has not been designed. Use server-controlled map_read entitlements with expiry/revocation and audited changes. A signed-in account has no implicit map/staff entitlement. This policy decision does not assign a real subject, appoint a catalog publisher or approve live role changes. Before later real use, select the canonical membership store and establish an audited provisioning method. Only a separately authorized administrator grants staff capabilities; ingestion and publishing do not grant access-administration authority.
 
 Keep catalog_reader, catalog_ingester, catalog_publisher and catalog_migrator capabilities distinct. Actual scoped database login/role support and grants require review/provisioning; do not silently replace them with a broad service-role credential. Enforce private catalog isolation across REST, GraphQL, SQL, functions and geometry delivery, rather than relying on a schema label.
 
@@ -90,3 +90,13 @@ The offline reference was prepared within the continuing review work. It resides
 Next, integrate the reviewed boundary into an isolated API candidate and extend it to the actual contract/HTTP adapters, with draft catalog migrations and scoped-role verification in a disposable local database. Live Supabase DDL/role provisioning, real member assignments, authentication configuration and Railway/WeWeb activation remain separately pending. Before those actions, review the concrete changes and confirm the Dev membership/publisher policy. No staff appointment or deployed-authority claim is invented from the sole-operator context.
 
 This checkpoint updates Doc 81 with fresh settings and exact ACS rights evidence, adds this implementation scope, preserves the rights evidence record, and includes the offline reference source/tests/README. Earlier unknowns remain historically visible with a dated superseding note. Preserve every unrelated repository file and original fixture.
+
+## 7. Manual membership API checkpoint — 2026-10-08 local / 2026-10-09 UTC
+
+The owner selected manual approval while an automated process remains undesigned. The first API boundary is now saved at [investscape-api commit 3a07b0d](https://github.com/wahjai604/investscape-api/commit/3a07b0d0f04921e845af988f76f082c4d526c2c1), on the separate review/market-intel-map-access-2026-10-08 branch. It is based on 2cec0ab and does not change the Railway-connected branch. [Candidate scope and verification](https://github.com/wahjai604/investscape-api/blob/3a07b0d0f04921e845af988f76f082c4d526c2c1/docs/market-intel-map-access-review.md) records the exact limitations.
+
+The candidate contains a dedicated ES256/RS256 map verifier, a manual authority interface and an unmounted, default-disabled router factory. It checks the server-controlled issuer/subject grant before and after reading. Self-assigned metadata, missing approval evidence, revoked/expired grants and dependency failures cannot admit catalog access. No real authority provider, account assignment or audit store has been created. The HTTP adapter only admits an explicit unavailable catalog placeholder, with a narrow four-geography selection; it does not implement the complete Doc 79 manifest/layer contract or deliver observations/geometry.
+
+Fresh offline verification on Node v24.19.0: typecheck and build passed; repository suite 544 tests, 542 passed, 2 skipped, 0 failed. The candidate adds 36 passing cryptographic/localhost HTTP tests using synthetic keys and grants. Two existing E85 Vancouver evidence-dependent tests are skipped because their snapshot files are absent in this isolated checkout. No database suite, deployed endpoint or live JWKS/Auth test ran. Existing startup/router, Quick/Full, shared Lighthouse, engine and dependency files remain unchanged.
+
+This supersedes the pending first-boundary integration step in Section 6 only. Next are the concrete full read contracts/publication adapter and draft private catalog/manual administration model, including audit events and scoped-role verification. The effective deployed issuer, canonical real membership store, publisher appointment and runtime database authority remain unresolved. Manual approval does not establish these facts or authorize deployment, live DDL, real grants or WeWeb activation. All pilot layers remain inactive.
