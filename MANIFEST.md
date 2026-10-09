@@ -6,6 +6,8 @@ The Oct 9 Dev provisioning/wiring review is now complete in Doc 82 §10 and the 
 
 The Oct 9 source implementation now completes Doc 82 §11's default-off API composition and packaged WeWeb session/approval wrapper: 20 added Node tests; full suite 605 passed / 2 existing skips, typecheck/build passing; 34 actual Vue browser assertions and 28 standalone UI assertions passed. Two new synthetic screenshots accompany the isolated API review branch. Startup binds no map pools; no live provisioning, appointment, Auth change, deployment, WeWeb component upload/page edit/publication or activation occurred.
 
+The Oct 9 Dev verification now completes Doc 82 §12's bounded catalog metadata and concrete scoped provisioning review package: the private schema and six proposed roles are absent; explicit owner/disabled runtime roles, independent map ledger, candidate hashes and permission assertions are prepared. Six new package tests and 24 existing store tests pass together (30), with typecheck. Upstream legacy session accessors are pinned, while installed-build/effective Auth/origin bindings and the empty Railway patch remain unresolved. Read-only SQL ran; no live mutation, credential binding, appointment, deployment, WeWeb installation or activation occurred.
+
 ---
 
 # InvestScape Docs Backup — Manifest
