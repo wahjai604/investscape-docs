@@ -3,6 +3,8 @@
 **Date:** 2026-10-08  
 **Status:** Finalized proposed read contract; owner approved the five design directions and answered the outstanding planning questions on 2026-10-08. Implementation remains separately gated.
 
+**Latest readiness review:** the sequential access, workload, source-terms and responsibility review below records newer evidence than the first-pass storage sections. Its gate-status table is the current checkpoint; unresolved live settings, named owners and provider clearance remain explicit.
+
 ## Purpose
 
 Resolve the five open design points for a map-facing Market Intel read contract. This contract covers quantitative observations and map feature summaries. Research articles remain an independently governed content track and can be composed into the Market Intel experience after their own visibility and rights controls are defined.
@@ -158,13 +160,13 @@ Transport/API failures use a typed error with `code`, safe `message`, and `reque
 |---|---|---|
 | 1. Combined vs separate reads | **Approved:** separate map manifest and independently fetched layers | Performance/load testing later |
 | 2. Geography and vintages | **Approved:** verified levels only; stable feature ID and explicit boundary version/crosswalk | Boundary providers and enabled level list still need to be selected against the validated pilot dataset |
-| 3. Research connection | **Approved:** separate visibility-filtered Research endpoint, composed in Market Intel UI/AI | Research editorial owner, audience rules, item rights, publication/withdrawal policy remain open |
+| 3. Research connection | **Approved:** separate visibility-filtered Research endpoint, composed in Market Intel UI/AI; member-only initially; Eric Tse is editorial owner | Per-item rights and publication/withdrawal implementation remain open |
 | 4. Coverage states | **Approved:** `available`, `no_data`, `partial`, `unavailable`, `error`; pagination separate | Validate against source-specific edge cases later |
 | 5. Catalog storage | **Approved boundary:** API is read boundary; canonical persistent store undecided; Supabase only candidate | Inspect current backend schemas/exposure, then choose store, retention, refresh, and geometry/tile ownership |
 
 ## Owner questions for remaining decisions
 
-The owner approved the five contract directions above. The following answers are still needed before they can be made concrete. Defaults are proposed starting points, not repository facts. Reply with the proposed answer, change it, or type your own in the answer field.
+The owner approved the five contract directions above. The six answers below were supplied and recorded in the owner conversation on 2026-10-08. The original proposed answers remain for history; the recorded owner answers control the planning baseline.
 
 ### Q1 — Initial map geography levels
 
@@ -172,7 +174,7 @@ The owner approved the five contract directions above. The following answers are
 
 **Proposed answer:** Country, province/state, and metro/CMA first; enable city only where the pilot boundary and metric crosswalk are verified. Keep neighborhood, postal/ZIP, and custom polygons out of the initial contract.
 
-**Your answer:** `____________________________________________`
+**Recorded owner answer:** Approved 2026-10-08: Country, province/state, and metro/CMA first. City/CSD and smaller-area activation are deferred; verified CSD evidence is retained separately.
 
 ### Q2 — Boundary providers and pilot scope
 
@@ -180,7 +182,7 @@ The owner approved the five contract directions above. The following answers are
 
 **Proposed answer:** Yes. Keep that as a test cohort and expand only after provider licensing, vintage, feature IDs, and joins are qualified.
 
-**Your answer:** `____________________________________________`
+**Recorded owner answer:** Approved 2026-10-08: Toronto CMA, Vancouver CMA, Arizona state and Texas state are the initial qualification cohort. Expand only after boundary and metric joins are qualified.
 
 ### Q3 — Research publication audience
 
@@ -188,7 +190,7 @@ The owner approved the five contract directions above. The following answers are
 
 **Proposed answer:** Signed-in InvestScape members only at first; public access can be approved for specific items later if rights and editorial policy support it.
 
-**Your answer:** `____________________________________________`
+**Recorded owner answer:** Approved 2026-10-08: Signed-in InvestScape members only initially, including items whose publisher source page is public.
 
 ### Q4 — Research editorial and rights owner
 
@@ -196,7 +198,7 @@ The owner approved the five contract directions above. The following answers are
 
 **Proposed answer:** Name a Lighthouse Research editorial owner (individual or role) before the first item is published; require documented per-item rights evidence and a review cadence before approval.
 
-**Your answer:** `____________________________________________`
+**Recorded owner answer:** Approved 2026-10-08: Eric Tse is the initial accountable Research editorial and rights owner. Assistant support does not transfer accountability.
 
 ### Q5 — Canonical observation storage
 
@@ -204,7 +206,7 @@ The owner approved the five contract directions above. The following answers are
 
 **Proposed answer:** Evaluate the existing Supabase Postgres project first for metadata and normalized observations, while checking current schema exposure, access controls, expected volume, refresh workload, retention, and export needs. Keep bulk geometry/vector tiles separate pending sizing/provider review. This is an evaluation order, not authorization to alter Supabase.
 
-**Your answer:** `____________________________________________`
+**Recorded owner answer:** Approved 2026-10-08: Evaluate the existing Supabase project first. The authoritative catalog store and schema are not selected or authorized by that evaluation.
 
 ### Q6 — Data refresh and retention expectations
 
@@ -212,7 +214,7 @@ The owner approved the five contract directions above. The following answers are
 
 **Proposed answer:** Do not impose one global cadence. Record each provider’s verified publication cadence; set a per-source target and alert threshold after source qualification. Retain historical versions when the provider revises values, subject to source terms and storage review.
 
-**Your answer:** `____________________________________________`
+**Recorded owner answer:** Approved 2026-10-08: Source-specific release cadence, freshness alerts and revision retention, subject to verified schedules, terms and storage review.
 
 ## Explicit exclusions
 
@@ -478,3 +480,189 @@ If later approved after architecture review:
 6. **Operational ownership:** assign ingestion monitoring, stale-data alerts, source corrections, withdrawal handling, geometry/provider support and incident response.
 
 **Outcome:** responsibilities are now mapped at the proposal level. Supabase is a candidate for normalized quantitative records, Railway API is the intended authenticated read boundary, and WeWeb is the client renderer. None is authorized as an implementation decision. The next phase is to resolve the exposed-schema, staging-auth, access-posture, workload/terms and operational-ownership gates before any logical data model review. No project settings were changed; no schema, service, route, deployment or WeWeb change was made.
+
+## Sequential readiness review — access, workload, terms and operations (2026-10-08)
+
+### Scope and decision authority
+
+This pass executes the remaining planning reviews under the owner's instruction to proceed sequentially and make routine decisions continuously. The access and operating rules below are a **planning baseline**, not permission to implement a catalog, change authentication, accept a provider subscription, change schemas, deploy or edit/publish WeWeb. Historical first-pass findings above are retained; this section supersedes their staging-auth uncertainty only to the extent of the evidence recorded here.
+
+### 1. Current access and staging identity evidence
+
+**Data API exposure remains unverified.** The authorized Supabase dashboard surface is at sign-in. A read-only inspection of database/role settings returned no `pgrst.db_schemas` override for the authenticator or global role; an empty result does not establish the effective exposed schemas, because that configuration can be supplied outside those settings. The earlier report that `investscape` was exposed is still user/session-reported. No dashboard setting was changed, no credentials were requested, and no shared `lighthouse` ledger was inspected.
+
+**Isolated staging startup evidence is now available.** The current Railway inventory identifies successful deployment `c0f1658f-481b-4579-a297-4ba02963436e`, created 2026-10-04T09:32:26.907Z, in the dedicated InvestScape Native Full Staging project. Service logs for that deployment's startup at approximately 09:32:59Z report the session verifier as unconfigured and the general engine authentication guard as disabled. Variable names alone were not used to infer their values. The environment called `production` belongs to this isolated staging project; no actual production deployment was inspected or changed.
+
+Assistant-run probes on 2026-10-08 used no real credentials and no saved-record operations:
+
+| Staging probe | Observed result | What this establishes |
+|---|---|---|
+| `GET /health` | 200, healthy | Service reachable at probe time |
+| `POST /v1/calculate/market-intelligence/comparability`, `{}`, no authorization | 400, input validation reached | This existing calculation route did not require a member session before validating this request |
+| Same calculation request with a deliberately invalid static bearer value | 400, input validation reached | The tested route did not reject that invalid authorization value before validation |
+| `POST /v1/development/full/calculate`, `{}`, no authorization | 401, authentication required | Full has a different observed unauthenticated boundary |
+
+These are bounded probes of existing routes. They do not verify acceptance of a valid member, cross-account update denial, all routes, current secret values or any future catalog endpoint. There is no map catalog endpoint to test. The calculation requests used caller-supplied empty inputs and did not establish a private-data disclosure. General engine authentication must not be assumed adequate for the proposed member catalog. Any later auth remediation needs its own implementation authorization and must account for Quick/Full independently.
+
+**Required later acceptance:** configured issuer/audience/signature/expiry verification; missing, malformed and invalid sessions rejected before catalog reads; approved members accepted; unpublished/withdrawn items denied through direct detail; owner-private portfolio data denied to a second account. Use isolated test accounts without sharing tokens in chat.
+
+### 2. Catalog access and publication baseline
+
+| Concern | Selected planning rule |
+|---|---|
+| Quantitative catalog | Initially member-readable through the verified server API. No anonymous or direct client Data API access to a new canonical catalog, staging revisions or internal audit records. A backend-only database area is the candidate; schema name and SQL are deferred. |
+| Serving credentials | A narrowly scoped read role for approved published records. Separate restricted ingestion writes and publication/withdrawal privileges. Do not make a broad service-role credential the default read design. |
+| Publication | Ingest into a staged revision; validate keys, dimensions, values, annotations, source rights and attribution; an accountable reviewer promotes an approved revision. Serve the active published revision atomically, with source/revision lineage. |
+| Research | Independently governed, initially member-only. Market Intel and AI receive only approved permitted summaries or links. Search and direct detail apply identical rights/visibility checks; quantitative storage does not become an article full-text store. |
+| Personal map overlay | Separate owner-authorized Portfolio read. Use a private cache or no-store policy for personal responses; never put holdings in a shared cache or automatically publish them to Community. |
+| AI | Use the same authorized read boundary and retain period, geography, source, uncertainty and comparability fields. AI has no broader access than the requesting user. Research rights travel with retrieved context. |
+| Shared cache | Cache only cleared published aggregates by data revision, geography, metric, period and applicable visibility/rights scope. Authorization occurs before serving a cached response; a cursor is not an access capability. |
+| Correction/withdrawal | Supersede a corrected revision with a documented reason. Withdrawn material disappears from member reads, cached responses and future AI retrieval. Retain an internal audit record only to the extent source terms permit it. |
+
+Grants and RLS remain separate controls. An implementation review must verify that app roles cannot bypass the API boundary through exposed views/functions/tables; policies and least grants cannot be inferred from today's product tables. No role, grant, policy or schema was created in this pass.
+
+### 3. Measured pilot workload and delivery implications
+
+The assistant streamed the five supplied ZIP CSVs without expanding the largest file to disk. Counts below include all periods and dimensions in those supplied snapshots; they are **not** the count of approved published metrics. Toronto/Vancouver labels were used for this workload inventory only; production joins must use the separately validated keys/crosswalk rules in the contract.
+
+| Supplied table | Compressed bytes | CSV bytes | All data rows | Toronto/Vancouver slice rows | Included periods | Observation frequency from metadata |
+|---|---:|---:|---:|---:|---|---|
+| 17-10-0148-01, CMA/CA population | 22,688,780 | 277,885,640 | 1,819,875 | 17,250 | 2001–2025, 25 annual periods | Annual |
+| 17-10-0155-01, CSD population | 2,807,984 | 16,725,685 | 130,025 | 50 | 2001–2025, 25 annual periods | Annual |
+| 34-10-0130-01, CMHC vacancy | 9,711 | 131,917 | 1,224 | 68 | 1992–2025, 34 annual periods | Annual |
+| 34-10-0133-01, CMHC average rent | 1,545,574 | 24,042,374 | 132,344 | 1,248 | 1987–2025, 39 annual periods | Annual |
+| 46-10-0092-01, experimental asking/paid rent | 128,839 | 1,791,335 | 9,646 | 540 | 2019-01–2026-04, 30 source periods | Quarterly |
+| **Total** | **27,180,888** | **320,576,951** | **2,093,114** | **19,156** | Not a single common period | Mixed |
+
+Population CMA/CA data includes 3 gender categories and 115 age groups. The average-rent slice includes 4 structure types and 4 unit types; the experimental rent slice includes 7 rental-unit types and 2 estimate categories. These dimensions must remain in the observation identity. Annual/quarterly observation frequency does not establish a provider's release date or a safe polling rate; missing periods must not be invented.
+
+**ACS accepted cohort:** the four unique 2024 ACS 5-year exports cover B01003, B19013, B25064 and B25003 for Arizona and Texas: six measure rows across two states, or **12 estimate values**, with associated MOE/annotations. They represent **2020–2024**, not an instantaneous 2024 measurement. The two supplied B25003 five-year exports are byte-identical and count once. The earlier one-year exports remain a separate optional cohort. The population MOE annotation `*****` stays an annotation, not zero or an invented numeric MOE. Uploaded state labels do not replace the verified Census state keys.
+
+| Pilot boundary delivery file | Features | Bytes | Vertices |
+|---|---:|---:|---:|
+| Canadian CMA pair | 2 | 6,457,365 | 158,327 |
+| Canadian CSD pair | 2 | 4,865,399 | 119,289 |
+| Arizona/Texas states | 2 | 353,344 | 14,344 |
+| **Pilot total** | **6** | **11,676,108** | **291,960** |
+
+The additional Toronto/Vancouver local-area files are auxiliary prototype material, not enabled analytic levels in this contract. Six large boundary features are not evidence that nationwide client performance will be adequate. Keep detailed polygons/tiles out of metric responses and AI context; geometry delivery, simplification tolerance, viewport loading and tile caching require a separate measured test and source/provider clearance.
+
+**Scaling assumptions for the later benchmark:** user counts alone do not determine load. An illustrative layer-read demand is concurrent viewers × viewport events/second × active layers × (1 − cache-hit fraction). This is a planning scenario, not a traffic forecast or a capacity claim:
+
+| Concurrent viewers | Assumed viewport events/sec/viewer | Assumed layers | Layer reads/sec before cache | Origin reads/sec at assumed 90% cache hit |
+|---|---:|---:|---:|---:|
+| 100 | 0.2 | 3 | 60 | 6 |
+| 1,000 | 0.2 | 3 | 600 | 60 |
+| 10,000 | 0.2 | 3 | 6,000 | 600 |
+
+A combined layer request can change HTTP request counts; the table counts layer reads, not HTTP calls. Cache misses and personalized reads need separate measurement. Provider ingestion happens independently of user viewport requests: users read a validated catalog snapshot rather than triggering an upstream download. Queueing, retries, idempotent revision ingestion and worker replicas address ingestion throughput; replicated API workers and caches address member reads. Neither requires duplicating an E-number or merging independently governed engines.
+
+**Selected planning defaults:** bounded viewport/page requests; cancellation of obsolete requests; versioned cleared geometry references; last approved snapshot retained on refresh failure with freshness disclosed; no silent data substitution. Existing contract limits must be documented before implementation. Hardware, database indexes/partitioning, PostGIS, tile technology, retention duration and numerical service-level targets remain benchmark/design decisions, not inferred from this small pilot. No benchmark, provider subscription or infrastructure provisioning was performed.
+
+### 4. Source terms and refresh qualification
+
+The following is an evidence-based qualification record, not blanket legal clearance. Check each exact source/product, its terms at acquisition, third-party exclusions and any additional restrictions before publication. Statistical data, boundary services, basemap tiles, geocoding results and article text have separate rights.
+
+| Source/product | Evidence checked on 2026-10-08 | Planning disposition |
+|---|---|---|
+| StatCan-origin statistical tables | Statistics Canada Open Licence and FAQ permit commercial/value-added reuse subject to conditions, including accurate attribution and third-party exceptions. | Conditional candidate for approved tabular publication. Preserve table/version/retrieval lineage and applicable notices; do not apply this licence automatically to CMHC-origin tables or all government products. |
+| CMHC average-rent table 34-10-0133-01 | Its supplied metadata note 2 links directly to the verified HMIP data licence. The agreement allows commercial/value-added reuse subject to attribution, accurate reproduction, redistribution conditions and revocable use. | Record that exact linked agreement and required source/adaptation notices in the rights review. Publication remains conditional on implementing those obligations and resolving applicable additional restrictions. |
+| CMHC vacancy table 34-10-0130-01 | Its metadata note 2 links to an older CMHC URL that could not be retrieved. A current general CMHC data licence was found, but the old URL's mapping/applicability was not verified. | Exact-product applicability remains pending. The current general agreement is evidence to review, not an automatic replacement for the metadata-linked terms. Do not apply another CMHC dashboard's non-commercial licence to this table. |
+| ACS selected detailed-table exports | Census API terms and citation guidance were checked; current ACS documentation describes annual products and requires an API key for all data queries. | Keep table/variable/geography/period and annotation lineage. Future keys belong in server-side secret management, never chat. Selected API pulls/exports avoid requiring a 12 GB local bulk download. No key was requested or entered. |
+| Boundary files | Earlier product-specific geometry qualification/crosswalk evidence remains separate from statistical-table rights. | Review the exact delivered geometry product, attribution and redistribution/export conditions. Geometric validation alone does not clear hosting rights. |
+| Basemap, geocoder and export provider | No provider chosen and no persistent screenshot/export or provider-tile caching right cleared. | Provider selection is still open. Community exports must omit unapproved provider material; a neutral background with separately cleared original overlays is the proposed fallback. |
+| Research publishers, universities, associations and Lighthouse-authored work | Not cleared by statistical-data licences. | Independent per-item rights/publication review; public availability alone does not grant full-text storage, redistribution or AI usage rights. |
+
+Canonical references:
+
+- StatCan licence: https://www.statcan.gc.ca/en/terms-conditions/open-licence
+- StatCan licence FAQ: https://www.statcan.gc.ca/en/terms-conditions/open-licence-faq
+- CMHC average-rent metadata-linked agreement: https://www.cmhc-schl.gc.ca/about-us/terms-conditions/hmip-terms-conditions
+- CMHC vacancy metadata-linked URL (inaccessible in this pass): https://www.cmhc-schl.gc.ca/en/data-and-research/cmhc-licence-agreement-use-of-data
+- Current general CMHC agreement (applicability to that older link still pending): https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/cmhc-licence-agreement-use-of-data
+- Census API terms: https://www.census.gov/data/developers/about/terms-of-service.html
+- Census citation guidance: https://www.census.gov/about/policies/citation.html
+- Current ACS five-year developer guidance, including API-key requirement and annotation handling: https://www.census.gov/data/developers/data-sets/acs-5year.html
+
+**Refresh baseline:** use a source registry with dataset observation frequency, verified release schedule when known, last checked/retrieved time, provider revision identifier/checksum, rights-review date and next review. Release schedules are not inferred from observation frequency. Check release metadata before fetching data; obey provider limits and back off on errors. Automated acquisition is not enabled here. Retain permitted source snapshots and immutable parsed revisions for reproducibility; retention duration requires an explicit cost/rights review. On correction, stage/revalidate then replace the active revision; on provider withdrawal, restrict affected reads immediately and purge disallowed cached content.
+
+### 5. Operational responsibilities and launch gates
+
+Responsibilities can be specified now; actual personnel assignments cannot be fabricated. One person may hold multiple roles in an early pilot, with the assignments and approvals recorded. No team member was appointed or contacted in this review.
+
+| Accountable role | Required responsibility | Assignment state |
+|---|---|---|
+| Product owner | Accept pilot metrics, geographic scope, member visibility and comparison disclosures; approve subsequent implementation scope | Owner decisions recorded; no delegated launch authority assigned |
+| Quantitative data steward/publisher | Maintain definitions, source rights/attribution, geography joins, release qualification, correction/withdrawal approvals | Named individual pending |
+| Research editorial owner | Independently approve summaries/links, rights, freshness, publication and withdrawals | Eric Tse, owner-approved 2026-10-08; separate from quantitative stewardship |
+| Ingestion operator | Monitor refreshes, retries, revision reconciliation, stale-source alerts and permitted retention; escalate source changes | Named individual pending |
+| API/security owner | Verify identity, member/owner authorization, least grants, caches, request limits and denied-read acceptance | Named individual pending |
+| Geometry/provider owner | Own boundary versions, simplification validation, tile/geocoder terms, attribution, cost and export constraints | Named individual pending |
+| Incident coordinator | Coordinate access faults, data corrections and rights withdrawals with the relevant accountable owner | Named individual and escalation channel pending |
+
+**Operating rules selected for planning:** retain the last approved snapshot when refresh fails and disclose its date/freshness; quarantine newly malformed or definition-changed input; do not promote unreviewed changes; treat suspected private-data exposure and rights withdrawal as immediate restriction events; keep routine source failures isolated so unrelated valid layers remain available. Alerts and escalation times must be assigned before live ingestion. No on-call service or notification was created.
+
+| Gate | Review outcome | Requirement still needed before implementation/launch |
+|---|---|---|
+| Existing product migration source | Identified in pinned API source | Live applied-state alignment remains unknown; shared ledger review is separately scoped. This is not a Market Intel catalog baseline. |
+| Current Data API exposure | Unverified; sign-in blocks dashboard readback | Authenticated settings evidence for exposed/default schemas and permitted paths, without changing them |
+| Staging identity | General-engine startup state and bounded HTTP behavior verified; Full unauthenticated denial observed | Configured member verification and valid/invalid/account-isolation acceptance for proposed reads; separately authorized remediation if required |
+| Catalog access posture | Member/API-only planning baseline selected | Review concrete role/grant/RLS/view/function design and demonstrate no alternate read bypass |
+| Workload | Supplied tabular and geometry sizes measured | Wider coverage forecast and representative cold/warm, concurrent and personalized benchmarks; select storage/geometry service on evidence |
+| Source/provider rights | Conditional evidence improved; average-rent metadata link verified | Resolve vacancy exact terms, delivered boundary rights, selected map/geocoder/export terms and source-specific publication obligations |
+| Operations | Duties and failure/withdrawal rules specified | Named accountable owners and workable alert/escalation/review process |
+
+**Sequence outcome:** all five planning reviews have been completed and their dispositions recorded; **the implementation gates have not all passed**. The main uncertainty reduced in this pass is staging general-engine authentication, which is not member-ready for a new catalog on the evidence above. Current Data API exposure, live migration alignment, full source/provider clearance, named owners and representative performance remain open. Direct Account B update denial for existing drafts remains untested and is not implied by this review.
+
+### Concrete next-phase input checklist
+
+The next deliverable is an implementation-readiness package, followed by a logical data model review once the necessary access/workload/rights evidence is available. It must include:
+
+1. A dated authenticated readback of current exposed/default schemas and alternate views/functions; a permitted InvestScape-only migration alignment evidence source.
+2. An isolated-staging member-auth remediation proposal and acceptance matrix, with no settings changes until separately authorized.
+3. A source registry for each approved metric/product: exact key/dimensions, geography/vintage, observation/release period, annotations, rights/attribution, correction rule and accountable owner.
+4. A geometry/provider delivery choice supported by rights and representative performance/cost tests; keep private Portfolio and Community export scope independent.
+5. Named stewardship/operations assignments and publish/withdraw escalation paths.
+
+Routine planning defaults above are settled for this baseline. Unavailable live evidence and unassigned people are recorded as gates rather than replaced with assumptions. No SQL/schema, API implementation, service provisioning, auth configuration, deployment, WeWeb edit/publication or E85 release was performed. Only documentation is updated on the existing docs branch.
+
+## Staging authentication remediation and acceptance worksheet — proposal only
+
+### Proposed sequence after separate implementation authorization
+
+1. Inventory every route that would serve catalog or private data, including alternate database API/view/function paths. Record present middleware behavior and which existing calculation clients depend on it; do not enable a global guard without that dependency review.
+2. Select the verified-session boundary for new map reads. Configure issuer, signing-key verification, allowed audience, expiry and expected member context server-side through approved secret/configuration handling. Identity comes from verified claims, not caller-supplied owner/member IDs.
+3. Fail closed when verification configuration is missing or key retrieval fails. Restrict catalog database access to the intended server role and published projections; review all grants and bypass paths.
+4. Apply publication/rights checks to list, viewport, detail and AI reads. Owner-scope Portfolio separately. Keep Research's independent authorization and rights rules.
+5. Run the acceptance cases below in isolated staging with disposable fixtures and approved accounts. Only record non-secret statuses and fixture identifiers. Restoration and cleanup instructions must be part of any separately authorized write test.
+6. Review regressions for existing Quick/Full clients and document results before considering deployment. No deployment approval is implied by this worksheet.
+
+| Case | Required observable outcome | Status in this planning pass |
+|---|---|---|
+| Missing authorization on proposed map read | 401 before catalog access | Not executed; endpoint does not exist |
+| Malformed bearer, bad signature, wrong issuer/audience, expired session | 401; no data in response/error | Not executed |
+| Verifier unavailable or misconfigured | Fail-closed service-unavailable response; no catalog access | Not executed |
+| Verified identity lacking required member entitlement | 403; no member catalog data | Not executed; entitlement implementation not selected |
+| Authorized member, published cleared metric | Only permitted fields/revision returned with provenance | Not executed |
+| Unpublished/withdrawn Research or restricted detail identifier | Consistent unavailable response; no hidden metadata or summary | Not executed |
+| Account B requests Account A's private Portfolio overlay | Denied/unavailable with no holdings disclosed, including cached responses | Not executed |
+| Cursor or shared-cache response reused in another authorization context | Re-authorized; scope cannot widen | Not executed |
+| Direct client access to catalog tables/views/functions | Cannot bypass the selected server-only posture | Not executed; catalog does not exist |
+| Existing Full unauthenticated calculation | Continues to deny unauthorized access | 401 observed for the bounded empty-input probe; no valid-member or cross-account acceptance claim |
+| Existing draft Account B update-denial test | Direct targeted write cannot alter Account A's disposable fixture | Still untested; requires its independently scoped, authorized disposable write procedure |
+
+**Open implementation choices:** verifier wiring, entitlement authority, database role/grants, route placement and exact unavailable/error mapping. Use the finalized map contract's error envelope; this worksheet adds acceptance requirements, not new routes or an authentication implementation.
+
+## Implementation-readiness planning checkpoint — 2026-10-08
+
+See [Doc 80](80-Market-Intel-Map-Pilot-Implementation-Readiness-Plan.md) and its [planning registry](../../data-templates/market-intel-map-pilot-registry-planning-2026-10-08.json) for the four-geography layer definitions, interaction specification, proposed file-level backend work, acceptance cases and remaining gates. These are documentation artifacts; no live map or catalog was built.
+
+The owner answers and Research editorial assignment above correct stale unanswered/unassigned fields. Country/state/metro-CMA is the approved initial direction; only the two state and two CMA features have selected pilot evidence. Municipal/CSD rows are retained qualification evidence and are not enabled by this pilot.
+
+**Additional source-definition finding:** the supplied 46-10-0092 metadata note 2 says average paid rent is a moving average of the last three quarters. Its Q2 2026 label must therefore not imply a quarter-only measurement window. Preserve reported quarter, the three-quarter averaging method and experimental status; keep asking and paid rents as separate layers. The supplied 17-10-0148 metadata note 5 establishes preliminary postcensal status for 2025 even though selected row STATUS fields are blank. Apply dataset-level quality context as well as row annotations. Both findings were checked from the uploaded source archives during this planning phase; no online release was rechecked.
+
+**Evidence labels:** the sequential review's earlier database inspections, startup logs and HTTP probes are retained prior assistant-run records, not new execution in this phase. GitHub source and isolated Railway non-secret metadata were refreshed during the architecture handoff, and native WeWeb save definitions were freshly read. The configured editor-only Quick/Full drafts write via Supabase Data API to project hwhkgrwikczwztfnsjir; this does not identify the Lighthouse acceptance writer or prove a shared Relationship OS transaction domain.
+
+**Current handoff boundaries:** isolated Railway project 227cdcb9-8e2c-4cf2-8e96-805454eccf56, service 0a9b03d7-9de1-4cf0-b793-f83454465a40, environment d1a3a868-f1a1-4662-80a4-22a8a5aa20d2 (named production but used as isolated staging), latest deployment c0f1658f-481b-4579-a297-4ba02963436e. Source branch is feat/native-full-api-adapter. Doc 78 historically associates that deployment with API commit 2cec0ab519513a34aabbad909c4f24b1472d385c; current safe metadata does not independently return the deployment commit. Effective issuer, catalog writer and live migration alignment remain unverified.
+
+**Authority:** the owner authorized execution of the five documentation/readiness steps and their docs-branch checkpoint. This does not authorize schema or API implementation, auth changes, provider subscription, service provisioning, deployment, native WeWeb edits/publication, Relationship OS changes or E85 release.
