@@ -10,6 +10,8 @@ The Oct 9 Dev verification now completes Doc 82 §12's bounded catalog metadata 
 
 Doc 82 §13 records the owner's Oct 9 approval of the unchanged disabled-create package, conditional on recovery evidence. Fresh read-only Dev metadata remains consistent. The available recovery point is still unknown: the Supabase connector has no backup-list tool, and a bounded dashboard inspection requires browser-fallback permission. No DDL, backup operation, credential binding, deployment or activation was attempted; no unchanged tests were rerun.
 
+Doc 82 §14 closes the concrete recovery-reference gap from the owner's screenshots: scheduled PHYSICAL backup at 2026-10-09 11:16:52 UTC / 04:16:52 Vancouver, listed with Restore; PITR not enabled. This is visually inspected reported screenshot evidence, not a live backup API verification or restore rehearsal. Fresh Dev metadata still has no map schema/role collisions. Owner approval is retained, SQL bytes unchanged, and the expressly read-only inspection made no database, backup, credential, deployment or activation changes.
+
 ---
 
 # InvestScape Docs Backup — Manifest
