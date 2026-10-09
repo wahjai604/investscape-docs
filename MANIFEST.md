@@ -14,6 +14,8 @@ Doc 82 §14 closes the concrete recovery-reference gap from the owner's screensh
 
 Doc 82 §15 records the owner-authorized disabled Dev create on Oct 9 at 15:17:48 UTC / 08:17:48 Vancouver: nine owned forced-RLS tables, six NOLOGIN roles, independent map ledger and tool migration history; fixed managed PostgreSQL 17 effective permissions and empty-store counts passed. Applied receipt and permission evidence are saved on the isolated API review branch. The provisioning phase is complete; installed legacy/Auth/origin verification and scoped wiring remain next. No runtime credentials, real appointments, API deployment, WeWeb publication or map activation occurred. Earlier not-applied paragraphs are retained as dated history.
 
+Doc 82 §16 records sequential Auth/origin verification and blocked Dev wiring preparation: fresh WeWeb connection metadata and Railway exact staging API domain/deployed commit/1-of-1 running topology, with installed legacy/effective Auth/signing/rendered-origin facts still unknown and WeWeb follow-up reads unavailable. Source-only existing-client bridge adds 11 synthetic tests; final full suite 624 total / 622 passed / 2 existing skips, typecheck/build passing. Wiring defaults remain off/null and no database/platform configuration, credentials, appointment, deployment, WeWeb publication or map activation occurred.
+
 ---
 
 # InvestScape Docs Backup — Manifest
