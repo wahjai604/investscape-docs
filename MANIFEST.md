@@ -19,6 +19,9 @@ Doc 82 §16 records sequential Auth/origin verification and blocked Dev wiring p
 Doc 82 §17 records the owner-approved read-only UI follow-up: WeWeb confirms the installed legacy Supabase Auth plugin and configured Investscape-Dev target; Publications shows no publications yet. Installed release/accessor, rendered app origin and active signing algorithm remain unknown. Supabase dashboard sign-in selected ChatGPT; automatic approval review blocked the separate OpenAI authentication destination. Evidence is saved, wiring stays disabled, and no source/runtime/database/platform configuration, deployment or activation changed.
 
 
+Doc 82 §18 records verified signed-in Supabase access after owner-approved/completed ChatGPT sign-in. Current signing metadata is ECC (P-256), documented ES256, matching the source verifier algorithm allowlist; legacy HS256 is listed as previous. Installed WeWeb build/accessor, app origin and real-session acceptance remain unknown. A dashboard/connector health discrepancy is retained without endpoint probes. Wiring remains disabled; no configuration, database, deployment or activation changed.
+
+
 ---
 
 # InvestScape Docs Backup — Manifest
