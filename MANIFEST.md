@@ -129,3 +129,8 @@ Doc 85 records source commit 3223f49de6adfd2b394f73d2309cd5646631bae9: dedicated
 ## Research owner approvals — 2026-10-09 at 18:49:04 owner-local
 
 - [87 — Research Owner Approvals and 365-Day Editor Nomination](canonical-docs/current/87-Research-Owner-Approvals-and-365-Day-Editor-Nomination.md): four exact link-only drafts owner-approved; source review cap remains 90 days; Eric Tse sole editor nomination approved with 365-day term from actual audited appointment. Pinned receipt/source `abe56d459d7059d3c71e8f60d48f2edf56aa3e57`. No live appointment, database execution, deployment or publication.
+
+
+## Research prepared operator packages — 2026-10-09 owner-local / Oct 10 UTC
+
+- [88 — Research Cleared Source and Editor Appointment Packages](canonical-docs/current/88-Research-Cleared-Source-and-Editor-Appointment-Packages.md): four link-only stage commands and separate guarded, audited 365-day initial editor appointment. Five new offline checks/typecheck pass; original provisioning hashes unchanged. Pinned source `6e473f4bb0b568575c9967bb906abe35e507f614`; live recovery/Auth permission, app identity and runtime bindings remain unresolved. No live execution or publication.
