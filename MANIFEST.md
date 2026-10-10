@@ -124,3 +124,8 @@ Doc 85 records source commit 3223f49de6adfd2b394f73d2309cd5646631bae9: dedicated
 ## Research live prerequisites — 2026-10-09 owner-local / 2026-10-10 UTC
 
 - [86 — Research Live Prerequisites and Owner Decisions](canonical-docs/current/86-Research-Live-Prerequisites-and-Owner-Decisions.md): dashboard sign-in and backup listing freshly verified; newest point predates map provisioning, PITR disabled, Auth grantability gap refreshed. Source/evidence `df1fc574e683eb80d481875620ffc96211a8916d`; no live mutation/deployment/activation. Two concrete owner decisions remain pending.
+
+
+## Research owner approvals — 2026-10-09 at 18:49:04 owner-local
+
+- [87 — Research Owner Approvals and 365-Day Editor Nomination](canonical-docs/current/87-Research-Owner-Approvals-and-365-Day-Editor-Nomination.md): four exact link-only drafts owner-approved; source review cap remains 90 days; Eric Tse sole editor nomination approved with 365-day term from actual audited appointment. Pinned receipt/source `abe56d459d7059d3c71e8f60d48f2edf56aa3e57`. No live appointment, database execution, deployment or publication.
