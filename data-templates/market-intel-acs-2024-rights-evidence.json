@@ -1,0 +1,33 @@
+{
+  "evidenceDateUTC": "2026-10-09",
+  "evidenceDateVancouver": "2026-10-08",
+  "label": "Freshly verified",
+  "sourceUrl": "https://api.census.gov/data/2024/acs/acs5.json",
+  "sourceContentSha256": "6c49a963e2e3c06ab172b1424814b1c6b32388b9819dac18dd3a1a732aca31f4",
+  "datasetIdentifier": "https://api.census.gov/data/id/ACSDT5Y2024",
+  "title": "ACS 5-Year Detailed Tables",
+  "vintage": 2024,
+  "dataset": [
+    "acs",
+    "acs5"
+  ],
+  "accessLevel": "public",
+  "isAggregate": true,
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "licenseLegalCode": "https://creativecommons.org/publicdomain/zero/1.0/legalcode.en",
+  "providerMetadataModified": "2025-09-02 17:33:50.0",
+  "selectedDetailedTables": [
+    "B01003",
+    "B19013",
+    "B25064",
+    "B25003"
+  ],
+  "selectedEstimateWindow": "2020–2024 ACS 5-year estimates; retain original upload labels and MOE",
+  "rightsDisposition": "Selected official detailed-table aggregate copyright reuse evidence established via provider CC0 link; no unrelated content/marks/third-party products included; no publication activated",
+  "requirements": [
+    "Retain Census attribution as product evidence policy",
+    "Preserve definitions, estimate window, currency/price basis and MOE/control markers",
+    "No geographic downscaling or fabricated values",
+    "Review and qualify revisions before publication"
+  ]
+}

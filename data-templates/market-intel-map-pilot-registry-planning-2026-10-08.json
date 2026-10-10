@@ -1,0 +1,1387 @@
+{
+  "artifactVersion": "market-intel-map-pilot-planning-1",
+  "date": "2026-10-08",
+  "timezone": "America/Vancouver",
+  "status": "planning_only_not_live_or_published",
+  "owner": "Eric Tse",
+  "contractReference": "Doc 79 finalized proposed map read",
+  "implementationPlan": "Doc 80",
+  "approvedDecisions": {
+    "readComposition": "manifest_and_independent_layers",
+    "initialLevels": [
+      "country",
+      "province_state",
+      "metro_cma"
+    ],
+    "researchAudience": "signed_in_members",
+    "researchEditorialOwner": "Eric Tse",
+    "coverageStates": [
+      "available",
+      "no_data",
+      "partial",
+      "unavailable",
+      "error"
+    ],
+    "storage": "evaluate_existing_supabase_first_store_unselected",
+    "refreshRetention": "source_specific_verified_schedules_terms_and_review"
+  },
+  "geographies": [
+    {
+      "geographyId": "CA-CMA-535",
+      "displayName": "Toronto CMA",
+      "country": "CA",
+      "level": "CMA",
+      "featureKey": "535",
+      "boundaryVersion": "2021",
+      "sourceFile": "canada-cma.geojson",
+      "sourceSha256": "f6b4d104cdf3c7c61a179bcd510a8a6f6e19ea3643dd6883498e4ef062920122",
+      "joinKeyField": "CMAUID",
+      "releaseStatus": "not_authorized"
+    },
+    {
+      "geographyId": "CA-CMA-933",
+      "displayName": "Vancouver CMA",
+      "country": "CA",
+      "level": "CMA",
+      "featureKey": "933",
+      "boundaryVersion": "2021",
+      "sourceFile": "canada-cma.geojson",
+      "sourceSha256": "f6b4d104cdf3c7c61a179bcd510a8a6f6e19ea3643dd6883498e4ef062920122",
+      "joinKeyField": "CMAUID",
+      "releaseStatus": "not_authorized"
+    },
+    {
+      "geographyId": "US-STATE-04",
+      "displayName": "Arizona",
+      "country": "US",
+      "level": "state",
+      "featureKey": "04",
+      "boundaryVersion": "2025",
+      "sourceFile": "arizona-texas.geojson",
+      "sourceSha256": "c5dc122ab6f7fca8e8966e551baf4af1c20a23b77983765e5a875ae5a2da4b5d",
+      "joinKeyField": "GEOID",
+      "releaseStatus": "not_authorized"
+    },
+    {
+      "geographyId": "US-STATE-48",
+      "displayName": "Texas",
+      "country": "US",
+      "level": "state",
+      "featureKey": "48",
+      "boundaryVersion": "2025",
+      "sourceFile": "arizona-texas.geojson",
+      "sourceSha256": "c5dc122ab6f7fca8e8966e551baf4af1c20a23b77983765e5a875ae5a2da4b5d",
+      "joinKeyField": "GEOID",
+      "releaseStatus": "not_authorized"
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "statcan-17100148",
+      "agency": "Statistics Canada",
+      "tableId": "17100148",
+      "citationUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710014801",
+      "sourceFile": "17100148-eng.zip",
+      "sha256": "7b007a0ff50bb1bad6a041093c3c71502c095f2516d20c961d9c26ed55b327d5",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "licence": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+        "rightsEvidence": "Prior StatCan licence review; dataset obligations still require publication review"
+      },
+      "sourceReleaseDate": null
+    },
+    {
+      "sourceId": "statcan-46100092",
+      "agency": "Statistics Canada",
+      "tableId": "46100092",
+      "citationUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=4610009201",
+      "sourceFile": "46100092-eng.zip",
+      "sha256": "0f2d46318e248732d37ac68923322ed14e4e085937880b4f1c0b9f9c0e8f3719",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "licence": "https://www.statcan.gc.ca/en/terms-conditions/open-licence",
+        "rightsEvidence": "Prior StatCan licence review; metadata note 2 freshly verified"
+      },
+      "sourceReleaseDate": null
+    },
+    {
+      "sourceId": "statcan-34100130",
+      "agency": "CMHC via Statistics Canada",
+      "tableId": "34100130",
+      "citationUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410013001",
+      "sourceFile": "34100130-eng.zip",
+      "sha256": "3e48aa7c7a3e2b612aabd384ee74eaa4e486ea2e99a38532a9aa0b035dede31f",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "licence": "https://www.cmhc-schl.gc.ca/en/data-and-research/cmhc-licence-agreement-use-of-data",
+        "rightsEvidence": "Metadata-linked older URL inaccessible in prior review; exact applicability pending"
+      },
+      "sourceReleaseDate": null
+    },
+    {
+      "sourceId": "statcan-34100133",
+      "agency": "CMHC via Statistics Canada",
+      "tableId": "34100133",
+      "citationUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410013301",
+      "sourceFile": "34100133-eng.zip",
+      "sha256": "9085a5bdbcdd2f29a4235175a65d940d7b84346a09548a974ffff26fbf0523b2",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "licence": "https://www.cmhc-schl.gc.ca/about-us/terms-conditions/hmip-terms-conditions",
+        "rightsEvidence": "Metadata-linked licence verified in prior review; obligations not implemented"
+      },
+      "sourceReleaseDate": null
+    },
+    {
+      "sourceId": "acs5-2024-B01003",
+      "agency": "U.S. Census Bureau",
+      "tableId": "B01003",
+      "product": "ACSDT5Y2024",
+      "citationUrl": "https://data.census.gov/table/ACSDT5Y2024.B01003",
+      "sourceFile": "ACSDT5Y2024.B01003-2026-10-08T124410.csv",
+      "sha256": "f9dcbf6b9b63356ad49918f117e7e7151e10cebbb0a3bbe24c083bf292ad9688",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "evidence": "Prior Census citation/API terms review; source-specific attribution and delivered geometry rights remain to be implemented"
+      },
+      "sourceReleaseDate": null
+    },
+    {
+      "sourceId": "acs5-2024-B19013",
+      "agency": "U.S. Census Bureau",
+      "tableId": "B19013",
+      "product": "ACSDT5Y2024",
+      "citationUrl": "https://data.census.gov/table/ACSDT5Y2024.B19013",
+      "sourceFile": "ACSDT5Y2024.B19013-2026-10-08T125519.csv",
+      "sha256": "f14365e3d6492fab2afe3478c383ccc2cc14e26a8a4dd909c31f6f700e90dc45",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "evidence": "Prior Census citation/API terms review; source-specific attribution and delivered geometry rights remain to be implemented"
+      },
+      "sourceReleaseDate": null
+    },
+    {
+      "sourceId": "acs5-2024-B25064",
+      "agency": "U.S. Census Bureau",
+      "tableId": "B25064",
+      "product": "ACSDT5Y2024",
+      "citationUrl": "https://data.census.gov/table/ACSDT5Y2024.B25064",
+      "sourceFile": "ACSDT5Y2024.B25064-2026-10-08T125618.csv",
+      "sha256": "ed45f73965ec9cee1c1380127bf412815d53bbdd0dcbb872c949989e138a19cd",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "evidence": "Prior Census citation/API terms review; source-specific attribution and delivered geometry rights remain to be implemented"
+      },
+      "sourceReleaseDate": null
+    },
+    {
+      "sourceId": "acs5-2024-B25003",
+      "agency": "U.S. Census Bureau",
+      "tableId": "B25003",
+      "product": "ACSDT5Y2024",
+      "citationUrl": "https://data.census.gov/table/ACSDT5Y2024.B25003",
+      "sourceFile": "ACSDT5Y2024.B25003-2026-10-08T125955.csv",
+      "sha256": "c53e9122d15cbb5bf2eae9509564ecd3834fc6451f48d9cac64654cbf57a8281",
+      "evidenceDate": "2026-10-08",
+      "rights": {
+        "status": "publication_review_pending",
+        "evidence": "Prior Census citation/API terms review; source-specific attribution and delivered geometry rights remain to be implemented"
+      },
+      "sourceReleaseDate": null
+    }
+  ],
+  "layers": [
+    {
+      "layerId": "ca-cma-population",
+      "sourceId": "statcan-17100148",
+      "geographyIds": [
+        "CA-CMA-535",
+        "CA-CMA-933"
+      ],
+      "label": "Population; July 1, 2025; preliminary postcensal",
+      "exactSourceFilters": {
+        "Gender": "Total - gender",
+        "Age group": "All ages"
+      },
+      "unit": "persons",
+      "currencyCode": null,
+      "period": {
+        "reportedPeriod": "2025",
+        "referenceDate": "2025-07-01",
+        "periodStart": "2025-07-01",
+        "periodEnd": "2025-07-01",
+        "label": "July 1, 2025"
+      },
+      "qualityStatus": [
+        "preliminary_postcensal"
+      ],
+      "warnings": [
+        "Dataset metadata note 5 applies even when row STATUS is blank"
+      ],
+      "universe": "All ages, total gender population",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "annual",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "ca-cma-qrs-asking-rent-2br",
+      "sourceId": "statcan-46100092",
+      "geographyIds": [
+        "CA-CMA-535",
+        "CA-CMA-933"
+      ],
+      "label": "Average advertised asking rent; 2-bedroom apartment; Q2 2026; experimental",
+      "exactSourceFilters": {
+        "Rental unit type": "Apartment - 2 bedrooms",
+        "Estimates": "Average asking rent"
+      },
+      "unit": "currency_per_month",
+      "currencyCode": "CAD",
+      "period": {
+        "reportedPeriod": "2026-04",
+        "periodStart": "2026-04-01",
+        "periodEnd": "2026-06-30",
+        "label": "Q2 2026",
+        "measurementWindow": {
+          "kind": "quarter"
+        }
+      },
+      "qualityStatus": [
+        "experimental"
+      ],
+      "warnings": [
+        "Listing-derived asking rent; current dollars; no unit-quality adjustment; subject to revision"
+      ],
+      "universe": "Advertised two-bedroom apartment rental listings in the source coverage",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "quarterly",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "ca-cma-qrs-paid-rent-2br",
+      "sourceId": "statcan-46100092",
+      "geographyIds": [
+        "CA-CMA-535",
+        "CA-CMA-933"
+      ],
+      "label": "Average paid rent; 2-bedroom apartment; Q2 2026 label; three-quarter moving average; experimental",
+      "exactSourceFilters": {
+        "Rental unit type": "Apartment - 2 bedrooms",
+        "Estimates": "Average paid rent"
+      },
+      "unit": "currency_per_month",
+      "currencyCode": "CAD",
+      "period": {
+        "reportedPeriod": "2026-04",
+        "periodStart": "2026-04-01",
+        "periodEnd": "2026-06-30",
+        "label": "Q2 2026",
+        "measurementWindow": {
+          "kind": "trailing_quarters_moving_average",
+          "quarters": 3,
+          "label": "Moving average of the last three quarters; Q2 2026 reported quarter"
+        }
+      },
+      "qualityStatus": [
+        "experimental"
+      ],
+      "warnings": [
+        "Source metadata note 2: moving average of last three quarters",
+        "Paid rent is not asking rent; source coverage excludes social/affordable housing; subject to revision"
+      ],
+      "universe": "Renter households in the source-covered two-bedroom apartment universe",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "quarterly",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "ca-cma-cmhc-vacancy",
+      "sourceId": "statcan-34100130",
+      "geographyIds": [
+        "CA-CMA-535",
+        "CA-CMA-933"
+      ],
+      "label": "CMHC vacancy; privately initiated row/apartment structures 3+ units; 2025 weighted average",
+      "exactSourceFilters": {},
+      "unit": "percent",
+      "currencyCode": null,
+      "period": {
+        "reportedPeriod": "2025",
+        "periodStart": null,
+        "periodEnd": null,
+        "label": "2025 annual survey"
+      },
+      "qualityStatus": [],
+      "warnings": [
+        "Exact metadata-linked licence applicability unresolved",
+        "2011 observation geography versus 2021 display boundary; identical footprint unverified"
+      ],
+      "universe": "Privately initiated row and apartment structures of three units and over",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "annual",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "ca-cma-cmhc-rent-2br",
+      "sourceId": "statcan-34100133",
+      "geographyIds": [
+        "CA-CMA-535",
+        "CA-CMA-933"
+      ],
+      "label": "CMHC average rent; 2-bedroom; apartment structures 3+ units; 2025",
+      "exactSourceFilters": {
+        "Type of structure": "Apartment structures of three units and over",
+        "Type of unit": "Two bedroom units"
+      },
+      "unit": "currency_per_month",
+      "currencyCode": "CAD",
+      "period": {
+        "reportedPeriod": "2025",
+        "periodStart": null,
+        "periodEnd": null,
+        "label": "2025 annual survey"
+      },
+      "qualityStatus": [],
+      "warnings": [
+        "Linked licence conditions require implementation",
+        "2011 observation geography versus 2021 display boundary; identical footprint unverified"
+      ],
+      "universe": "Two-bedroom units in apartment structures of three units and over",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "annual",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "us-state-acs-population",
+      "sourceId": "acs5-2024-B01003",
+      "geographyIds": [
+        "US-STATE-04",
+        "US-STATE-48"
+      ],
+      "label": "Population; 2020–2024 ACS 5-year period estimates",
+      "exactSourceFilters": {
+        "Label (Grouping)": [
+          "Total"
+        ]
+      },
+      "unit": "persons",
+      "currencyCode": null,
+      "period": {
+        "reportedPeriod": "2024",
+        "periodStart": "2020-01-01",
+        "periodEnd": "2024-12-31",
+        "label": "2020–2024 ACS 5-year period estimates"
+      },
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "warnings": [
+        "Population MOE ***** is a Census control marker",
+        "2025 display fixture; release needs 2024 boundary or approved exception"
+      ],
+      "universe": "Total population",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "annual_product",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "us-state-acs-household-income",
+      "sourceId": "acs5-2024-B19013",
+      "geographyIds": [
+        "US-STATE-04",
+        "US-STATE-48"
+      ],
+      "label": "Median household income; 2020–2024 ACS 5-year; 2024 inflation-adjusted USD",
+      "exactSourceFilters": {
+        "Label (Grouping)": [
+          "Median household income in the past 12 months (in 2024 inflation-adjusted dollars)"
+        ]
+      },
+      "unit": "currency",
+      "currencyCode": "USD",
+      "period": {
+        "reportedPeriod": "2024",
+        "periodStart": "2020-01-01",
+        "periodEnd": "2024-12-31",
+        "label": "2020–2024 ACS 5-year period estimates"
+      },
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "warnings": [
+        "2024 inflation-adjusted dollars",
+        "2025 display fixture; release needs 2024 boundary or approved exception"
+      ],
+      "universe": "Households; median household income in the past 12 months",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "annual_product",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "us-state-acs-gross-rent",
+      "sourceId": "acs5-2024-B25064",
+      "geographyIds": [
+        "US-STATE-04",
+        "US-STATE-48"
+      ],
+      "label": "Median gross rent; 2020–2024 ACS 5-year period estimates",
+      "exactSourceFilters": {
+        "Label (Grouping)": [
+          "Median gross rent"
+        ]
+      },
+      "unit": "currency_per_month",
+      "currencyCode": "USD",
+      "period": {
+        "reportedPeriod": "2024",
+        "periodStart": "2020-01-01",
+        "periodEnd": "2024-12-31",
+        "label": "2020–2024 ACS 5-year period estimates"
+      },
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "warnings": [
+        "Gross rent differs from Canadian asking/paid rent",
+        "2025 display fixture; release needs 2024 boundary or approved exception"
+      ],
+      "universe": "Renter-occupied housing units paying cash rent",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "annual_product",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    },
+    {
+      "layerId": "us-state-acs-tenure-counts",
+      "sourceId": "acs5-2024-B25003",
+      "geographyIds": [
+        "US-STATE-04",
+        "US-STATE-48"
+      ],
+      "label": "Occupied housing units by tenure; 2020–2024 ACS 5-year period estimates",
+      "exactSourceFilters": {
+        "Label (Grouping)": [
+          "Total:",
+          "Owner occupied",
+          "Renter occupied"
+        ]
+      },
+      "unit": "housing_units",
+      "currencyCode": null,
+      "period": {
+        "reportedPeriod": "2024",
+        "periodStart": "2020-01-01",
+        "periodEnd": "2024-12-31",
+        "label": "2020–2024 ACS 5-year period estimates"
+      },
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "warnings": [
+        "Counts only; no derived tenure-share uncertainty",
+        "2025 display fixture; release needs 2024 boundary or approved exception"
+      ],
+      "universe": "Occupied housing units",
+      "publicationState": "planning_only",
+      "active": false,
+      "rightsClearance": "pending_publication_review",
+      "freshness": {
+        "observationFrequency": "annual_product",
+        "verifiedReleaseSchedule": null,
+        "staleAlertThreshold": null,
+        "retentionDuration": null,
+        "reviewedAt": "2026-10-08",
+        "jobsEnabled": false
+      }
+    }
+  ],
+  "planningObservations": [
+    {
+      "sampleId": "ca-cma-population:535:2025",
+      "layerId": "ca-cma-population",
+      "geographyId": "CA-CMA-535",
+      "sourceId": "statcan-17100148",
+      "value": 7108874,
+      "valueStatus": "available",
+      "sourceUnit": "Persons",
+      "sourceScalar": "units",
+      "sourceVector": "v1589887692",
+      "sourceCoordinate": "22.1.1",
+      "sourceReportedGeographyName": "Toronto (CMA), Ontario",
+      "sourceGeographyId": "2021S0503535",
+      "observationGeographyVintage": "2021",
+      "sourcePeriod": "2025",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [
+        "preliminary_postcensal"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "535",
+        "boundaryVersion": "2021",
+        "status": "official_alias_same_vintage",
+        "method": "official_alternative_cma_code",
+        "limitation": "Source and boundary DGUID strings differ; preserve original identifiers"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-population:933:2025",
+      "layerId": "ca-cma-population",
+      "geographyId": "CA-CMA-933",
+      "sourceId": "statcan-17100148",
+      "value": 3088036,
+      "valueStatus": "available",
+      "sourceUnit": "Persons",
+      "sourceScalar": "units",
+      "sourceVector": "v1589917707",
+      "sourceCoordinate": "44.1.1",
+      "sourceReportedGeographyName": "Vancouver (CMA), British Columbia",
+      "sourceGeographyId": "2021S0503933",
+      "observationGeographyVintage": "2021",
+      "sourcePeriod": "2025",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [
+        "preliminary_postcensal"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "933",
+        "boundaryVersion": "2021",
+        "status": "official_alias_same_vintage",
+        "method": "official_alternative_cma_code",
+        "limitation": "Source and boundary DGUID strings differ; preserve original identifiers"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-qrs-asking-rent-2br:535:2026-04",
+      "layerId": "ca-cma-qrs-asking-rent-2br",
+      "geographyId": "CA-CMA-535",
+      "sourceId": "statcan-46100092",
+      "value": 2650,
+      "valueStatus": "available",
+      "sourceUnit": "Dollars",
+      "sourceScalar": "units",
+      "sourceVector": "v1675425048",
+      "sourceCoordinate": "27.3.1",
+      "sourceReportedGeographyName": "Toronto, Census metropolitan area (CMA)",
+      "sourceGeographyId": "2021S0503535",
+      "observationGeographyVintage": "2021",
+      "sourcePeriod": "2026-04",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [
+        "experimental"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "535",
+        "boundaryVersion": "2021",
+        "status": "official_alias_same_vintage",
+        "method": "official_alternative_cma_code",
+        "limitation": "Source and boundary DGUID strings differ; preserve original identifiers"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-qrs-paid-rent-2br:535:2026-04",
+      "layerId": "ca-cma-qrs-paid-rent-2br",
+      "geographyId": "CA-CMA-535",
+      "sourceId": "statcan-46100092",
+      "value": 2160,
+      "valueStatus": "available",
+      "sourceUnit": "Dollars",
+      "sourceScalar": "units",
+      "sourceVector": "v1938684514",
+      "sourceCoordinate": "27.3.2",
+      "sourceReportedGeographyName": "Toronto, Census metropolitan area (CMA)",
+      "sourceGeographyId": "2021S0503535",
+      "observationGeographyVintage": "2021",
+      "sourcePeriod": "2026-04",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [
+        "experimental"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "535",
+        "boundaryVersion": "2021",
+        "status": "official_alias_same_vintage",
+        "method": "official_alternative_cma_code",
+        "limitation": "Source and boundary DGUID strings differ; preserve original identifiers"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-qrs-asking-rent-2br:933:2026-04",
+      "layerId": "ca-cma-qrs-asking-rent-2br",
+      "geographyId": "CA-CMA-933",
+      "sourceId": "statcan-46100092",
+      "value": 3030,
+      "valueStatus": "available",
+      "sourceUnit": "Dollars",
+      "sourceScalar": "units",
+      "sourceVector": "v1675425158",
+      "sourceCoordinate": "41.3.1",
+      "sourceReportedGeographyName": "Vancouver, Census metropolitan area (CMA)",
+      "sourceGeographyId": "2021S0503933",
+      "observationGeographyVintage": "2021",
+      "sourcePeriod": "2026-04",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [
+        "experimental"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "933",
+        "boundaryVersion": "2021",
+        "status": "official_alias_same_vintage",
+        "method": "official_alternative_cma_code",
+        "limitation": "Source and boundary DGUID strings differ; preserve original identifiers"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-qrs-paid-rent-2br:933:2026-04",
+      "layerId": "ca-cma-qrs-paid-rent-2br",
+      "geographyId": "CA-CMA-933",
+      "sourceId": "statcan-46100092",
+      "value": 2470,
+      "valueStatus": "available",
+      "sourceUnit": "Dollars",
+      "sourceScalar": "units",
+      "sourceVector": "v1938684668",
+      "sourceCoordinate": "41.3.2",
+      "sourceReportedGeographyName": "Vancouver, Census metropolitan area (CMA)",
+      "sourceGeographyId": "2021S0503933",
+      "observationGeographyVintage": "2021",
+      "sourcePeriod": "2026-04",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [
+        "experimental"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "933",
+        "boundaryVersion": "2021",
+        "status": "official_alias_same_vintage",
+        "method": "official_alternative_cma_code",
+        "limitation": "Source and boundary DGUID strings differ; preserve original identifiers"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-cmhc-vacancy:535:2025",
+      "layerId": "ca-cma-cmhc-vacancy",
+      "geographyId": "CA-CMA-535",
+      "sourceId": "statcan-34100130",
+      "value": 3.0,
+      "valueStatus": "available",
+      "sourceUnit": "Rate",
+      "sourceScalar": "units",
+      "sourceVector": "v1930324",
+      "sourceCoordinate": "24",
+      "sourceReportedGeographyName": "Toronto, Ontario",
+      "sourceGeographyId": "2011S0503535",
+      "observationGeographyVintage": "2011",
+      "sourcePeriod": "2025",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "535",
+        "boundaryVersion": "2021",
+        "status": "stable_code_vintage_differs",
+        "method": "official_alternative_cma_code",
+        "limitation": "Geographic footprint equality not established across vintages"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-cmhc-vacancy:933:2025",
+      "layerId": "ca-cma-cmhc-vacancy",
+      "geographyId": "CA-CMA-933",
+      "sourceId": "statcan-34100130",
+      "value": 3.7,
+      "valueStatus": "available",
+      "sourceUnit": "Rate",
+      "sourceScalar": "units",
+      "sourceVector": "v1930326",
+      "sourceCoordinate": "26",
+      "sourceReportedGeographyName": "Vancouver, British Columbia",
+      "sourceGeographyId": "2011S0503933",
+      "observationGeographyVintage": "2011",
+      "sourcePeriod": "2025",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "933",
+        "boundaryVersion": "2021",
+        "status": "stable_code_vintage_differs",
+        "method": "official_alternative_cma_code",
+        "limitation": "Geographic footprint equality not established across vintages"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-cmhc-rent-2br:535:2025",
+      "layerId": "ca-cma-cmhc-rent-2br",
+      "geographyId": "CA-CMA-535",
+      "sourceId": "statcan-34100133",
+      "value": 2046,
+      "valueStatus": "available",
+      "sourceUnit": "Dollars",
+      "sourceScalar": "units",
+      "sourceVector": "v3824175",
+      "sourceCoordinate": "125.1.3",
+      "sourceReportedGeographyName": "Toronto, Ontario",
+      "sourceGeographyId": "2011S0503535",
+      "observationGeographyVintage": "2011",
+      "sourcePeriod": "2025",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "535",
+        "boundaryVersion": "2021",
+        "status": "stable_code_vintage_differs",
+        "method": "official_alternative_cma_code",
+        "limitation": "Geographic footprint equality not established across vintages"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "ca-cma-cmhc-rent-2br:933:2025",
+      "layerId": "ca-cma-cmhc-rent-2br",
+      "geographyId": "CA-CMA-933",
+      "sourceId": "statcan-34100133",
+      "value": 2363,
+      "valueStatus": "available",
+      "sourceUnit": "Dollars",
+      "sourceScalar": "units",
+      "sourceVector": "v3824177",
+      "sourceCoordinate": "184.1.3",
+      "sourceReportedGeographyName": "Vancouver, British Columbia",
+      "sourceGeographyId": "2011S0503933",
+      "observationGeographyVintage": "2011",
+      "sourcePeriod": "2025",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "sourceTerminated": "",
+      "qualityStatus": [],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": null,
+        "status": "not_supplied"
+      },
+      "crosswalk": {
+        "featureKey": "933",
+        "boundaryVersion": "2021",
+        "status": "stable_code_vintage_differs",
+        "method": "official_alternative_cma_code",
+        "limitation": "Geographic footprint equality not established across vintages"
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-population:04:total",
+      "layerId": "us-state-acs-population",
+      "geographyId": "US-STATE-04",
+      "sourceId": "acs5-2024-B01003",
+      "value": 7378838,
+      "rawEstimate": "7,378,838",
+      "valueStatus": "available",
+      "sourceCategory": "Total",
+      "rawSourceLabel": "Total",
+      "sourceReportedGeographyName": "Arizona",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "04",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "*****",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": "*****",
+        "status": "census_control_marker",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "04",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-population:48:total",
+      "layerId": "us-state-acs-population",
+      "geographyId": "US-STATE-48",
+      "sourceId": "acs5-2024-B01003",
+      "value": 30188424,
+      "rawEstimate": "30,188,424",
+      "valueStatus": "available",
+      "sourceCategory": "Total",
+      "rawSourceLabel": "Total",
+      "sourceReportedGeographyName": "Texas",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "48",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "*****",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": null,
+        "rawMarginOfError": "*****",
+        "status": "census_control_marker",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "48",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-household-income:04:median-household-income-in-the-past-months-in-inflation-adjusted-dollars",
+      "layerId": "us-state-acs-household-income",
+      "geographyId": "US-STATE-04",
+      "sourceId": "acs5-2024-B19013",
+      "value": 79964,
+      "rawEstimate": "79,964",
+      "valueStatus": "available",
+      "sourceCategory": "Median household income in the past 12 months (in 2024 inflation-adjusted dollars)",
+      "rawSourceLabel": "Median household income in the past 12 months (in 2024 inflation-adjusted dollars)",
+      "sourceReportedGeographyName": "Arizona",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "04",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 407,
+        "rawMarginOfError": "±407",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "04",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-household-income:48:median-household-income-in-the-past-months-in-inflation-adjusted-dollars",
+      "layerId": "us-state-acs-household-income",
+      "geographyId": "US-STATE-48",
+      "sourceId": "acs5-2024-B19013",
+      "value": 78476,
+      "rawEstimate": "78,476",
+      "valueStatus": "available",
+      "sourceCategory": "Median household income in the past 12 months (in 2024 inflation-adjusted dollars)",
+      "rawSourceLabel": "Median household income in the past 12 months (in 2024 inflation-adjusted dollars)",
+      "sourceReportedGeographyName": "Texas",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "48",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 263,
+        "rawMarginOfError": "±263",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "48",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-gross-rent:04:median-gross-rent",
+      "layerId": "us-state-acs-gross-rent",
+      "geographyId": "US-STATE-04",
+      "sourceId": "acs5-2024-B25064",
+      "value": 1543,
+      "rawEstimate": "1,543",
+      "valueStatus": "available",
+      "sourceCategory": "Median gross rent",
+      "rawSourceLabel": "Median gross rent",
+      "sourceReportedGeographyName": "Arizona",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "04",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 7,
+        "rawMarginOfError": "±7",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "04",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-gross-rent:48:median-gross-rent",
+      "layerId": "us-state-acs-gross-rent",
+      "geographyId": "US-STATE-48",
+      "sourceId": "acs5-2024-B25064",
+      "value": 1403,
+      "rawEstimate": "1,403",
+      "valueStatus": "available",
+      "sourceCategory": "Median gross rent",
+      "rawSourceLabel": "Median gross rent",
+      "sourceReportedGeographyName": "Texas",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "48",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 4,
+        "rawMarginOfError": "±4",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "48",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-tenure-counts:04:total",
+      "layerId": "us-state-acs-tenure-counts",
+      "geographyId": "US-STATE-04",
+      "sourceId": "acs5-2024-B25003",
+      "value": 2856081,
+      "rawEstimate": "2,856,081",
+      "valueStatus": "available",
+      "sourceCategory": "Total:",
+      "rawSourceLabel": "Total:",
+      "sourceReportedGeographyName": "Arizona",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "04",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 6374,
+        "rawMarginOfError": "±6,374",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "04",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-tenure-counts:48:total",
+      "layerId": "us-state-acs-tenure-counts",
+      "geographyId": "US-STATE-48",
+      "sourceId": "acs5-2024-B25003",
+      "value": 10992816,
+      "rawEstimate": "10,992,816",
+      "valueStatus": "available",
+      "sourceCategory": "Total:",
+      "rawSourceLabel": "Total:",
+      "sourceReportedGeographyName": "Texas",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "48",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 15813,
+        "rawMarginOfError": "±15,813",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "48",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-tenure-counts:04:owner-occupied",
+      "layerId": "us-state-acs-tenure-counts",
+      "geographyId": "US-STATE-04",
+      "sourceId": "acs5-2024-B25003",
+      "value": 1924098,
+      "rawEstimate": "1,924,098",
+      "valueStatus": "available",
+      "sourceCategory": "Owner occupied",
+      "rawSourceLabel": "    Owner occupied",
+      "sourceReportedGeographyName": "Arizona",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "04",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 9729,
+        "rawMarginOfError": "±9,729",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "04",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-tenure-counts:48:owner-occupied",
+      "layerId": "us-state-acs-tenure-counts",
+      "geographyId": "US-STATE-48",
+      "sourceId": "acs5-2024-B25003",
+      "value": 6879255,
+      "rawEstimate": "6,879,255",
+      "valueStatus": "available",
+      "sourceCategory": "Owner occupied",
+      "rawSourceLabel": "    Owner occupied",
+      "sourceReportedGeographyName": "Texas",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "48",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 32101,
+        "rawMarginOfError": "±32,101",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "48",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-tenure-counts:04:renter-occupied",
+      "layerId": "us-state-acs-tenure-counts",
+      "geographyId": "US-STATE-04",
+      "sourceId": "acs5-2024-B25003",
+      "value": 931983,
+      "rawEstimate": "931,983",
+      "valueStatus": "available",
+      "sourceCategory": "Renter occupied",
+      "rawSourceLabel": "    Renter occupied",
+      "sourceReportedGeographyName": "Arizona",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "04",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 7038,
+        "rawMarginOfError": "±7,038",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "04",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    },
+    {
+      "sampleId": "us-state-acs-tenure-counts:48:renter-occupied",
+      "layerId": "us-state-acs-tenure-counts",
+      "geographyId": "US-STATE-48",
+      "sourceId": "acs5-2024-B25003",
+      "value": 4113561,
+      "rawEstimate": "4,113,561",
+      "valueStatus": "available",
+      "sourceCategory": "Renter occupied",
+      "rawSourceLabel": "    Renter occupied",
+      "sourceReportedGeographyName": "Texas",
+      "sourceGeographyId": null,
+      "normalizedStateFips": "48",
+      "sourceGeoIdWasSupplied": false,
+      "observationGeographyVintage": "2024",
+      "sourcePeriod": "2020–2024 ACS 5-year period estimates",
+      "sourceStatus": "",
+      "sourceSymbol": "",
+      "qualityStatus": [
+        "period_estimate"
+      ],
+      "uncertainty": {
+        "marginOfError": 20050,
+        "rawMarginOfError": "±20,050",
+        "status": "supplied",
+        "confidenceLevel": null,
+        "confidenceLevelStatus": "not_supplied_in_export"
+      },
+      "crosswalk": {
+        "featureKey": "48",
+        "boundaryVersion": "2025",
+        "status": "stable_code_vintage_differs",
+        "method": "explicit_qualified_state_name_to_fips_crosswalk",
+        "limitation": "CSV omits GEO_ID. State key explicitly added; 2024 boundary required for strict ACS alignment or approved display exception."
+      },
+      "publicationState": "planning_only"
+    }
+  ],
+  "comparisonPolicy": {
+    "canadianCmaVsUsState": "context_only",
+    "sameSourceSameDimensionsAndPeriod": "candidate_comparable_subject_to_crosswalk_and_method_check",
+    "askingVsPaidRent": "not_equivalent_keep_separate",
+    "noCurrencyConversion": true,
+    "noInvestmentRanking": true
+  },
+  "disabledCoverage": [
+    "country",
+    "Canadian_province",
+    "city_CSD",
+    "US_city_county_metro",
+    "neighbourhood",
+    "postal_ZIP",
+    "custom_polygon"
+  ],
+  "operations": {
+    "researchEditorialOwner": "Eric Tse",
+    "otherRoles": "Eric Tse proposed interim accountable operator; duties/escalation acceptance pending",
+    "jobsEnabled": false
+  },
+  "remainingGates": [
+    "effective_member_auth",
+    "catalog_writer_and_migration_baseline",
+    "current_Data_API_and_alternate_read_access",
+    "source_specific_rights",
+    "geometry_rights_and_2024_US_vintage_or_exception",
+    "geometry_delivery_and_performance",
+    "operational_duties_and_thresholds"
+  ],
+  "validationNote": "Planning sample parsed from uploaded snapshots; no API/login/database writes, online publisher refresh, geometry-validity rerun or browser acceptance."
+}

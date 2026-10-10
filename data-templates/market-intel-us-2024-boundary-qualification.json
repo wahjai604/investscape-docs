@@ -1,0 +1,54 @@
+{
+  "evidenceDate": "2026-10-09",
+  "status": "planning_only",
+  "active": false,
+  "sourceUrl": "https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_us_state_500k.zip",
+  "archiveSha256": "3e81cbb6cf5f60d9b01ef3e730afa14d61ce5f784252a0b33a696135e71447bc",
+  "archiveBytes": 3242450,
+  "metadataFile": "cb_2024_us_state_500k.shp.iso.xml",
+  "metadataSha256": "afc060839dbfc6aa36e854385619eff2284da029b3cdfcec6975319ce74b842f",
+  "product": "2024 Cartographic Boundary File (SHP), State and Equivalent Entities, 1:500,000",
+  "sourceCrs": "EPSG:4269",
+  "outputCrs": "EPSG:4326",
+  "transformation": "pyproj always_xy; no repair or simplification",
+  "subsetFile": "market-intel-us-2024-state-boundaries-planning.geojson",
+  "subsetSha256": "31211ed970abd98e157432e95b64e40b4957858f65672e9fca905581dcf53967",
+  "subsetBytes": 353494,
+  "featureCount": 2,
+  "uniqueGEOIDs": [
+    "04",
+    "48"
+  ],
+  "invalidCount": 0,
+  "emptyCount": 0,
+  "pairwisePositiveAreaOverlapCount": 0,
+  "bounds": {
+    "04": [
+      -114.81651,
+      31.332177,
+      -109.045223,
+      37.00426
+    ],
+    "48": [
+      -106.645646,
+      25.837377,
+      -93.508292,
+      36.500704
+    ]
+  },
+  "rightsReview": "Exact archive metadata permits product/publication use with Census source acknowledgment; small-scale display only. No general ACS rights conclusion from this file.",
+  "constraintsSource": "Embedded MD_LegalConstraints; full provider wording remains in original archive",
+  "displayConstraints": {
+    "minimumScaleDenominator": 500000,
+    "geographicAnalysis": false,
+    "addressGeocoding": false,
+    "preciseSpatialRelationships": false
+  },
+  "remaining": [
+    "Scale enforcement in eventual renderer",
+    "Geometry delivery/hosting choice",
+    "Performance benchmark",
+    "ACS observation reuse evidence",
+    "No parcel/financial/precision or full national topology validation"
+  ]
+}

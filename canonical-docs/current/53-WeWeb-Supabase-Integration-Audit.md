@@ -1,3 +1,5 @@
+**Current-status note (2026-10-02):** The audit below is historical platform research, not current verification of element/plugin limitations. Native English Workspace/Quick drafts now exist; demonstrated Quick calculation paths passed preview review. WeWeb Supabase is installed but has no configured connection in current inspection. Charts, i18n, authenticated saving and other modules still need native acceptance. See [Doc 78](78-Phase2-Native-Migration-and-SaaS-Checkpoint.md).
+
 # InvestScape — WeWeb+Supabase Integration Audit (Read-Only) — Doc 53
 
 **This is a READ-ONLY AUDIT, same convention as Doc 17. Nothing here is fixed or built in this pass — findings only, so you can decide what's worth acting on before anything gets touched.** Scope: every canonical doc still written against Bubble-specific mechanics that Doc 02/03/15's revision pass didn't already cover — Doc 11 (Notifications), Doc 13 (i18n), Doc 24/26/49 (Customizable Layout), Doc 10 (Import/Export/Storage), and Doc 03 Addendum B (ApexCharts Wiring).
